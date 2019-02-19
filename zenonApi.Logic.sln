@@ -9,6 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zenonApi.Core", "zenonApi.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tester", "Tester\Tester.csproj", "{9AA44F5C-7AE8-43B4-96E6-32FFD5B69680}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{40BF74F7-B97A-4B00-AB5E-0EFDA55BD4E5}"
+	ProjectSection(SolutionItems) = preProject
+		Readme-zenonApi.Logic.md = Readme-zenonApi.Logic.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
