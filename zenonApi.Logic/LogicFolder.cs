@@ -7,18 +7,25 @@ using zenonApi.Logic.Converters;
 
 namespace zenonApi.Logic
 {
-  public class LogicFolder : zenonSerializable<LogicFolder, ILogicFileContainer>, ILogicFileContainer
+  public class LogicFolder : zenonSerializable<LogicFolder, ILogicFileContainer, LogicProject>, ILogicFileContainer
   {
     private LogicFolder() { }
 
-    internal LogicFolder(ApplicationTree applicationTree, LogicFolder parent)
+    internal LogicFolder(ApplicationTree parent)
     {
-      // TODO applicationTree
       this.Parent = parent;
+      this.Root = parent.Root;
+    }
+
+    internal LogicFolder(LogicFolder parent)
+    {
+      this.Parent = parent;
+      this.Root = parent.Root;
     }
 
     #region zenonSerializable impelementation
     public override ILogicFileContainer Parent { get; protected set; }
+    public override LogicProject Root { get; protected set; }
     protected override string NodeName => "Folder";
     #endregion
 

@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using zenonApi.Core;
 
 namespace zenonApi.Logic
 {
-  public class LogicProject : zenonSerializable<LogicProject, IZenonSerializable>
+  public class LogicProject : zenonSerializable<LogicProject, IZenonSerializable, LogicProject>
   {
     #region zenonSerializable Implementation
     protected override string NodeName => "K5project";
     // TODO: Who holds the logic projects? Nobody? If yes, then leave this to null
     public override IZenonSerializable Parent { get; protected set; }
+    public override LogicProject Root { get; protected set; }
     #endregion
 
     [zenonSerializableAttribute("version")]
@@ -21,5 +23,9 @@ namespace zenonApi.Logic
 
     [zenonSerializableNode("Appli")]
     public ApplicationTree ApplicationTree { get; protected set; }
+
+    [Browsable(false)]
+    [zenonSerializableNode("programs")]
+    internal _LogicPrograms Programs { get; set; }
   }
 }

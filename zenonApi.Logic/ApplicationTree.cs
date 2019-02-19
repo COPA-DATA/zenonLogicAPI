@@ -6,7 +6,7 @@ using zenonApi.Logic.Converters;
 
 namespace zenonApi.Logic
 {
-  public class ApplicationTree : zenonSerializable<ApplicationTree, LogicProject>, ILogicFileContainer
+  public class ApplicationTree : zenonSerializable<ApplicationTree, LogicProject, LogicProject>, ILogicFileContainer
   {
     private ApplicationTree() { }
 
@@ -14,10 +14,14 @@ namespace zenonApi.Logic
     internal ApplicationTree(LogicProject parent)
     {
       this.Parent = parent;
+      // For this class, the root is the same as the parent
+      this.Root = parent;
     }
 
     #region zenonSerializable implementation
     public override LogicProject Parent { get; protected set; }
+    ILogicFileContainer IZenonSerializable<ILogicFileContainer, LogicProject>.Parent => throw new NotImplementedException();
+    public override LogicProject Root { get; protected set; }
     protected override string NodeName => "Appli";
     #endregion
 
