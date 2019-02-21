@@ -11,7 +11,6 @@ namespace zenonApi.Logic
   {
     #region zenonSerializable Implementation
     protected override string NodeName => "K5project";
-    // TODO: Who holds the logic projects? Nobody? If yes, then leave this to null
     #endregion
 
 
