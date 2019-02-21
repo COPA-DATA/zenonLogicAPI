@@ -13,12 +13,23 @@ namespace zenonApi.Logic
 
     #endregion  
 
+    /// <summary>
+    /// Name of the group.
+    /// This attribute is mendatory.
+    /// </summary>
     [zenonSerializableAttribute("name")]
     public string Name { get; set; }
 
+    /// <summary>
+    /// Kind of variable group.
+    /// This attribute is mandatory.
+    /// </summary>
     [zenonSerializableAttribute("kind")]
     public LogicVariableKind Kind { get; set; }
 
+    /// <summary>
+    /// List of variables of the group.
+    /// </summary>
     [zenonSerializableNode("var")]
     public List<LogicVariable> Variables { get; set; } 
   }

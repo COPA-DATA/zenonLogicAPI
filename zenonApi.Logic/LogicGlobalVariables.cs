@@ -14,6 +14,10 @@ namespace zenonApi.Logic
 
     #endregion  
 
+    /// <summary>
+    /// This tag groups variables of a same variable group.
+    /// There is one variable group for each listed group.
+    /// </summary>
     [zenonSerializableNode("vargroup")]
     public List<LogicVariableGroup> VariableGroups { get; set; }
 

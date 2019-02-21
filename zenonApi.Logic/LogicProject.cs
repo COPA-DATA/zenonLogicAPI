@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 using zenonApi.Core;
 
 namespace zenonApi.Logic
@@ -43,5 +40,11 @@ namespace zenonApi.Logic
     [Browsable(false)]
     [zenonSerializableNode("programs")]
     internal _LogicPrograms Programs { get; set; }
+
+    /// <summary>
+    /// This tag groups all the global scope variable groups of the project.
+    /// </summary>
+    [zenonSerializableNode("variables")]
+    public LogicGlobalVariables LogicGlobalVariables { get; protected set; }
   }
 }
