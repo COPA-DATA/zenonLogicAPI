@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Linq;
 
 using zenonApi.Logic;
@@ -10,7 +9,7 @@ namespace Tester
   {
     static void Main(string[] args)
     {
-      var test = XDocument.Load(@"C:\Users\Mathias\Desktop\TemplateBbLogicProjectExport.xml");
+      var test = XDocument.Load(@"C:\Users\mike.thomas\Desktop\TemplateBbLogicProjectExport.xml");
       LogicProject proj = LogicProject.Import(test.Element("K5project"));
       LogicFolder folder = proj.ApplicationTree.Folders.First();
       LogicProgram prog = folder.Programs.FirstOrDefault();

@@ -1,4 +1,5 @@
 ﻿using System;
+using zenonApi.Logic.Resources;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic.SerializationConverters
@@ -7,30 +8,32 @@ namespace zenonApi.Logic.SerializationConverters
   {
     public string Convert(object source)
     {
-      //TODO: check order in which zenon writes the Dim1 - Dim3
-
-      if (source is Tuple<int, int, int> coords)
+      if (source == null)
       {
-        return $"{coords.Item1}{coords.Item2}{coords.Item3}";
+        return null;
       }
 
-      return "0,0,0";
+      if (source is ValueTuple<int, int, int> coords)
+      {
+        return $"{coords.Item1},{coords.Item2},{coords.Item3}";
+      }
+
+     throw new FormatException(string.Format(Strings.CoordConverterFormatExcp, nameof(CoordinateConverter)));
     }
 
     public object Convert(string source)
     {
       if (string.IsNullOrWhiteSpace(source))
       {
-        return new Tuple<int, int, int>(0, 0, 0);
+        return null;
       }
 
       var str = source;
-      var splitString = str.Split(';');
+      var splitString = str.Split(',');
 
       if (splitString.Length > 3)
       {
-        //TODO: Exception or retorn value with something like 0,0,0?
-        throw new ArgumentOutOfRangeException();
+        throw new ArgumentOutOfRangeException(Strings.CoordConverterArgumOutOfRangeExcp);
       }
 
       var success = int.TryParse(splitString[0], out int xCoord);
@@ -39,8 +42,7 @@ namespace zenonApi.Logic.SerializationConverters
 
       if (!success)
       {
-        //TODO: Exception or retorn value with something like 0,0,0?
-        throw new FormatException();
+        throw new FormatException(Strings.CoordConverterParseException);
       }
 
       return new Tuple<int, int, int>(xCoord, yCoord, zCoord);

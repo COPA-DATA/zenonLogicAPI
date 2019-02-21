@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-
-using zenonApi.Serialization;
 using zenonApi.Extensions;
+using zenonApi.Serialization;
 
 namespace zenonApi.Logic.SerializationConverters
 {
@@ -12,7 +9,6 @@ namespace zenonApi.Logic.SerializationConverters
   {
     public string Convert(object source)
     {
-      // TODO: is the logic herin correct? Are spaces between the "," and the next values required/optional/allowed?
       if (source is LogicVariableAttributes attributes)
       {
         StringBuilder sb = new StringBuilder();
@@ -62,7 +58,6 @@ namespace zenonApi.Logic.SerializationConverters
       LogicVariableAttributes attributes = new LogicVariableAttributes();
       source = source.Trim();
 
-      // TODO: INOUT, IN, OUT must come at the beginning, right?
       if (source.StartsWith("INOUT"))
       {
         attributes.In = true;
