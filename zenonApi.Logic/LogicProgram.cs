@@ -4,7 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
-using zenonApi.Core;
+using zenonApi.Serialization;
+using zenonApi.Logic.Internal;
 
 namespace zenonApi.Logic
 {
@@ -18,12 +19,10 @@ namespace zenonApi.Logic
       this.Root = parent.Root;
     }
 
+    protected override string NodeName => "Program";
+
     [zenonSerializableAttribute("Name")]
     public string Name { get; set; }
-
-    public override ILogicFileContainer Parent { get; protected set; }
-    public override LogicProject Root { get; protected set; }
-    protected override string NodeName => "Program";
 
     #region Properties, which are serialized/deserialized in external class _Pou
     public LogicProgramType Kind

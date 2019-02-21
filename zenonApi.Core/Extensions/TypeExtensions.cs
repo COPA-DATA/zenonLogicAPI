@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace zenonApi.Core.Extensions
+namespace zenonApi.Extensions
 {
   public static class TypeExtensions
   {

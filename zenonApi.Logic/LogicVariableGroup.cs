@@ -1,16 +1,12 @@
 ﻿using System.Collections.Generic;
-using zenonApi.Core;
+using zenonApi.Serialization;
 
 namespace zenonApi.Logic
 {
   public class LogicVariableGroup : zenonSerializable<LogicVariableGroup, ILogicVariableGroupContainer, LogicProject>
   {
     #region zenonSerializable Implementation
-
     protected override string NodeName => "vargroup";
-    public override ILogicVariableGroupContainer Parent { get; protected set; }
-    public override LogicProject Root { get; protected set; }
-
     #endregion  
 
     /// <summary>

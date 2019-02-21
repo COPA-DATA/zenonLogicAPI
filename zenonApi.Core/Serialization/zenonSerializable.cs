@@ -5,7 +5,10 @@ using System.Xml.Linq;
 using System.Reflection;
 using System.Collections;
 
-namespace zenonApi.Core
+// TODO: Add converters for zenonSerializableNode
+// TODO: Add order considerations for the items
+
+namespace zenonApi.Serialization
 {
   public abstract class zenonSerializable<TSelf, TParent, TRoot> : IZenonSerializable<TParent, TRoot>
     where TSelf : zenonSerializable<TSelf, TParent, TRoot>
@@ -13,8 +16,8 @@ namespace zenonApi.Core
     where TRoot : class, IZenonSerializable
   {
     protected abstract string NodeName { get; }
-    public abstract TParent Parent { get; protected set; }
-    public abstract TRoot Root { get; protected set; }
+    public virtual TParent Parent { get; protected set; }
+    public virtual TRoot Root { get; protected set; }
 
     static Dictionary<Type, IZenonSerializationConverter> converterCache = new Dictionary<Type, IZenonSerializationConverter>();
 
@@ -48,6 +51,13 @@ namespace zenonApi.Core
       var xmlAttribute = property.GetCustomAttribute<zenonSerializableAttributeAttribute>();
       if (xmlAttribute != null)
       {
+        object sourceValue = property.GetValue(source);
+        if (xmlAttribute.OmitIfNull && sourceValue == null)
+        {
+          // Omit the whole node
+          return;
+        }
+
         // Check if there is an converter for this property
         if (xmlAttribute.Converter != null)
         {
@@ -89,6 +99,13 @@ namespace zenonApi.Core
       var xmlNode = property.GetCustomAttribute<zenonSerializableNodeAttribute>();
       if (xmlNode != null)
       {
+        object sourceValue = property.GetValue(source);
+        if (xmlNode.OmitIfNull && sourceValue == null)
+        {
+          // Omit the whole node
+          return;
+        }
+
         if (typeof(IZenonSerializable).IsAssignableFrom(property.PropertyType))
         {
           MethodInfo exportMethod = property.PropertyType.GetMethod(nameof(Export), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
@@ -126,7 +143,7 @@ namespace zenonApi.Core
         else
         {
           // Just write the string representation of the property as the value
-          XElement child = new XElement(xmlNode.PropertyName);
+          XElement child = new XElement(xmlNode.NodeName);
           var value = property.GetValue(source)?.ToString();
           if (value != null)
           {
@@ -144,6 +161,12 @@ namespace zenonApi.Core
       var xmlAttribute = property.GetCustomAttribute<zenonSerializableNodeContentAttribute>();
       if (xmlAttribute != null)
       {
+        object sourceValue = property.GetValue(source);
+        if (sourceValue == null)
+        {
+          return;
+        }
+
         // Check if there is an converter for this property
         if (xmlAttribute.Converter != null)
         {
@@ -294,7 +317,7 @@ namespace zenonApi.Core
       var prop = property.GetCustomAttribute<zenonSerializableNodeAttribute>();
       if (prop != null)
       {
-        var xmlNodes = sourceXml.Elements(prop.PropertyName).OfType<XNode>().Cast<XElement>().ToList();
+        var xmlNodes = sourceXml.Elements(prop.NodeName).OfType<XNode>().Cast<XElement>().ToList();
 
         // Currently we only support deserializing to a concrete List types, not IEnumerable or similar, maybe in the future
         if (typeof(IList).IsAssignableFrom(property.PropertyType))

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using zenonApi.Core;
+using zenonApi.Serialization;
 
-namespace zenonApi.Logic
+namespace zenonApi.Logic.Internal
 {
   /// <summary>
   /// Represents a program, sub-program or UDFB. This class is internal and not
@@ -16,10 +16,7 @@ namespace zenonApi.Logic
 
 
     #region zenonSerializable implementation
-    public override _LogicPrograms Parent { get; protected set; }
     IZenonSerializable IZenonSerializable<IZenonSerializable, LogicProject>.Parent => this.Parent;
-    public override LogicProject Root { get; protected set; }
-
     protected override string NodeName => "pou";
     #endregion
 
@@ -80,7 +77,7 @@ namespace zenonApi.Logic
     /// <summary>
     /// Provides a multiline description attached to a program.
     /// </summary>
-    [zenonSerializableNode("pounote")]
+    [zenonSerializableNode("pounote", OmitIfNull = true)]
     public string MultiLineDescription { get; set; }
 
     [zenonSerializableNode("vargroup")]
@@ -96,13 +93,13 @@ namespace zenonApi.Logic
     /// Contains pre-compiled code of an user defined function block imported
     /// without its source code.
     /// </summary>
-    [zenonSerializableNode("pc5code")]
+    [zenonSerializableNode("pc5code", OmitIfNull = true)]
     public string PrecompiledUdfbCode { get; set; }
 
     /// <summary>
     /// Contains a piece of ST/IL source code.
     /// </summary>
-    [zenonSerializableNode("sourceSTIL")]
+    [zenonSerializableNode("sourceSTIL", OmitIfNull = true)]
     public string SourceCode { get; set; }
 
     // TODO sourceFBD
@@ -115,15 +112,14 @@ namespace zenonApi.Logic
     /// Undocumented zenon Logic node. Contains columns displayed in the
     /// Workbench and further information.
     /// </summary>
-    [zenonSerializableNode("srcdic")]
+    [zenonSerializableNode("srcdic", OmitIfNull = true)]
     public string SourceDictionary { get; set; }
 
     /// <summary>
     /// Undocumented zenon Logic node.
     /// </summary>
-    [zenonSerializableNode("cryptcode")]
+    [zenonSerializableNode("cryptcode", OmitIfNull = true)]
     public string CryptCode { get; set; }
-
     #endregion
   }
 }

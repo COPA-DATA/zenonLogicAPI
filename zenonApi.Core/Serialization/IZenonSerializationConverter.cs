@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace zenonApi.Core
+namespace zenonApi.Serialization
 {
   public interface IZenonSerializationConverter
   {

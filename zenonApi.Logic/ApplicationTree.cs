@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using zenonApi.Core;
-using zenonApi.Logic.Converters;
+using zenonApi.Serialization;
+using zenonApi.Logic.SerializationConverters;
 
 namespace zenonApi.Logic
 {
@@ -10,18 +10,8 @@ namespace zenonApi.Logic
   {
     private ApplicationTree() { }
 
-    // TODO: Can the application tree contain programs directly?
-    internal ApplicationTree(LogicProject parent)
-    {
-      this.Parent = parent;
-      // For this class, the root is the same as the parent
-      this.Root = parent;
-    }
-
     #region zenonSerializable implementation
-    public override LogicProject Parent { get; protected set; }
     ILogicFileContainer IZenonSerializable<ILogicFileContainer, LogicProject>.Parent => null;
-    public override LogicProject Root { get; protected set; }
     protected override string NodeName => "Appli";
     #endregion
 

@@ -1,4 +1,4 @@
-﻿using zenonApi.Core;
+﻿using zenonApi.Serialization;
 
 namespace zenonApi.Logic
 {

@@ -1,16 +1,12 @@
-﻿using zenonApi.Core;
-using zenonApi.Logic.Converters;
+﻿using zenonApi.Serialization;
+using zenonApi.Logic.SerializationConverters;
 
 namespace zenonApi.Logic
 {
   public class LogicVariable : zenonSerializable<LogicVariable, LogicVariableGroup, LogicProject>
   {
     #region zenonSerializable Implementation
-
     protected override string NodeName => "var";
-    public override LogicVariableGroup Parent { get; protected set; }
-    public override LogicProject Root { get; protected set; }
-
     #endregion  
 
     /// <summary>

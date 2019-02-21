@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using zenonApi.Core;
+using zenonApi.Serialization;
 
-namespace zenonApi.Logic
+namespace zenonApi.Logic.Internal
 {
   /// <summary>
   /// Describes a group of definitions.

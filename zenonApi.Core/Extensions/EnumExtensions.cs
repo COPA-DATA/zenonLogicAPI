@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-namespace zenonApi.Core.Extensions
+namespace zenonApi.Extensions
 {
   public static class EnumExtensions
   {

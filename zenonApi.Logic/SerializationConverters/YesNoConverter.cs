@@ -1,7 +1,7 @@
 ﻿using System;
-using zenonApi.Core;
+using zenonApi.Serialization;
 
-namespace zenonApi.Logic.Converters
+namespace zenonApi.Logic.SerializationConverters
 {
   internal class YesNoConverter : IZenonSerializationConverter
   {

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace zenonApi.Core
+namespace zenonApi.Serialization
 {
   [AttributeUsage(AttributeTargets.Property)]
   public class zenonSerializableAttributeAttribute : Attribute
@@ -13,6 +11,8 @@ namespace zenonApi.Core
     }
 
     public string AttributeName { get; private set; }
+    public byte AttributeOrder { get; set; }
+    public bool OmitIfNull { get; set; }
 
     private Type converter = null;
     public Type Converter

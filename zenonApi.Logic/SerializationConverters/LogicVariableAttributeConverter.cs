@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using zenonApi.Core;
-using zenonApi.Core.Extensions;
+using zenonApi.Serialization;
+using zenonApi.Extensions;
 
-namespace zenonApi.Logic.Converters
+namespace zenonApi.Logic.SerializationConverters
 {
   public class LogicVariableAttributeConverter : IZenonSerializationConverter
   {

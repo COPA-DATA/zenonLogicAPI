@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using zenonApi.Core;
+using zenonApi.Serialization;
 
 namespace zenonApi.Logic
 {
@@ -11,11 +11,8 @@ namespace zenonApi.Logic
     {
       get => this.Parent;
     }
-    public override LogicProject Parent { get; protected set; }
-    public override LogicProject Root { get; protected set; }
 
     protected override string NodeName => "variables";
-
     #endregion  
 
     /// <summary>

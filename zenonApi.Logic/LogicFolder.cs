@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using zenonApi.Core;
-using zenonApi.Logic.Converters;
+using zenonApi.Serialization;
+using zenonApi.Logic.SerializationConverters;
 
 namespace zenonApi.Logic
 {
@@ -24,8 +24,6 @@ namespace zenonApi.Logic
     }
 
     #region zenonSerializable impelementation
-    public override ILogicFileContainer Parent { get; protected set; }
-    public override LogicProject Root { get; protected set; }
     protected override string NodeName => "Folder";
     #endregion
 

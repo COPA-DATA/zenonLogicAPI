@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace zenonApi.Core
+namespace zenonApi.Serialization
 {
   [AttributeUsage(AttributeTargets.Property)]
   public class zenonSerializableNodeContentAttribute : Attribute

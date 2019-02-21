@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using zenonApi.Core;
+using zenonApi.Serialization;
 
-namespace zenonApi.Logic
+namespace zenonApi.Logic.Internal
 {
   /// <summary>
   /// Lists all programs, sub-programs and UDFBs of the project.
@@ -22,9 +22,6 @@ namespace zenonApi.Logic
       // For this class, the parent is the same as the root:
       this.Root = parent;
     }
-
-    public override LogicProject Parent { get; protected set; }
-    public override LogicProject Root { get; protected set; }
 
     protected override string NodeName => "programs";
 

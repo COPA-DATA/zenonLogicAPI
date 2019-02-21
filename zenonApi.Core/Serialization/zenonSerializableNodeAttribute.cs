@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace zenonApi.Core
+namespace zenonApi.Serialization
 {
   [AttributeUsage(AttributeTargets.Property)]
   public class zenonSerializableNodeAttribute : Attribute
   {
     public zenonSerializableNodeAttribute(string attributeName)
     {
-      this.PropertyName = attributeName;
+      this.NodeName = attributeName;
     }
 
-    public string PropertyName { get; private set; }
+    public string NodeName { get; private set; }
+    public byte NodeOrder { get; set; }
+    public bool OmitIfNull { get; set; }
   }
 }

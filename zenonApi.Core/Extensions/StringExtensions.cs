@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace zenonApi.Core.Extensions
+namespace zenonApi.Extensions
 {
   public static class StringExtensions
   {

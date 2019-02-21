@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
-using zenonApi.Core;
+using zenonApi.Serialization;
+using zenonApi.Logic.Internal;
 
 namespace zenonApi.Logic
 {
@@ -11,8 +12,6 @@ namespace zenonApi.Logic
     #region zenonSerializable Implementation
     protected override string NodeName => "K5project";
     // TODO: Who holds the logic projects? Nobody? If yes, then leave this to null
-    public override IZenonSerializable Parent { get; protected set; }
-    public override LogicProject Root { get; protected set; }
     #endregion
 
 
