@@ -4,7 +4,7 @@ using System.Text;
 
 namespace zenonApi.Serialization
 {
-  [AttributeUsage(AttributeTargets.Field)]
+  [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
   public class zenonSerializableEnumAttribute : Attribute
   {
     public zenonSerializableEnumAttribute(string name)

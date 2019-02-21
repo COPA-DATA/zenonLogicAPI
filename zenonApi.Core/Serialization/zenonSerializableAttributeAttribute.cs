@@ -2,7 +2,7 @@
 
 namespace zenonApi.Serialization
 {
-  [AttributeUsage(AttributeTargets.Property)]
+  [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
   public class zenonSerializableAttributeAttribute : Attribute
   {
     public zenonSerializableAttributeAttribute(string attributeName)
