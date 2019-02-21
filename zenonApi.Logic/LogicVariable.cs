@@ -1,4 +1,5 @@
 ﻿using zenonApi.Core;
+using zenonApi.Logic.Converters;
 
 namespace zenonApi.Logic
 {
@@ -46,7 +47,7 @@ namespace zenonApi.Logic
     /// Attributes of the variable, seperated by comas.
     /// This attribute is optional.
     /// </summary>
-    [zenonSerializableAttribute("attr")]
+    [zenonSerializableAttribute("attr", Converter = typeof(LogicVariableAttributeConverter))]
     public LogicVariableAttributes Attributes { get; set; } = null;
 
     /// <summary>
