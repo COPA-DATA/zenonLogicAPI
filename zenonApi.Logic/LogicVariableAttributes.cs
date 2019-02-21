@@ -2,9 +2,9 @@
 {
   public class LogicVariableAttributes
   {
-    public bool? In { get; set; } = null;
+    public bool In { get; set; }
 
-    public bool? Out { get; set; } = null;
+    public bool Out { get; set; }
 
     public bool External { get; set; }
 

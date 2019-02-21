@@ -20,7 +20,7 @@ namespace zenonApi.Logic
 
     #region zenonSerializable implementation
     public override LogicProject Parent { get; protected set; }
-    ILogicFileContainer IZenonSerializable<ILogicFileContainer, LogicProject>.Parent => throw new NotImplementedException();
+    ILogicFileContainer IZenonSerializable<ILogicFileContainer, LogicProject>.Parent => null;
     public override LogicProject Root { get; protected set; }
     protected override string NodeName => "Appli";
     #endregion
@@ -35,20 +35,21 @@ namespace zenonApi.Logic
     [zenonSerializableNode("Program")]
     public List<LogicProgram> Programs { get; set; }
 
-    [zenonSerializableNode("FieldBus")]
-    protected object FieldBus { get; set; }
-    [zenonSerializableNode("Binding")]
-    protected object Binding { get; set; }
-    [zenonSerializableNode("Profiles")]
-    protected object Profiles { get; set; }
-    [zenonSerializableNode("IOS")]
-    protected object IOS { get; set; }
-    [zenonSerializableNode("GlobalDefs")]
-    protected object GlobalDefinitions { get; set; }
-    [zenonSerializableNode("Vars")]
-    protected object Variables { get; set; }
-    [zenonSerializableNode("Types")]
-    protected object Types { get; set; }
+
+    //[zenonSerializableNode("FieldBus")]
+    //protected object FieldBus { get; set; }
+    //[zenonSerializableNode("Binding")]
+    //protected object Binding { get; set; }
+    //[zenonSerializableNode("Profiles")]
+    //protected object Profiles { get; set; }
+    //[zenonSerializableNode("IOS")]
+    //protected object IOS { get; set; }
+    //[zenonSerializableNode("GlobalDefs")]
+    //protected object GlobalDefinitions { get; set; }
+    //[zenonSerializableNode("Vars")]
+    //protected object Variables { get; set; }
+    //[zenonSerializableNode("Types")]
+    //protected object Types { get; set; }
     #endregion
   }
 }

@@ -18,6 +18,8 @@ namespace zenonApi.Logic
     public override LogicProject Root { get; protected set; }
     #endregion
 
+
+    #region Specific properties
     /// <summary>
     /// The mandatory version of the K5 project.
     /// </summary>
@@ -43,5 +45,9 @@ namespace zenonApi.Logic
     [Browsable(false)]
     [zenonSerializableNode("programs")]
     internal _LogicPrograms Programs { get; set; }
+
+    [zenonSerializableNode("variables")]
+    public LogicGlobalVariables GlobalVariables { get; protected set; }
+    #endregion
   }
 }

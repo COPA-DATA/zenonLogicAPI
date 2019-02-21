@@ -14,7 +14,7 @@ namespace Tester
       LogicProject proj = LogicProject.Import(test.Element("K5project"));
       LogicFolder folder = proj.ApplicationTree.Folders.First();
       LogicProgram prog = folder.Programs.FirstOrDefault();
-      
+
       var tree = folder.Parent;
 
       XElement testresult = proj.Export();

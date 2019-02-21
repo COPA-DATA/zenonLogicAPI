@@ -24,8 +24,8 @@ namespace zenonApi.Logic
     [zenonSerializableAttribute("dim")]
     public string ArrayDimension { get; set; }
 
-    [zenonSerializableAttribute("attr")]
-    public object Attributes { get; set; }
+    //[zenonSerializableAttribute("attr")]
+    //public object Attributes { get; set; }
 
 
 
