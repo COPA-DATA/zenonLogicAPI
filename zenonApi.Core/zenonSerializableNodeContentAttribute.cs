@@ -8,5 +8,7 @@ namespace zenonApi.Core
   public class zenonSerializableNodeContentAttribute : Attribute
   {
     public zenonSerializableNodeContentAttribute() { }
+
+    public Type Converter { get; set; }
   }
 }

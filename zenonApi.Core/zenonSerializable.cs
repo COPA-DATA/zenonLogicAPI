@@ -28,8 +28,15 @@ namespace zenonApi.Core
       TSelf self = (TSelf)this;
       foreach (var property in this.GetType().GetRuntimeProperties())
       {
+        if (property.GetGetMethod(true) == null)
+        {
+          // No getter, nothing to do
+          continue;
+        }
+
         exportAttribute(current, self, property);
         exportNode(current, self, property);
+        exportNodeContent(current, self, property);
       }
 
       return current;
@@ -91,7 +98,7 @@ namespace zenonApi.Core
         }
         else if (property.PropertyType.IsEnum)
         {
-          // TODO: zenonSerializableEnum
+          // TODO: zenonSerializableEnum? Required at all?
         }
         else if (typeof(IList).IsAssignableFrom(property.PropertyType))
         {
@@ -118,7 +125,57 @@ namespace zenonApi.Core
         }
         else
         {
-          // TODO, non zenonSerializableTypes
+          // Just write the string representation of the property as the value
+          XElement child = new XElement(xmlNode.PropertyName);
+          var value = property.GetValue(source)?.ToString();
+          if (value != null)
+          {
+            child.Value = value;
+          }
+
+          target.Add(child);
+        }
+      }
+    }
+
+
+    private static void exportNodeContent(XElement target, TSelf source, PropertyInfo property)
+    {
+      var xmlAttribute = property.GetCustomAttribute<zenonSerializableNodeContentAttribute>();
+      if (xmlAttribute != null)
+      {
+        // Check if there is an converter for this property
+        if (xmlAttribute.Converter != null)
+        {
+          IZenonSerializationConverter converterInstance = getConverter(xmlAttribute.Converter);
+          // Ensure to call the correct method overload of the converter by using the (object)-cast
+          target.Value = converterInstance.Convert((object)property.GetValue(source));
+        }
+        else
+        {
+          var value = property.GetValue(source);
+          if (value == null)
+          {
+            // If the value is null, we set the content to null too.
+            target.Value = null;
+            return;
+          }
+
+          var valueType = value.GetType();
+          if (valueType.IsEnum)
+          {
+            // Try to find a zenonSerializable attribute to write the correct value
+            var attribute = valueType.GetField(value.ToString()).GetCustomAttribute<zenonSerializableEnumAttribute>();
+            if (attribute != null)
+            {
+              // Set the value from the attribute, otherwise use the default string value (after the outer if-clause)
+              target.SetValue(attribute.Name);
+              return;
+            }
+          }
+
+          string stringValue = property.GetValue(source)?.ToString();
+          target.SetValue(stringValue);
         }
       }
     }
@@ -141,8 +198,15 @@ namespace zenonApi.Core
       // Find all the attributes and properties of the current type for deserialization
       foreach (var property in t.GetRuntimeProperties())
       {
+        if (property.GetSetMethod(true) == null)
+        {
+          // No setter, nothing to do at all
+          continue;
+        }
+
         importAttribute(result, source, property);
         importNode(result, source, property);
+        importNodeContent(result, source, property);
       }
 
       return result;
@@ -173,7 +237,6 @@ namespace zenonApi.Core
 
     private static void importAttribute(TSelf target, XElement sourceXml, PropertyInfo property)
     {
-      // TODO: Add support for zenonSerializableEnum
       var zenonAttribute = property.GetCustomAttribute<zenonSerializableAttributeAttribute>();
       if (zenonAttribute != null)
       {
@@ -210,7 +273,7 @@ namespace zenonApi.Core
 
           // If neither the attribute nor the string name matches, something went wrong
           throw new Exception($"Cannot set value \"{xmlAttribute.Value}\" for {property.PropertyType.Name}, either a "
-            + $"{nameof(zenonSerializableEnumAttribute)} must be set for the enum values or "
+            + $"{nameof(zenonSerializableEnumAttribute)} must be set for the enum fields or "
             + $"the name must exactly match the XML value.");
         }
         else if (typeof(IConvertible).IsAssignableFrom(property.PropertyType))
@@ -220,7 +283,7 @@ namespace zenonApi.Core
         }
         else
         {
-          throw new Exception($"Cannot convert types without a converter, which do not implement {nameof(IConvertible)}.");
+          throw new Exception($"Cannot convert types without an {nameof(IZenonSerializationConverter)}, which do not implement {nameof(IConvertible)}.");
         }
       }
     }
@@ -231,7 +294,7 @@ namespace zenonApi.Core
       var prop = property.GetCustomAttribute<zenonSerializableNodeAttribute>();
       if (prop != null)
       {
-        var xmlNodes = sourceXml.Elements(prop.PropertyName).OfType<XNode>().ToList();
+        var xmlNodes = sourceXml.Elements(prop.PropertyName).OfType<XNode>().Cast<XElement>().ToList();
 
         // Currently we only support deserializing to a concrete List types, not IEnumerable or similar, maybe in the future
         if (typeof(IList).IsAssignableFrom(property.PropertyType))
@@ -281,6 +344,73 @@ namespace zenonApi.Core
 
             property.SetValue(target, child);
           }
+        }
+        else if (xmlNodes.Count == 1)
+        {
+          // TODO: There are no converters yet for this case
+          // Just try to deserialize the value directly
+          if (typeof(IConvertible).IsAssignableFrom(property.PropertyType))
+          {
+            var value = Convert.ChangeType(xmlNodes.First().Value, property.PropertyType);
+            property.SetValue(target, value);
+          }
+          else
+          {
+            throw new Exception($"Cannot convert types without an {nameof(IZenonSerializationConverter)}, which do not implement {nameof(IConvertible)}.");
+          }
+        }
+      }
+    }
+
+
+    private static void importNodeContent(TSelf target, XElement sourceXml, PropertyInfo property)
+    {
+      var zenonAttribute = property.GetCustomAttribute<zenonSerializableNodeContentAttribute>();
+      if (zenonAttribute != null)
+      {
+        if (sourceXml.Value == null)
+        {
+          return;
+        }
+
+        // Check if there is a converter
+        if (zenonAttribute.Converter != null)
+        {
+          IZenonSerializationConverter converterInstance = getConverter(zenonAttribute.Converter);
+          property.SetValue(target, converterInstance.Convert(sourceXml.Value));
+        }
+        else if (property.PropertyType.IsEnum)
+        {
+          // If no converter is registered, try to convert it manually
+          // TODO: Special types like guids would be nice to consider here
+
+          foreach (var value in Enum.GetValues(property.PropertyType))
+          {
+            var field = property.PropertyType.GetField(value.ToString());
+
+            // Try to match the enum value either by the attribute or the string name
+            var attribute = field.GetCustomAttribute<zenonSerializableEnumAttribute>();
+            if ((attribute != null && sourceXml.Value == attribute.Name)
+              || sourceXml.Value == field.Name)
+            {
+              property.SetValue(target, value);
+              return;
+            }
+          }
+
+          // If neither the attribute nor the string name matches, something went wrong
+          throw new Exception($"Cannot set value \"{sourceXml.Value}\" for {property.PropertyType.Name}, either a "
+            + $"{nameof(zenonSerializableEnumAttribute)} must be set for the enum fields or "
+            + $"the name must exactly match the XML value.");
+        }
+        else if (typeof(IConvertible).IsAssignableFrom(property.PropertyType))
+        {
+          var converted = Convert.ChangeType(sourceXml.Value, property.PropertyType);
+          property.SetValue(target, converted);
+        }
+        else
+        {
+          throw new Exception($"Cannot convert types without an {nameof(IZenonSerializationConverter)}, which do not implement {nameof(IConvertible)}.");
         }
       }
     }
