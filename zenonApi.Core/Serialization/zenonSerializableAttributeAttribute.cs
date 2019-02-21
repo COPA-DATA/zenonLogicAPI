@@ -12,7 +12,7 @@ namespace zenonApi.Serialization
 
     public string AttributeName { get; private set; }
     public byte AttributeOrder { get; set; }
-    public bool OmitIfNull { get; set; }
+    public bool OmitIfNull { get; set; } = true;
 
     private Type converter = null;
     public Type Converter

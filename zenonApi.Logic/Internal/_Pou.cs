@@ -77,7 +77,7 @@ namespace zenonApi.Logic.Internal
     /// <summary>
     /// Provides a multiline description attached to a program.
     /// </summary>
-    [zenonSerializableNode("pounote", OmitIfNull = true)]
+    [zenonSerializableNode("pounote")]
     public string MultiLineDescription { get; set; }
 
     [zenonSerializableNode("vargroup")]
@@ -93,13 +93,13 @@ namespace zenonApi.Logic.Internal
     /// Contains pre-compiled code of an user defined function block imported
     /// without its source code.
     /// </summary>
-    [zenonSerializableNode("pc5code", OmitIfNull = true)]
+    [zenonSerializableNode("pc5code")]
     public string PrecompiledUdfbCode { get; set; }
 
     /// <summary>
     /// Contains a piece of ST/IL source code.
     /// </summary>
-    [zenonSerializableNode("sourceSTIL", OmitIfNull = true)]
+    [zenonSerializableNode("sourceSTIL")]
     public string SourceCode { get; set; }
 
     // TODO sourceFBD
@@ -112,13 +112,13 @@ namespace zenonApi.Logic.Internal
     /// Undocumented zenon Logic node. Contains columns displayed in the
     /// Workbench and further information.
     /// </summary>
-    [zenonSerializableNode("srcdic", OmitIfNull = true)]
+    [zenonSerializableNode("srcdic")]
     public string SourceDictionary { get; set; }
 
     /// <summary>
     /// Undocumented zenon Logic node.
     /// </summary>
-    [zenonSerializableNode("cryptcode", OmitIfNull = true)]
+    [zenonSerializableNode("cryptcode")]
     public string CryptCode { get; set; }
     #endregion
   }

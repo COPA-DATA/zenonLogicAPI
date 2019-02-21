@@ -7,6 +7,7 @@ using System.Collections;
 
 // TODO: Add converters for zenonSerializableNode
 // TODO: Add order considerations for the items
+// Nullable
 
 namespace zenonApi.Serialization
 {
@@ -27,43 +28,69 @@ namespace zenonApi.Serialization
       // Create a node for the current element, check for all properties with a zenonSerializableAttribute-
       // or zenonSerializableNode-Attribute and append them
       XElement current = new XElement(this.NodeName);
-
       TSelf self = (TSelf)this;
-      foreach (var property in this.GetType().GetRuntimeProperties())
-      {
-        if (property.GetGetMethod(true) == null)
-        {
-          // No getter, nothing to do
-          continue;
-        }
 
-        exportAttribute(current, self, property);
-        exportNode(current, self, property);
-        exportNodeContent(current, self, property);
+      // Get all the properties together with their attributes in tuples
+      var properties = this.GetType().GetRuntimeProperties().Select(x => (property: x, attributes: x.GetCustomAttributes()));
+
+      // Group the tuples by the required attribute types and order them if required by their specified serialization order
+      var attributesDict = properties
+        .Select(x => (property: x.property, attribute: x.attributes.OfType<zenonSerializableAttributeAttribute>().FirstOrDefault()))
+        .Where(x => x.attribute != null)
+        .OrderBy(x => x.attribute.AttributeOrder);
+
+      var nodesDict = properties
+        .Select(x => (property: x.property, attribute: x.attributes.OfType<zenonSerializableNodeAttribute>().FirstOrDefault()))
+        .Where(x => x.attribute != null)
+        .OrderBy(x => x.attribute.NodeOrder);
+
+      var contentsDict = properties
+        .Select(x => (property: x.property, attribute: x.attributes.OfType<zenonSerializableNodeContentAttribute>().FirstOrDefault()))
+        .Where(x => x.attribute != null);
+
+      // Now simply create everything according to the preselection
+      foreach (var attributeDict in attributesDict)
+      {
+        exportAttribute(current, self, attributeDict.property, attributeDict.attribute);
+      }
+
+      foreach (var nodeDict in nodesDict)
+      {
+        exportNode(current, self, nodeDict.property, nodeDict.attribute);
+      }
+
+      foreach (var contentDict in contentsDict)
+      {
+        exportNodeContent(current, self, contentDict.property, contentDict.attribute);
       }
 
       return current;
     }
 
 
-    private static void exportAttribute(XElement target, TSelf source, PropertyInfo property)
+    private static void exportAttribute(XElement target, TSelf source, PropertyInfo property, zenonSerializableAttributeAttribute attributeAttribute)
     {
-      var xmlAttribute = property.GetCustomAttribute<zenonSerializableAttributeAttribute>();
-      if (xmlAttribute != null)
+      if (property.GetGetMethod(true) == null)
+      {
+        // No getter, nothing to do
+        return;
+      }
+
+      if (attributeAttribute != null)
       {
         object sourceValue = property.GetValue(source);
-        if (xmlAttribute.OmitIfNull && sourceValue == null)
+        if (attributeAttribute.OmitIfNull && sourceValue == null)
         {
           // Omit the whole node
           return;
         }
 
         // Check if there is an converter for this property
-        if (xmlAttribute.Converter != null)
+        if (attributeAttribute.Converter != null)
         {
-          IZenonSerializationConverter converterInstance = getConverter(xmlAttribute.Converter);
+          IZenonSerializationConverter converterInstance = getConverter(attributeAttribute.Converter);
           // Ensure to call the correct method overload of the converter by using the (object)-cast
-          target.SetAttributeValue(xmlAttribute.AttributeName, converterInstance.Convert((object)property.GetValue(source)));
+          target.SetAttributeValue(attributeAttribute.AttributeName, converterInstance.Convert((object)property.GetValue(source)));
         }
         else
         {
@@ -82,25 +109,30 @@ namespace zenonApi.Serialization
             if (attribute != null)
             {
               // Set the value from the attribute, otherwise use the default string value (after the outer if-clause)
-              target.SetAttributeValue(xmlAttribute.AttributeName, attribute.Name);
+              target.SetAttributeValue(attributeAttribute.AttributeName, attribute.Name);
               return;
             }
           }
-          
+
           string stringValue = property.GetValue(source)?.ToString();
-          target.SetAttributeValue(xmlAttribute.AttributeName, stringValue);
+          target.SetAttributeValue(attributeAttribute.AttributeName, stringValue);
         }
       }
     }
 
 
-    private static void exportNode(XElement target, TSelf source, PropertyInfo property)
+    private static void exportNode(XElement target, TSelf source, PropertyInfo property, zenonSerializableNodeAttribute nodeAttribute)
     {
-      var xmlNode = property.GetCustomAttribute<zenonSerializableNodeAttribute>();
-      if (xmlNode != null)
+      if (property.GetGetMethod(true) == null)
+      {
+        // No getter, nothing to do
+        return;
+      }
+
+      if (nodeAttribute != null)
       {
         object sourceValue = property.GetValue(source);
-        if (xmlNode.OmitIfNull && sourceValue == null)
+        if (nodeAttribute.OmitIfNull && sourceValue == null)
         {
           // Omit the whole node
           return;
@@ -143,7 +175,7 @@ namespace zenonApi.Serialization
         else
         {
           // Just write the string representation of the property as the value
-          XElement child = new XElement(xmlNode.NodeName);
+          XElement child = new XElement(nodeAttribute.NodeName);
           var value = property.GetValue(source)?.ToString();
           if (value != null)
           {
@@ -156,10 +188,15 @@ namespace zenonApi.Serialization
     }
 
 
-    private static void exportNodeContent(XElement target, TSelf source, PropertyInfo property)
+    private static void exportNodeContent(XElement target, TSelf source, PropertyInfo property, zenonSerializableNodeContentAttribute contentAttribute)
     {
-      var xmlAttribute = property.GetCustomAttribute<zenonSerializableNodeContentAttribute>();
-      if (xmlAttribute != null)
+      if (property.GetGetMethod(true) == null)
+      {
+        // No getter, nothing to do
+        return;
+      }
+
+      if (contentAttribute != null)
       {
         object sourceValue = property.GetValue(source);
         if (sourceValue == null)
@@ -168,9 +205,9 @@ namespace zenonApi.Serialization
         }
 
         // Check if there is an converter for this property
-        if (xmlAttribute.Converter != null)
+        if (contentAttribute.Converter != null)
         {
-          IZenonSerializationConverter converterInstance = getConverter(xmlAttribute.Converter);
+          IZenonSerializationConverter converterInstance = getConverter(contentAttribute.Converter);
           // Ensure to call the correct method overload of the converter by using the (object)-cast
           target.Value = converterInstance.Convert((object)property.GetValue(source));
         }

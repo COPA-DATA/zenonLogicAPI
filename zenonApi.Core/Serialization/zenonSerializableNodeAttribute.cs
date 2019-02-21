@@ -14,6 +14,6 @@ namespace zenonApi.Serialization
 
     public string NodeName { get; private set; }
     public byte NodeOrder { get; set; }
-    public bool OmitIfNull { get; set; }
+    public bool OmitIfNull { get; set; } = true;
   }
 }
