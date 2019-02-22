@@ -4,25 +4,40 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Reflection;
 using System.Collections;
+using zenonApi.Collections;
 
 // TODO: Add converters for zenonSerializableNode
-// TODO: Add order considerations for the items
-// Nullable
+// TODO: Nullables to be allowed
 
 namespace zenonApi.Serialization
 {
-  public abstract class zenonSerializable<TSelf, TParent, TRoot> : IZenonSerializable<TParent, TRoot>
+  public abstract class zenonSerializable<TSelf, TParent, TRoot> : ContainerAwareCollectionItem<TSelf>, IZenonSerializable<TParent, TRoot>
     where TSelf : zenonSerializable<TSelf, TParent, TRoot>
     where TParent : class, IZenonSerializable
     where TRoot : class, IZenonSerializable
   {
     protected abstract string NodeName { get; }
-    public virtual TParent Parent { get; protected set; }
-    public virtual TRoot Root { get; protected set; }
+    public virtual TParent Parent
+    {
+      get => this.ContainerItemParent as TParent;
+      protected set
+      {
+        this.ContainerItemParent = value;
+      }
+    }
+
+    public virtual TRoot Root
+    {
+      get => this.ContainerItemRoot as TRoot;
+      protected set
+      {
+        this.ContainerItemRoot = value;
+      }
+    }
 
     static Dictionary<Type, IZenonSerializationConverter> converterCache = new Dictionary<Type, IZenonSerializationConverter>();
 
-
+    #region Export to XElement
     public virtual XElement Export()
     {
       // Create a node for the current element, check for all properties with a zenonSerializableAttribute-
@@ -239,8 +254,10 @@ namespace zenonApi.Serialization
         }
       }
     }
+    #endregion
 
 
+    #region Import from XElement
     public static TSelf Import(XElement source, TParent parent = null, TRoot root = null)
     {
       // Create an instance of the current type
@@ -474,5 +491,6 @@ namespace zenonApi.Serialization
         }
       }
     }
+    #endregion
   }
 }

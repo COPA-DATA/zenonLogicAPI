@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using zenonApi.Collections;
 using zenonApi.Logic.SerializationConverters;
 using zenonApi.Serialization;
 
@@ -44,7 +44,7 @@ namespace zenonApi.Logic
     /// Attributes of the variable, seperated by comas.
     /// This attribute is optional.
     /// </summary>
-    [zenonSerializableAttribute("attr", AttributeOrder = 4,Converter = typeof(LogicVariableAttributeConverter))]
+    [zenonSerializableAttribute("attr", AttributeOrder = 4, Converter = typeof(LogicVariableAttributeConverter))]
     public LogicVariableAttributes Attributes { get; set; }
 
     /// <summary>
@@ -59,6 +59,6 @@ namespace zenonApi.Logic
     /// Indicates additional information for the variable it belongs to.
     /// </summary>
     [zenonSerializableNode("varinfo", NodeOrder = 6)]
-    public List<LogicVariableInfo> VariableInfos { get; set; }
+    public ContainerAwareObservableCollection<LogicVariableInfo> VariableInfos { get; set; }
   }
 }

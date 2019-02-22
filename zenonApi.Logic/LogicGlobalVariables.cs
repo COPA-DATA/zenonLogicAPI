@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using zenonApi.Collections;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic
@@ -20,7 +20,6 @@ namespace zenonApi.Logic
     /// There is one variable group for each listed group.
     /// </summary>
     [zenonSerializableNode("vargroup", NodeOrder = 0)]
-    public List<LogicVariableGroup> VariableGroups { get; protected set; }
-
+    public ContainerAwareObservableCollection<LogicVariableGroup> VariableGroups { get; protected set; }
   }
 }

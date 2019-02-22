@@ -40,7 +40,7 @@ namespace zenonApi.Logic
     /// </summary>
     [Browsable(false)]
     [zenonSerializableNode("programs", NodeOrder = 10)]
-    internal _LogicPrograms Programs { get; set; }
+    internal _LogicProgramsCollection Programs { get; set; }
 
     /// <summary>
     /// Contains the logical folder structure of the programs and UDFBs.

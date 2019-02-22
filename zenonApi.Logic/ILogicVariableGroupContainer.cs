@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using zenonApi.Serialization;
+﻿using zenonApi.Serialization;
+using zenonApi.Collections;
 
 namespace zenonApi.Logic
 {
   public interface ILogicVariableGroupContainer : IZenonSerializable<IZenonSerializable, LogicProject>
   {
-    List<LogicVariableGroup> VariableGroups { get; }
+    ContainerAwareObservableCollection<LogicVariableGroup> VariableGroups { get; }
   }
 }

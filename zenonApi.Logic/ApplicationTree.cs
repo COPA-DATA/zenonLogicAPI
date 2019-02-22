@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using zenonApi.Serialization;
 using zenonApi.Logic.SerializationConverters;
+using zenonApi.Collections;
 
 namespace zenonApi.Logic
 {
@@ -20,10 +21,10 @@ namespace zenonApi.Logic
     public bool Expand { get; protected set; } = true;
 
     [zenonSerializableNode("Folder")]
-    public List<LogicFolder> Folders { get; set; }
+    public ContainerAwareObservableCollection<LogicFolder> Folders { get; set; }
 
     [zenonSerializableNode("Program")]
-    public List<LogicProgram> Programs { get; set; }
+    public ContainerAwareObservableCollection<LogicProgram> Programs { get; set; }
 
 
     //[zenonSerializableNode("FieldBus")]

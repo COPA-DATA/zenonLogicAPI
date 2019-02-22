@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using zenonApi.Collections;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic
@@ -27,6 +28,6 @@ namespace zenonApi.Logic
     /// List of variables of the group.
     /// </summary>
     [zenonSerializableNode("var", NodeOrder = 2)]
-    public List<LogicVariable> Variables { get; set; } 
+    public ContainerAwareObservableCollection<LogicVariable> Variables { get; set; } 
   }
 }

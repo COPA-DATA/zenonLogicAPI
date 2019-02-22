@@ -1,38 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using zenonApi.Serialization;
+﻿using zenonApi.Serialization;
 using zenonApi.Logic.SerializationConverters;
+using zenonApi.Collections;
 
 namespace zenonApi.Logic
 {
   public class LogicFolder : zenonSerializable<LogicFolder, ILogicFileContainer, LogicProject>, ILogicFileContainer
   {
-    private LogicFolder() { }
-
-    internal LogicFolder(ApplicationTree parent)
-    {
-      this.Parent = parent;
-      this.Root = parent.Root;
-    }
-
-    internal LogicFolder(LogicFolder parent)
-    {
-      this.Parent = parent;
-      this.Root = parent.Root;
-    }
-
     #region zenonSerializable impelementation
     protected override string NodeName => "Folder";
     #endregion
 
     #region Specific properties
     [zenonSerializableNode("Folder")]
-    public List<LogicFolder> Folders { get; protected set; }
+    public ContainerAwareObservableCollection<LogicFolder> Folders { get; protected set; }
 
     [zenonSerializableNode("Program")]
-    public List<LogicProgram> Programs { get; protected set; }
+    public ContainerAwareObservableCollection<LogicProgram> Programs { get; protected set; }
 
     [zenonSerializableAttribute("Expand", Converter = typeof(YesNoConverter))]
     protected bool Expand { get; set; } = true;

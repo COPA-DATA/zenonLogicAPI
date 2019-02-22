@@ -20,6 +20,9 @@ namespace Tester
 
       var tree = folder.Parent;
 
+      var pouTest = proj.ApplicationTree.Folders[2].Programs.First();
+      pouTest.Remove();
+
       XElement testresult = proj.Export();
     }
   }
