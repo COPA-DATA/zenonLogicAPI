@@ -65,12 +65,6 @@ namespace zenonApi.Collections
 
 
     #region Extended protected functionality, for deriving classes
-    protected virtual void OnItemPropertyChanged(object sender, PropertyChangedEventArgs args)
-    {
-      this.OnPropertyChanged(new PropertyChangedEventArgs("Index[]"));
-    }
-
-
     /// <summary>
     /// Inserts the elements of a collection into the current list at the specified index.
     /// </summary>
