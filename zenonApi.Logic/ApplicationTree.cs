@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using zenonApi.Serialization;
+﻿using zenonApi.Collections;
 using zenonApi.Logic.SerializationConverters;
-using zenonApi.Collections;
+using zenonApi.Serialization;
 
 namespace zenonApi.Logic
 {

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Xml.Linq;
-
 using zenonApi.Logic;
-using zenonApi.Extensions;
 
 namespace Tester
 {

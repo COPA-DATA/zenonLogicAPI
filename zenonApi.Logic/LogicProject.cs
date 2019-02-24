@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
-using zenonApi.Serialization;
 using zenonApi.Logic.Internal;
+using zenonApi.Serialization;
 
 namespace zenonApi.Logic
 {
@@ -12,7 +12,6 @@ namespace zenonApi.Logic
     #region zenonSerializable Implementation
     protected override string NodeName => "K5project";
     #endregion
-
 
     #region Specific properties
 
@@ -27,6 +26,12 @@ namespace zenonApi.Logic
     /// </summary>
     [zenonSerializableAttribute("path", AttributeOrder = 1)]
     public string Path { get; protected set; }
+
+    /// <summary>
+    /// The tag groups all the defined data types.
+    /// </summary>
+    //[zenonSerializableNode("types", NodeOrder = 4)]
+    //public LogicDataTypesCollection DataTypes { get; set; }
 
     /// <summary>
     /// This tag groups all the global scope variable groups of the project.
