@@ -27,9 +27,9 @@ namespace zenonApi.Logic
     [zenonSerializableAttribute("path", AttributeOrder = 1)]
     public string Path { get; protected set; }
 
-    /// <summary>
-    /// The tag groups all the defined data types.
-    /// </summary>
+    ///// <summary>
+    ///// The tag groups all the defined data types.
+    ///// </summary>
     //[zenonSerializableNode("types", NodeOrder = 4)]
     //public LogicDataTypesCollection DataTypes { get; set; }
 

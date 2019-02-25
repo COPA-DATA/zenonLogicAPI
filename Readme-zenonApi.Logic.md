@@ -1,5 +1,14 @@
 # zenonApi.Logic
 
+## Short-Term Roadmap
+- [ ] Refactor the serializer:
+  - [ ] The NodeName property was redundant and was removed
+  - [ ] Dictionaries can be serialized
+  - [ ] Support Converters for zenonSerializableNodeContent
+  - [ ] Support Converters for zenonSerializableNodes
+  - [ ] Do we really need the "Parent" property everywhere?
+        Shouldn't we use Parents only for file structures etc?
+
 ## Long-Term Roadmap
 - [ ] Map the K5Project tree completely
 - [ ] Copy the entire documentation from the K5Help.xml to documentation tags in

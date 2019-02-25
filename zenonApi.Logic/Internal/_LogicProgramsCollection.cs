@@ -1,4 +1,5 @@
-﻿using zenonApi.Collections;
+﻿using System.ComponentModel;
+using zenonApi.Collections;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic.Internal
