@@ -6,7 +6,7 @@ namespace zenonApi.Logic
   public class LogicDataType : zenonSerializable<LogicDataType, LogicDataTypesCollection, LogicProject>
   {
     #region zenonSerializable Implementation
-    protected override string NodeName => "type";
+    public override string NodeName => "type";
     #endregion
 
     #region Specific properties

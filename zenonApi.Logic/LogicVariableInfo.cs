@@ -5,7 +5,7 @@ namespace zenonApi.Logic
   //TODO talk with StefanH about this class, the values are not clear for me
   public class LogicVariableInfo : zenonSerializable<LogicVariableInfo, LogicVariable, LogicProject>
   {
-    protected override string NodeName => "varinfo";
+    public override string NodeName => "varinfo";
 
     /// <summary>
     /// Type of information contained in the Data attribute.

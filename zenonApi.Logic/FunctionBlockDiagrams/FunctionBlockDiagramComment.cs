@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using zenonApi.Serialization;
+﻿using zenonApi.Serialization;
 
 namespace zenonApi.Logic.FunctionBlockDiagrams
 {
@@ -10,7 +7,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
   /// </summary>
   public class FunctionBlockDiagramComment : FunctionBlockDiagramObject<FunctionBlockDiagramComment>
   {
-    protected override string NodeName => "FBDcomment";
+    public override string NodeName => "FBDcomment";
 
     /// <summary>
     /// The formatted text content of the comment box.

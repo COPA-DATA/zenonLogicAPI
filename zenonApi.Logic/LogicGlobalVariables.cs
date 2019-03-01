@@ -3,16 +3,10 @@ using zenonApi.Serialization;
 
 namespace zenonApi.Logic
 {
-  public class LogicGlobalVariables : zenonSerializable<LogicGlobalVariables, LogicProject, LogicProject>, ILogicVariableGroupContainer
+  public class LogicGlobalVariables : zenonSerializable<LogicGlobalVariables, LogicProject, LogicProject>
   {
     #region zenonSerializable Implementation
-
-    IZenonSerializable IZenonSerializable<IZenonSerializable, LogicProject>.Parent
-    {
-      get => this.Parent;
-    }
-
-    protected override string NodeName => "variables";
+    public override string NodeName => "variables";
     #endregion  
 
     /// <summary>
@@ -20,6 +14,6 @@ namespace zenonApi.Logic
     /// There is one variable group for each listed group.
     /// </summary>
     [zenonSerializableNode("vargroup", NodeOrder = 0)]
-    public ContainerAwareObservableCollection<LogicVariableGroup> VariableGroups { get; protected set; }
+    public ExtendedObservableCollection<LogicVariableGroup> VariableGroups { get; protected set; }
   }
 }

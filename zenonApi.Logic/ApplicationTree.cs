@@ -8,9 +8,12 @@ namespace zenonApi.Logic
   {
     private ApplicationTree() { }
 
-    #region zenonSerializable implementation
-    ILogicFileContainer IZenonSerializable<ILogicFileContainer, LogicProject>.Parent => null;
-    protected override string NodeName => "Appli";
+    #region interface implementation
+    public override string NodeName => "Appli";
+    ILogicFileContainer IZenonSerializable<ILogicFileContainer, ILogicFileContainer, LogicProject>.Parent
+    {
+      get => null; // No more parent file container, this is the logical root for the file structure
+    }
     #endregion
 
     #region Specific properties
@@ -22,6 +25,7 @@ namespace zenonApi.Logic
 
     [zenonSerializableNode("Program")]
     public ContainerAwareObservableCollection<LogicProgram> Programs { get; set; }
+
 
 
     //[zenonSerializableNode("FieldBus")]

@@ -10,7 +10,7 @@ namespace zenonApi.Logic
   public class LogicProject : zenonSerializable<LogicProject, IZenonSerializable, LogicProject>
   {
     #region zenonSerializable Implementation
-    protected override string NodeName => "K5project";
+    public override string NodeName => "K5project";
     #endregion
 
     #region Specific properties

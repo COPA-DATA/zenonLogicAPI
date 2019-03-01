@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using zenonApi.Serialization;
+﻿using zenonApi.Serialization;
 
 namespace zenonApi.Logic.FunctionBlockDiagrams
 {
@@ -10,7 +7,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
   /// </summary>
   public class FunctionBlockDiagramBox : FunctionBlockDiagramObject<FunctionBlockDiagramBox>
   {
-    protected override string NodeName => "FBDbox";
+    public override string NodeName => "FBDbox";
 
     /// <summary>
     /// The number of input pins, which is mandatory.

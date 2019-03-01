@@ -7,7 +7,7 @@ namespace zenonApi.Logic
   public class LogicFolder : zenonSerializable<LogicFolder, ILogicFileContainer, LogicProject>, ILogicFileContainer
   {
     #region zenonSerializable impelementation
-    protected override string NodeName => "Folder";
+    public override string NodeName => "Folder";
     #endregion
 
     #region Specific properties

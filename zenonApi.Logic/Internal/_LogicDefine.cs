@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using zenonApi.Serialization;
+﻿using zenonApi.Serialization;
 
 namespace zenonApi.Logic.Internal
 {
@@ -14,7 +11,7 @@ namespace zenonApi.Logic.Internal
     public override _Pou Parent { get; protected set; }
     public override LogicProject Root { get; protected set; }
 
-    protected override string NodeName => "defines";
+    public override string NodeName => "defines";
     #endregion
 
     /// <summary>

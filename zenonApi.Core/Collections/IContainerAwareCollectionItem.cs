@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections;
 
 namespace zenonApi.Collections
 {
-  public interface IContainerAwareCollectionItem<TParent, TRoot>
+  public interface IContainerAwareCollectionItem
   {
-    TParent Parent { get; set; }
-    TRoot Root { get; set; }
+    IList ItemContainer { get; set; }
+    object ContainerItemParent { get; set; }
+    object ContainerItemRoot { get; set; }
+
+    void Remove();
   }
 }

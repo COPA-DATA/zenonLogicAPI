@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using zenonApi.Serialization;
+﻿using zenonApi.Serialization;
 
 namespace zenonApi.Logic.FunctionBlockDiagrams
 {
@@ -10,7 +7,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
   /// </summary>
   public class FunctionBlockDiagramCorner : zenonSerializable<FunctionBlockDiagramCorner, FunctionBlockDiagramDefinition, LogicProject>
   {
-    protected override string NodeName => "FBDcorner";
+    public override string NodeName => "FBDcorner";
 
     /// <summary>
     /// The ID of the FBD object, which is mandatory.

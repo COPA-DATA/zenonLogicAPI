@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
-using zenonApi.Collections;
+﻿using zenonApi.Collections;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic
 {
-  public class LogicVariableGroup : zenonSerializable<LogicVariableGroup, ILogicVariableGroupContainer, LogicProject>
+  public class LogicVariableGroup : zenonSerializable<LogicVariableGroup>
   {
     #region zenonSerializable Implementation
-    protected override string NodeName => "vargroup";
+    public override string NodeName => "vargroup";
     #endregion  
 
     /// <summary>
@@ -28,6 +27,6 @@ namespace zenonApi.Logic
     /// List of variables of the group.
     /// </summary>
     [zenonSerializableNode("var", NodeOrder = 2)]
-    public ContainerAwareObservableCollection<LogicVariable> Variables { get; set; } 
+    public ExtendedObservableCollection<LogicVariable> Variables { get; set; }
   }
 }

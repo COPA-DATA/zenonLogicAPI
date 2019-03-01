@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using zenonApi.Serialization;
+﻿using zenonApi.Serialization;
 
 namespace zenonApi.Logic.FunctionBlockDiagrams
 {
@@ -10,7 +7,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
   /// </summary>
   public class FunctionBlockDiagramContact : FunctionBlockDiagramObject<FunctionBlockDiagramContact>
   {
-    protected override string NodeName => "FBDcontact";
+    public override string NodeName => "FBDcontact";
 
     /// <summary>
     /// The kind of a contact in a FBD diagram.

@@ -7,7 +7,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
   /// </summary>
   public class FunctionBlockDiagramNetworkBreak : zenonSerializable<FunctionBlockDiagramNetworkBreak, FunctionBlockDiagramDefinition, LogicProject>
   {
-    protected override string NodeName => "FBDbreak";
+    public override string NodeName => "FBDbreak";
 
     /// <summary>
     /// The ID of the FBD object, which is mandatory.

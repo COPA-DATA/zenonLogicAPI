@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using zenonApi.Serialization;
+﻿using zenonApi.Serialization;
 
 namespace zenonApi.Logic.FunctionBlockDiagrams
 {
@@ -10,7 +7,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
   /// </summary>
   public class FunctionBlockDiagramLinePoint : zenonSerializable<FunctionBlockDiagramLinePoint, FunctionBlockDiagramLine, LogicProject>
   {
-    protected override string NodeName => "FBDlinepoint";
+    public override string NodeName => "FBDlinepoint";
 
     /// <summary>
     /// The X coordinate in grid units (mandatory).

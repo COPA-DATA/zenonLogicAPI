@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using zenonApi.Serialization;
+﻿using zenonApi.Serialization;
 using zenonApi.Collections;
-using System.ComponentModel;
 using zenonApi.Logic.FunctionBlockDiagrams;
 
 namespace zenonApi.Logic.Internal
@@ -10,7 +8,7 @@ namespace zenonApi.Logic.Internal
   /// Represents a program, sub-program or UDFB. This class is internal and not
   /// meant to be used directly.
   /// </summary>
-  internal class _Pou : zenonSerializable<_Pou, _LogicProgramsCollection, LogicProject>, ILogicVariableGroupContainer, ILogicProgram
+  internal class _Pou : zenonSerializable<_Pou, _LogicProgramsCollection, LogicProject>, ILogicProgram
   {
     /// <summary>
     /// Internal default constructor for serialization.
@@ -37,8 +35,7 @@ namespace zenonApi.Logic.Internal
 
 
     #region zenonSerializable implementation
-    IZenonSerializable IZenonSerializable<IZenonSerializable, LogicProject>.Parent => this.Parent;
-    protected override string NodeName => "pou";
+    public override string NodeName => "pou";
     #endregion
 
     #region Specific properties
@@ -105,7 +102,7 @@ namespace zenonApi.Logic.Internal
     /// Groups variables of the same variable group.
     /// </summary>
     [zenonSerializableNode("vargroup", NodeOrder = 1)]
-    public ContainerAwareObservableCollection<LogicVariableGroup> VariableGroups { get; set; }
+    public ExtendedObservableCollection<LogicVariableGroup> VariableGroups { get; set; }
 
     /// <summary>
     /// Describes a group definition.

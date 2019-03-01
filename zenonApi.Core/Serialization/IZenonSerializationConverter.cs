@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace zenonApi.Serialization
+﻿namespace zenonApi.Serialization
 {
   public interface IZenonSerializationConverter
   {

@@ -6,9 +6,9 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
   /// <summary>
   /// Describes a Function Block Diagram.
   /// </summary>
-  public class FunctionBlockDiagramDefinition : zenonSerializable<FunctionBlockDiagramDefinition, ILogicProgram, LogicProject>
+  public class FunctionBlockDiagramDefinition : zenonSerializable<FunctionBlockDiagramDefinition>
   {
-    protected override string NodeName => "sourceFBD";
+    public override string NodeName => "sourceFBD";
 
     #region Serializable Attributes
     /// <summary>
@@ -47,67 +47,67 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
     /// Contains the "variable" boxes in a FBD diagram.
     /// </summary>
     [zenonSerializableNode("FBDvarbox", NodeOrder = 0)]
-    public ContainerAwareObservableCollection<FunctionBlockDiagramVariableBox> VariableBoxes { get; set; }
+    public ExtendedObservableCollection<FunctionBlockDiagramVariableBox> VariableBoxes { get; set; }
 
     /// <summary>
     /// Contains the "comment" boxes in a FBD diagram.
     /// </summary>
     [zenonSerializableNode("FBDcomment", NodeOrder = 1)]
-    public ContainerAwareObservableCollection<FunctionBlockDiagramComment> CommentBoxes { get; set; }
+    public ExtendedObservableCollection<FunctionBlockDiagramComment> CommentBoxes { get; set; }
 
     /// <summary>
     /// Contains the "network break" separation lines in a FBD diagram.
     /// </summary>
     [zenonSerializableNode("FBDbreak", NodeOrder = 2)]
-    public ContainerAwareObservableCollection<FunctionBlockDiagramNetworkBreak> NetworkBreaks { get; set; }
+    public ExtendedObservableCollection<FunctionBlockDiagramNetworkBreak> NetworkBreaks { get; set; }
 
     /// <summary>
     /// Contains functions or FB boxes in a FBD diagram.
     /// </summary>
     [zenonSerializableNode("FBDbox", NodeOrder = 3)]
-    public ContainerAwareObservableCollection<FunctionBlockDiagramBox> Boxes { get; set; }
+    public ExtendedObservableCollection<FunctionBlockDiagramBox> Boxes { get; set; }
 
     /// <summary>
     /// Contains coils in a function block diagram.
     /// </summary>
     [zenonSerializableNode("FBDcontact", NodeOrder = 4)]
-    public ContainerAwareObservableCollection<FunctionBlockDiagramContact> Contacts { get; set; }
+    public ExtendedObservableCollection<FunctionBlockDiagramContact> Contacts { get; set; }
 
     /// <summary>
     /// Contains coils in a function block diagram.
     /// </summary>
     [zenonSerializableNode("FBDcoil", NodeOrder = 5)]
-    public ContainerAwareObservableCollection<FunctionBlockDiagramCoil> Coils { get; set; }
+    public ExtendedObservableCollection<FunctionBlockDiagramCoil> Coils { get; set; }
 
     /// <summary>
     /// Contains vertical bars (rails) in a FBD diagram.
     /// </summary>
     [zenonSerializableNode("FBDvrail", NodeOrder = 6)]
-    public ContainerAwareObservableCollection<FunctionBlockDiagramVerticalRail> VerticalRails { get; set; }
+    public ExtendedObservableCollection<FunctionBlockDiagramVerticalRail> VerticalRails { get; set; }
 
     /// <summary>
     /// Contains labels of the FBD diagram.
     /// </summary>
     [zenonSerializableNode("FBDlabel", NodeOrder = 7)]
-    public ContainerAwareObservableCollection<FunctionBlockDiagramLabel> Labels { get; set; }
-    
+    public ExtendedObservableCollection<FunctionBlockDiagramLabel> Labels { get; set; }
+
     /// <summary>
     /// Contains jump or "&lt;RETURN&gt;" items of the FBD diagram.
     /// </summary>
     [zenonSerializableNode("FBDjump", NodeOrder = 8)]
-    public ContainerAwareObservableCollection<FunctionBlockDiagramJump> Jumps { get; set; }
+    public ExtendedObservableCollection<FunctionBlockDiagramJump> Jumps { get; set; }
 
     /// <summary>
     /// Contains the user defined cornerns in a FBD diagram.
     /// </summary>
     [zenonSerializableNode("FBDcorner", NodeOrder = 8)]
-    public ContainerAwareObservableCollection<FunctionBlockDiagramCorner> Corners { get; set; }
-    
+    public ExtendedObservableCollection<FunctionBlockDiagramCorner> Corners { get; set; }
+
     /// <summary>
     /// Contains the connection lines in a FBD diagram.
     /// </summary>
     [zenonSerializableNode("FBDcorner", NodeOrder = 8)]
-    public ContainerAwareObservableCollection<FunctionBlockDiagramLine> Lines { get; set; }
+    public ExtendedObservableCollection<FunctionBlockDiagramLine> Lines { get; set; }
     #endregion
   }
 }

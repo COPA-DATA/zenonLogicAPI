@@ -1,14 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace zenonApi.Serialization
 {
+  /// <summary>
+  /// Set this attribute on properties contained in an <see cref="IZenonSerializable"/> to set the current node's
+  /// value to the property value.
+  /// Its usage is permitted only within an <see cref="IZenonSerializable"/> object.
+  /// </summary>
   [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
   public class zenonSerializableNodeContentAttribute : Attribute
   {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="zenonSerializableNodeContentAttribute"/>.
+    /// </summary>
     public zenonSerializableNodeContentAttribute() { }
 
+    /// <summary>
+    /// The type of an <see cref="IZenonSerializationConverter"/> to use for serialization and deserialization.
+    /// </summary>
     public Type Converter { get; set; }
   }
 }

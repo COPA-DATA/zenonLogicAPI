@@ -17,7 +17,7 @@ namespace zenonApi.Logic
   public class LogicProgram : zenonSerializable<LogicProgram, ILogicFileContainer, LogicProject>, ILogicProgram
   {
     #region Interface implementation
-    protected override string NodeName => "Program";
+    public override string NodeName => "Program";
     #endregion
 
     #region Ctor
@@ -131,9 +131,9 @@ namespace zenonApi.Logic
     /// <summary>
     /// Groups variables of the <see cref="LogicVariableGroup"/>.
     /// </summary>
-    public ContainerAwareObservableCollection<LogicVariableGroup> VariableGroups
+    public ExtendedObservableCollection<LogicVariableGroup> VariableGroups
     {
-      get => (ContainerAwareObservableCollection<LogicVariableGroup>)getPouProperty();
+      get => (ExtendedObservableCollection<LogicVariableGroup>)getPouProperty();
       set => setPouProperty(value);
     }
 

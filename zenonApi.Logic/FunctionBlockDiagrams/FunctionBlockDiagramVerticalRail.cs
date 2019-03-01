@@ -7,7 +7,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
   /// </summary>
   public class FunctionBlockDiagramVerticalRail : zenonSerializable<FunctionBlockDiagramVerticalRail, FunctionBlockDiagramDefinition, LogicProject>
   {
-    protected override string NodeName => "FBDvrail";
+    public override string NodeName => "FBDvrail";
 
     /// <summary>
     /// The kind of the rail (mandatory).

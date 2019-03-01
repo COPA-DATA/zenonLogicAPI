@@ -7,7 +7,7 @@ namespace zenonApi.Logic
   public class LogicVariable : zenonSerializable<LogicVariable, LogicVariableGroup, LogicProject>
   {
     #region zenonSerializable Implementation
-    protected override string NodeName => "var";
+    public override string NodeName => "var";
     #endregion  
 
     /// <summary>
@@ -59,6 +59,6 @@ namespace zenonApi.Logic
     /// Indicates additional information for the variable it belongs to.
     /// </summary>
     [zenonSerializableNode("varinfo", NodeOrder = 6)]
-    public ContainerAwareObservableCollection<LogicVariableInfo> VariableInfos { get; set; }
+    public ExtendedObservableCollection<LogicVariableInfo> VariableInfos { get; set; }
   }
 }

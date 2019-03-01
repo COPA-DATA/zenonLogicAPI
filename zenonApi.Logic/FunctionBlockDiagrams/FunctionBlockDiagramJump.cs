@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using zenonApi.Serialization;
+﻿using zenonApi.Serialization;
 
 namespace zenonApi.Logic.FunctionBlockDiagrams
 {
@@ -10,7 +7,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
   /// </summary>
   public class FunctionBlockDiagramJump : FunctionBlockDiagramObject<FunctionBlockDiagramJump>
   {
-    protected override string NodeName => "FBDjump";
+    public override string NodeName => "FBDjump";
 
     /// <summary>
     /// The name of the destination label or "&lt;RETURN&gt;" (mandatory)

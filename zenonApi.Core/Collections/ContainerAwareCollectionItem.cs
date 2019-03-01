@@ -1,12 +1,15 @@
-﻿namespace zenonApi.Collections
-{
-  public abstract class ContainerAwareCollectionItem<TSelf>
-    where TSelf : ContainerAwareCollectionItem<TSelf>
-  {
-    internal object ContainerItemParent;
-    internal object ContainerItemRoot;
+﻿using System.Collections;
+using zenonApi.Serialization;
 
-    internal ContainerAwareObservableCollection<TSelf> ItemContainer { get; set; } = null;
+namespace zenonApi.Collections
+{
+  public abstract class ContainerAwareCollectionItem<TSelf> : zenonSerializable<TSelf>, IContainerAwareCollectionItem
+    where TSelf : class, IZenonSerializable<TSelf>
+  {
+    // The following interface properties are hidden by intent
+    IList IContainerAwareCollectionItem.ItemContainer { get; set; }
+    object IContainerAwareCollectionItem.ContainerItemParent { get; set; }
+    object IContainerAwareCollectionItem.ContainerItemRoot { get; set; }
 
     /// <summary>
     /// Removes this child from its parent and root. No exception is thrown if no
@@ -14,12 +17,13 @@
     /// </summary>
     public virtual void Remove()
     {
-      if (this.ItemContainer == null)
+      IContainerAwareCollectionItem self = this;
+      if (self.ItemContainer == null)
       {
         return;
       }
 
-      ItemContainer.Remove((TSelf)this);
+      self.ItemContainer.Remove(this);
     }
   }
 }

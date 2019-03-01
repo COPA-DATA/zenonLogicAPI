@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using zenonApi.Collections;
+﻿using zenonApi.Collections;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic.Internal
@@ -22,7 +21,7 @@ namespace zenonApi.Logic.Internal
       this.Root = parent;
     }
 
-    protected override string NodeName => "programs";
+    public override string NodeName => "programs";
 
     [zenonSerializableNode("pou")]
     public ContainerAwareObservableCollection<_Pou> ProgramOrganizationUnits { get; set; }

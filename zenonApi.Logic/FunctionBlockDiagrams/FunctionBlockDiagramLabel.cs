@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using zenonApi.Serialization;
+﻿using zenonApi.Serialization;
 
 namespace zenonApi.Logic.FunctionBlockDiagrams
 {
@@ -10,7 +7,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
   /// </summary>
   public class FunctionBlockDiagramLabel : FunctionBlockDiagramObject<FunctionBlockDiagramLabel>
   {
-    protected override string NodeName => "FBDlabel";
+    public override string NodeName => "FBDlabel";
 
     /// <summary>
     /// The name of the label (mandatory)

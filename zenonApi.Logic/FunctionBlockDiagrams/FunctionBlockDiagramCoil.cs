@@ -7,7 +7,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
   /// </summary>
   public class FunctionBlockDiagramCoil : FunctionBlockDiagramObject<FunctionBlockDiagramCoil>
   {
-    protected override string NodeName => "FBDcoil";
+    public override string NodeName => "FBDcoil";
 
     /// <summary>
     /// The kind of a function block diagram coil (mandatory).

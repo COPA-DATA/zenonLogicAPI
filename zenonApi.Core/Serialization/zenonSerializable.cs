@@ -11,31 +11,64 @@ using zenonApi.Collections;
 
 namespace zenonApi.Serialization
 {
-  public abstract class zenonSerializable<TSelf, TParent, TRoot> : ContainerAwareCollectionItem<TSelf>, IZenonSerializable<TParent, TRoot>
-    where TSelf : zenonSerializable<TSelf, TParent, TRoot>
+  public abstract class zenonSerializable<TSelf, TParent, TRoot>
+    : ContainerAwareCollectionItem<TSelf>, IZenonSerializable<TSelf, TParent, TRoot>
+    where TSelf : class, IZenonSerializable<TSelf>
     where TParent : class, IZenonSerializable
     where TRoot : class, IZenonSerializable
   {
-    protected abstract string NodeName { get; }
     public virtual TParent Parent
     {
-      get => this.ContainerItemParent as TParent;
+      // Casts are required here, since we hide the interface properties in the base class
+      get => ((IContainerAwareCollectionItem)this).ContainerItemParent as TParent;
       protected set
       {
-        this.ContainerItemParent = value;
+        ((IContainerAwareCollectionItem)this).ContainerItemParent = value;
       }
     }
 
     public virtual TRoot Root
     {
-      get => this.ContainerItemRoot as TRoot;
+      // Casts are required here, since we hide the interface properties in the base class
+      get => ((IContainerAwareCollectionItem)this).ContainerItemRoot as TRoot;
       protected set
       {
-        this.ContainerItemRoot = value;
+        ((IContainerAwareCollectionItem)this).ContainerItemRoot = value;
       }
     }
+  }
 
-    static Dictionary<Type, IZenonSerializationConverter> converterCache = new Dictionary<Type, IZenonSerializationConverter>();
+  public abstract class zenonSerializable<TSelf> : IZenonSerializable<TSelf>
+    where TSelf : class, IZenonSerializable<TSelf>
+  {
+    public abstract string NodeName { get; }
+
+    protected static Dictionary<Type, IZenonSerializationConverter> converterCache = new Dictionary<Type, IZenonSerializationConverter>();
+
+
+    #region Private/Protected methods
+    protected static IZenonSerializationConverter getConverter(Type converterType)
+    {
+      if (converterType == null)
+      {
+        throw new ArgumentNullException(nameof(converterType));
+      }
+
+      IZenonSerializationConverter converterInstance = null;
+      if (converterCache.ContainsKey(converterType))
+      {
+        converterInstance = converterCache[converterType];
+      }
+      else
+      {
+        converterInstance = (IZenonSerializationConverter)Activator.CreateInstance(converterType, true);
+        converterCache[converterType] = converterInstance;
+      }
+
+      return converterInstance;
+    }
+    #endregion
+
 
     #region Export to XElement
     public virtual XElement Export()
@@ -43,7 +76,6 @@ namespace zenonApi.Serialization
       // Create a node for the current element, check for all properties with a zenonSerializableAttribute-
       // or zenonSerializableNode-Attribute and append them
       XElement current = new XElement(this.NodeName);
-      TSelf self = (TSelf)this;
 
       // Get all the properties together with their attributes in tuples
       var properties = this.GetType().GetRuntimeProperties().Select(x => (property: x, attributes: x.GetCustomAttributes()));
@@ -66,24 +98,24 @@ namespace zenonApi.Serialization
       // Now simply create everything according to the preselection
       foreach (var attributeDict in attributesDict)
       {
-        exportAttribute(current, self, attributeDict.property, attributeDict.attribute);
+        exportAttribute(current, this, attributeDict.property, attributeDict.attribute);
       }
 
       foreach (var nodeDict in nodesDict)
       {
-        exportNode(current, self, nodeDict.property, nodeDict.attribute);
+        exportNode(current, this, nodeDict.property, nodeDict.attribute);
       }
 
       foreach (var contentDict in contentsDict)
       {
-        exportNodeContent(current, self, contentDict.property, contentDict.attribute);
+        exportNodeContent(current, this, contentDict.property, contentDict.attribute);
       }
 
       return current;
     }
 
 
-    private static void exportAttribute(XElement target, TSelf source, PropertyInfo property, zenonSerializableAttributeAttribute attributeAttribute)
+    private static void exportAttribute(XElement target, IZenonSerializable source, PropertyInfo property, zenonSerializableAttributeAttribute attributeAttribute)
     {
       if (property.GetGetMethod(true) == null)
       {
@@ -136,7 +168,7 @@ namespace zenonApi.Serialization
     }
 
 
-    private static void exportNode(XElement target, TSelf source, PropertyInfo property, zenonSerializableNodeAttribute nodeAttribute)
+    private static void exportNode(XElement target, IZenonSerializable source, PropertyInfo property, zenonSerializableNodeAttribute nodeAttribute)
     {
       if (property.GetGetMethod(true) == null)
       {
@@ -203,7 +235,7 @@ namespace zenonApi.Serialization
     }
 
 
-    private static void exportNodeContent(XElement target, TSelf source, PropertyInfo property, zenonSerializableNodeContentAttribute contentAttribute)
+    private static void exportNodeContent(XElement target, IZenonSerializable source, PropertyInfo property, zenonSerializableNodeContentAttribute contentAttribute)
     {
       if (property.GetGetMethod(true) == null)
       {
@@ -258,18 +290,22 @@ namespace zenonApi.Serialization
 
 
     #region Import from XElement
-    public static TSelf Import(XElement source, TParent parent = null, TRoot root = null)
+    public static TSelf Import(XElement source, object parent = null, object root = null)
     {
       // Create an instance of the current type
-      var result = (TSelf)Activator.CreateInstance(typeof(TSelf), true);
-      result.Parent = parent;
-      result.Root = root;
       Type t = typeof(TSelf);
+      var result = (TSelf)Activator.CreateInstance(t, true);
 
       // The source element must match the node name
       if (source.Name != result.NodeName)
       {
         throw new Exception($"Expected {result.NodeName}, but got {source.Name}");
+      }
+
+      if (result is IContainerAwareCollectionItem resultWithParent)
+      {
+        resultWithParent.ContainerItemParent = parent;
+        resultWithParent.ContainerItemRoot = root;
       }
 
       // Find all the attributes and properties of the current type for deserialization
@@ -289,26 +325,46 @@ namespace zenonApi.Serialization
       return result;
     }
 
-
-    private static IZenonSerializationConverter getConverter(Type converterType)
+    private static void importChilds(PropertyInfo targetListProperty, TSelf parentContainer, List<XElement> xmlNodes)
     {
-      if (converterType == null)
-      {
-        throw new ArgumentNullException(nameof(converterType));
-      }
+      IList list = (IList)Activator.CreateInstance(targetListProperty.PropertyType, true);
 
-      IZenonSerializationConverter converterInstance = null;
-      if (converterCache.ContainsKey(converterType))
+      // Get the generic type, so that we can instantiate entries for the list (this should be a zenonSerializable)
+      Type genericParameter = targetListProperty.PropertyType.GetGenericArguments().First();
+      if (typeof(IZenonSerializable).IsAssignableFrom(genericParameter))
       {
-        converterInstance = converterCache[converterType];
+        foreach (var xmlNode in xmlNodes)
+        {
+          MethodInfo importMethod = genericParameter.GetMethod(nameof(Import), BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+          object child = null;
+
+          if (parentContainer is IContainerAwareCollectionItem caItem)
+          {
+            object root = caItem.ContainerItemRoot;
+            if (root == null && caItem.ContainerItemParent == null)
+            {
+              // the current object is most likely the desired root
+              root = parentContainer;
+            }
+
+            child = importMethod.Invoke(null, new object[] { xmlNode, parentContainer, root });
+          }
+          else
+          {
+            // The child is not capable of handling parents and roots, therefore pass null
+            child = importMethod.Invoke(null, new object[] { xmlNode, parentContainer, null });
+          }
+
+          list.Add(child);
+        }
       }
       else
       {
-        converterInstance = (IZenonSerializationConverter)Activator.CreateInstance(converterType, true);
-        converterCache[converterType] = converterInstance;
+        throw new Exception($"A list with a {nameof(zenonSerializableNodeAttribute)} must use "
+          + $"{nameof(IZenonSerializable)} or derived classes as the generic parameter. Invalid property's name: {nameof(targetListProperty.Name)}");
       }
 
-      return converterInstance;
+      targetListProperty.SetValue(parentContainer, list);
     }
 
 
@@ -377,28 +433,7 @@ namespace zenonApi.Serialization
         if (typeof(IList).IsAssignableFrom(property.PropertyType))
         {
           // Create the list which will hold the instances
-          IList list = (IList)Activator.CreateInstance(property.PropertyType, true);
-
-          // Get the generic type, so that we can instantiate entries for the list (this should be a zenonSerializable)
-          Type genericParameter = property.PropertyType.GetGenericArguments().First();
-          if (typeof(IZenonSerializable).IsAssignableFrom(genericParameter))
-          {
-            foreach (var xmlNode in xmlNodes)
-            {
-              MethodInfo importMethod = genericParameter.GetMethod(nameof(Import), BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-              object root = target.Root;
-              if (root == null && target.Parent == null)
-              {
-                // the current object is most likely the desired root
-                root = target;
-              }
-              var child = importMethod.Invoke(null, new object[] { xmlNode, target, root });
-
-              list.Add(child);
-            }
-          }
-
-          property.SetValue(target, list);
+          importChilds(property, target, xmlNodes);
         }
         else if (typeof(IZenonSerializable).IsAssignableFrom(property.PropertyType))
         {
@@ -410,21 +445,15 @@ namespace zenonApi.Serialization
           if (xmlNodes.Count == 1)
           {
             MethodInfo importMethod = property.PropertyType.GetMethod(nameof(Import), BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-
-            object root = target.Root;
-            if (root == null)
-            {
-              root = target;
-            }
-
-            var child = importMethod.Invoke(null, new object[] { xmlNodes.First(), target, root });
+            object root = (target as IContainerAwareCollectionItem)?.ContainerItemRoot;
+            var child = importMethod.Invoke(null, new object[] { xmlNodes.First(), target, root ?? target });
 
             property.SetValue(target, child);
           }
         }
         else if (xmlNodes.Count == 1)
         {
-          // TODO: There are no converters yet for this case
+          // TODO: There are no converters yet for this case (no zenonSerializable)
           // Just try to deserialize the value directly
           if (typeof(IConvertible).IsAssignableFrom(property.PropertyType))
           {

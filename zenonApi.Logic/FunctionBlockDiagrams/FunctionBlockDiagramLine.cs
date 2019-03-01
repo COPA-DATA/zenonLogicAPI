@@ -9,7 +9,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
   /// </summary>
   public class FunctionBlockDiagramLine : zenonSerializable<FunctionBlockDiagramLine, FunctionBlockDiagramDefinition, LogicProject>
   {
-    protected override string NodeName => "FBDline";
+    public override string NodeName => "FBDline";
 
     /// <summary>
     /// If set to true, a "o" boolean negation mark is drawn in zenon Logic.
@@ -45,6 +45,6 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
     /// Significant points for drawing connection lines in FBD diagrams.
     /// </summary>
     [zenonSerializableAttribute("FBDlinepoint", AttributeOrder = 5)]
-    public ContainerAwareCollectionItem<FunctionBlockDiagramLinePoint> DrawingPoints { get; set; }
+    public ExtendedObservableCollection<FunctionBlockDiagramLinePoint> DrawingPoints { get; set; }
   }
 }

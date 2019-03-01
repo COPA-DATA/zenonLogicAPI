@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-
-using zenonApi.Serialization;
 
 namespace zenonApi.Collections
 {
-  public class ContainerAwareObservableCollection<TChildren> : ExtendedObservableCollection<TChildren>
-    where TChildren : ContainerAwareCollectionItem<TChildren>
+  public class ContainerAwareObservableCollection<TChildren>
+    : ExtendedObservableCollection<TChildren>
+    where TChildren : IContainerAwareCollectionItem
   {
     #region Ctor
     public ContainerAwareObservableCollection() : base() { }
@@ -144,7 +141,7 @@ namespace zenonApi.Collections
       item.ContainerItemParent = parent;
       item.ContainerItemRoot = root;
     }
-    
+
     /// <summary>
     /// Replaces the element at the specified index.
     /// </summary>

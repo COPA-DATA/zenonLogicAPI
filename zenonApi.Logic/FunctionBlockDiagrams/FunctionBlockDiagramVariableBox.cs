@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using zenonApi.Serialization;
+﻿using zenonApi.Serialization;
 
 namespace zenonApi.Logic.FunctionBlockDiagrams
 {
@@ -10,7 +7,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
   /// </summary>
   public class FunctionBlockDiagramVariableBox : FunctionBlockDiagramObject<FunctionBlockDiagramVariableBox>
   {
-    protected override string NodeName => "FBDvarbox";
+    public override string NodeName => "FBDvarbox";
 
     /// <summary>
     /// The symbol of the attached variable in the project, which is mandatory.
