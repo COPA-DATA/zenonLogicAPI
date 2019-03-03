@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic
 {
+  [DebuggerDisplay("Name = {Name}")]
   public class LogicDataType : zenonSerializable<LogicDataType, LogicDataTypesCollection, LogicProject>
   {
     #region zenonSerializable Implementation

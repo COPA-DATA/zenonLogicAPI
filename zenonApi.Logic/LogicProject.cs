@@ -30,8 +30,8 @@ namespace zenonApi.Logic
     ///// <summary>
     ///// The tag groups all the defined data types.
     ///// </summary>
-    //[zenonSerializableNode("types", NodeOrder = 4)]
-    //public LogicDataTypesCollection DataTypes { get; set; }
+    [zenonSerializableNode("types", NodeOrder = 4)]
+    public LogicDataTypesCollection DataTypes { get; set; }
 
     /// <summary>
     /// This tag groups all the global scope variable groups of the project.

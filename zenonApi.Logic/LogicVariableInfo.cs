@@ -1,8 +1,10 @@
-﻿using zenonApi.Serialization;
+﻿using System.Diagnostics;
+using zenonApi.Serialization;
 
 namespace zenonApi.Logic
 {
   //TODO talk with StefanH about this class, the values are not clear for me
+  [DebuggerDisplay("Type = {Type}")]
   public class LogicVariableInfo : zenonSerializable<LogicVariableInfo, LogicVariable, LogicProject>
   {
     public override string NodeName => "varinfo";
@@ -12,7 +14,7 @@ namespace zenonApi.Logic
     /// TODO add information here about possible values - the doku differs from the example file
     /// </summary>
     [zenonSerializableAttribute("type", AttributeOrder = 0)]
-    public int Type { get; set; }
+    public LogicVariableInformationTypeKind Type { get; set; }
 
     /// <summary>
     /// Data in text format specified in the Type attribute.

@@ -29,7 +29,7 @@ namespace zenonApi.Logic
     /// Use this value to indicate, that the kind of a <see cref="LogicDataType"/> is a
     /// user defined function block.
     /// </summary>
-    [zenonSerializableEnum("UNFB")]
+    [zenonSerializableEnum("UDFB")]
     UserDefinedFunctionBlock,
     /// <summary>
     /// Use this value to indicate, that the kind of a <see cref="LogicDataType"/> is a
