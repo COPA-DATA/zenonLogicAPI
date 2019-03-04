@@ -27,11 +27,17 @@ namespace zenonApi.Logic
     [zenonSerializableAttribute("path", AttributeOrder = 1)]
     public string Path { get; protected set; }
 
+    /// <summary>
+    /// This tag groups all the settings of the project.
+    /// </summary>
+    [zenonSerializableNode("settings", NodeOrder = 2)]
+    public LogicProjectSettings Settings { get; protected set; }
+
     ///// <summary>
     ///// The tag groups all the defined data types.
     ///// </summary>
     [zenonSerializableNode("types", NodeOrder = 4)]
-    public LogicDataTypesCollection DataTypes { get; set; }
+    public LogicDataTypesCollection DataTypes { get; protected set; }
 
     /// <summary>
     /// This tag groups all the global scope variable groups of the project.

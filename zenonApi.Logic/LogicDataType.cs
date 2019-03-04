@@ -5,7 +5,7 @@ using zenonApi.Serialization;
 namespace zenonApi.Logic
 {
   [DebuggerDisplay("Name = {Name}")]
-  public class LogicDataType : zenonSerializable<LogicDataType, LogicDataTypesCollection, LogicProject>
+  public class LogicDataType : zenonSerializable<LogicDataType>
   {
     #region zenonSerializable Implementation
     public override string NodeName => "type";
