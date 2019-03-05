@@ -1,4 +1,5 @@
-﻿using zenonApi.Serialization;
+﻿using System.Xml.Linq;
+using zenonApi.Serialization;
 
 namespace zenonApi.Logic
 {
@@ -28,11 +29,11 @@ namespace zenonApi.Logic
 
     //TODO: Ask StefanH about this property (not in docu)
     [zenonSerializableRawFormat("fbundef", NodeOrder = 3)]
-    public string FbUndef { get; set; }
+    public XElement FbUndef { get; set; }
 
     //TODO: Ask StefanH about this property (not in docu)
     [zenonSerializableRawFormat("onlinecsts", NodeOrder = 4)]
-    public string OnlineCasts { get; set; }
+    public XElement OnlineCasts { get; set; }
 
   }
 }

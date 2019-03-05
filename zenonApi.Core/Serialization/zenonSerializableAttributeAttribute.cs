@@ -6,7 +6,7 @@ namespace zenonApi.Serialization
   /// Set this attribute to properties of an <see cref="IZenonSerializable"/> to create an XML attribute.
   /// </summary>
   [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-  public class zenonSerializableAttributeAttribute : Attribute
+  public class zenonSerializableAttributeAttribute : zenonSerializableBaseAttribute
   {
     /// <summary>
     /// Initializes a new instance of a <see cref="zenonSerializableAttributeAttribute"/>.
@@ -56,5 +56,17 @@ namespace zenonApi.Serialization
         }
       }
     }
+
+    #region Internal base class overrides
+    internal override zenonSerializableAttributeType AttributeType => zenonSerializableAttributeType.Attribute;
+    
+    internal override byte InternalOrder => this.AttributeOrder;
+    
+    internal override string InternalName => this.AttributeName;
+
+    internal override bool InternalOmitIfNull => this.OmitIfNull;
+
+    internal override Type InternalConverter => this.Converter;
+    #endregion
   }
 }

@@ -8,7 +8,7 @@ namespace zenonApi.Serialization
   /// resulting XML.
   /// </summary>
   [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-  public class zenonSerializableNodeAttribute : Attribute
+  public class zenonSerializableNodeAttribute : zenonSerializableBaseAttribute
   {
     /// <summary>
     /// Creates a new instance of the <see cref="zenonSerializableNodeAttribute"/>.
@@ -48,5 +48,18 @@ namespace zenonApi.Serialization
     /// Specifies if a node shall be omitted if it is null or contains no items in case of lists (default = true).
     /// </summary>
     public bool OmitIfNull { get; set; } = true;
+
+
+    #region Internal base class overrides
+    internal override zenonSerializableAttributeType AttributeType => zenonSerializableAttributeType.Node;
+
+    internal override byte InternalOrder => this.NodeOrder;
+
+    internal override string InternalName => this.NodeName;
+
+    internal override bool InternalOmitIfNull => this.OmitIfNull;
+
+    internal override Type InternalConverter => null; // TODO: If Converters are supported in the future, return the correct prop here
+    #endregion
   }
 }

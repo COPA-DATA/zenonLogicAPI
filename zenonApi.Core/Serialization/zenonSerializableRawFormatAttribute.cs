@@ -4,7 +4,7 @@ using System.Xml;
 namespace zenonApi.Serialization
 {
   [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
-  public class zenonSerializableRawFormatAttribute : Attribute
+  public class zenonSerializableRawFormatAttribute : zenonSerializableBaseAttribute
   {
     /// <summary>
     /// Creates a new instance of the <see cref="zenonSerializableRawFormatAttribute"/>.
@@ -44,5 +44,19 @@ namespace zenonApi.Serialization
     /// Specifies if a node shall be omitted if it is null or contains no items in case of lists (default = true).
     /// </summary>
     public bool OmitIfNull { get; set; } = true;
+
+
+
+    #region Internal base class overrides
+    internal override zenonSerializableAttributeType AttributeType => zenonSerializableAttributeType.RawNode;
+
+    internal override byte InternalOrder => this.NodeOrder;
+
+    internal override string InternalName => this.NodeName;
+
+    internal override bool InternalOmitIfNull => this.OmitIfNull;
+
+    internal override Type InternalConverter => null;
+    #endregion
   }
 }

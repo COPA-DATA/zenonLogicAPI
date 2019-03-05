@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Xml.Linq;
 using zenonApi.Logic.Internal;
 using zenonApi.Serialization;
 
@@ -58,7 +59,6 @@ namespace zenonApi.Logic
     /// </summary>
     [zenonSerializableNode("Appli", NodeOrder = 17)]
     public ApplicationTree ApplicationTree { get; protected set; }
-
     #endregion
   }
 }

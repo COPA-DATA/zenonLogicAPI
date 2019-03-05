@@ -6,7 +6,7 @@ namespace zenonApi.Serialization
   /// Use this attribute to specify for each value of an enumeration how it shall be written in XML.
   /// </summary>
   [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
-  public class zenonSerializableEnumAttribute : Attribute
+  public class zenonSerializableEnumAttribute : zenonSerializableBaseAttribute
   {
     /// <summary>
     /// Creates a new instance of a <see cref="zenonSerializableEnumAttribute"/>.
@@ -27,5 +27,17 @@ namespace zenonApi.Serialization
     /// Specifies how the enumeration value is written in the resulting XML.
     /// </summary>
     public string Name { get; protected set; }
+
+    #region Internal base class overrides
+    internal override zenonSerializableAttributeType AttributeType => zenonSerializableAttributeType.Enum;
+
+    internal override byte InternalOrder => 0;
+
+    internal override string InternalName => this.Name;
+
+    internal override bool InternalOmitIfNull => false;
+
+    internal override Type InternalConverter => null;
+    #endregion
   }
 }
