@@ -26,7 +26,7 @@ namespace zenonApi.Serialization
     /// Contains all unknown nodes, which are not covered by this API and were found for the current item.
     /// The key specifies the original tag name from XML, the value contains the entire XElement representing it.
     /// </summary>
-    Dictionary<string, XElement> UnknownNodes { get; }
+    Dictionary<string, List<XElement>> UnknownNodes { get; }
 
     /// <summary>
     /// Contains all unknown attributes, which are not covered by this API and were found for the current item.

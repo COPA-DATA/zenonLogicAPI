@@ -15,7 +15,6 @@ namespace zenonApi.Logic
     #endregion
 
     #region Specific properties
-
     /// <summary>
     /// The mandatory version of the K5 project.
     /// </summary>

@@ -7,8 +7,8 @@ using System.Collections;
 using zenonApi.Collections;
 using System.Diagnostics;
 
-// TODO: Add converters for zenonSerializableNode
 // TODO: Nullables to be allowed
+// TODO: Exception and other messages in Resource file
 
 namespace zenonApi.Serialization
 {
@@ -50,15 +50,15 @@ namespace zenonApi.Serialization
 
     /// <summary>
     /// Contains all unknown nodes, which are not covered by this API and were found for the current item.
-    /// The key specifies the original tag name from XML, the value contains the entire XElement representing it.
+    /// The key specifies the original tag name from XML, the value contains all the entire XElements representing it.
     /// </summary>
-    public Dictionary<string, XElement> UnknownNodes => unknownNodes;
+    public Dictionary<string, List<XElement>> UnknownNodes { get; } = new Dictionary<string, List<XElement>>();
 
     /// <summary>
     /// Contains all unknown attributes, which are not covered by this API and were found for the current item.
     /// The key specifies the original tag name from XML, the value contains the attribute's value.
     /// </summary>
-    public Dictionary<string, string> UnknownAttributes => unknownAttributes;
+    public Dictionary<string, string> UnknownAttributes { get; } = new Dictionary<string, string>();
     #endregion
 
 
@@ -89,9 +89,6 @@ namespace zenonApi.Serialization
 
       return converterInstance;
     }
-
-    private Dictionary<string, XElement> unknownNodes = new Dictionary<string, XElement>();
-    private Dictionary<string, string> unknownAttributes = new Dictionary<string, string>();
     #endregion
 
 
@@ -129,9 +126,16 @@ namespace zenonApi.Serialization
             break;
           default:
             // e.g. enum attribute
-            throw new NotSupportedException($"Attribute {attributeMapping.attribute.AttributeType} is not supported for usage on {attributeMapping.property.Name}.");
+            throw new NotSupportedException(
+              String.Format(
+                Strings.MsgErrorAttributeNotSupported,
+                attributeMapping.attribute.AttributeType,
+                attributeMapping.property.Name));
         }
       }
+
+      exportUnknownAttributes(current, this);
+      exportUnknownNodes(current, this);
 
       return current;
     }
@@ -230,7 +234,8 @@ namespace zenonApi.Serialization
           var genericParameterType = property.PropertyType.GenericTypeArguments.First();
           if (!typeof(IZenonSerializable).IsAssignableFrom(genericParameterType))
           {
-            throw new NotImplementedException($"Currently, only lists of types derived by {nameof(IZenonSerializable)} are supported.");
+            throw new NotImplementedException(
+              String.Format(Strings.MsgErrorInvalidSerializationListType, nameof(IZenonSerializable)));
           }
 
           foreach (IZenonSerializable listItem in list)
@@ -334,7 +339,7 @@ namespace zenonApi.Serialization
         if (sourceValue != null)
         {
           // We use the raw attribute only for items, which are not required by our team, therefore we print warnings if they are used
-          Debug.WriteLine($"Warning: Property {property.Name} is implemented with the {nameof(zenonSerializableRawFormatAttribute)} "
+          Debug.WriteLine($"zenonSerializable - Export Warning: Property {property.Name} is implemented with the {nameof(zenonSerializableRawFormatAttribute)} "
             + "attribute. If the usage of this property is not an exception, ask the API creators to implement an API supported version of it.");
 
           target.Add(sourceValue);
@@ -342,6 +347,49 @@ namespace zenonApi.Serialization
         else
         {
           target.Add(new XElement(rawAttribute.InternalName));
+        }
+      }
+    }
+
+
+    private static void exportUnknownAttributes(XElement target, IZenonSerializable source)
+    {
+      if (source?.UnknownAttributes == null || source.UnknownAttributes.Count == 0)
+      {
+        return;
+      }
+
+      foreach (var attributeMapping in source.UnknownAttributes)
+      {
+        target.SetAttributeValue(attributeMapping.Key, attributeMapping.Value);
+        Debug.WriteLine($"zenonSerializable - Export Warning: Unknown attribute {attributeMapping.Key} found for XML node {source.NodeName}.");
+      }
+    }
+
+    private static void exportUnknownNodes(XElement target, IZenonSerializable source)
+    {
+      if (source?.UnknownNodes == null || source.UnknownNodes.Count == 0)
+      {
+        return;
+      }
+
+      foreach (var nodeMapping in source.UnknownNodes)
+      {
+        var list = nodeMapping.Value;
+        if (list == null)
+        {
+          continue;
+        }
+
+        foreach (var singleNode in list)
+        {
+          if (singleNode == null)
+          {
+            continue;
+          }
+
+          target.Add(singleNode);
+          Debug.WriteLine($"zenonSerializable - Export Warning: Unknown sub-node {nodeMapping.Key} found in node {source.NodeName}.");
         }
       }
     }
@@ -376,11 +424,16 @@ namespace zenonApi.Serialization
           continue;
         }
 
+        // Each of the following methods alters the source XML, by removing everything which was found from it
         importAttribute(result, source, property);
         importNode(result, source, property);
         importNodeContent(result, source, property);
         importRaw(result, source, property);
       }
+
+      // Since everything was removed what was found, all of the remaining are unknown elements, which we can handle explicitly
+      importUnknownAttributes(result, source);
+      importUnknownNodes(result, source);
 
       return result;
     }
@@ -460,6 +513,9 @@ namespace zenonApi.Serialization
               || xmlAttribute.Value == field.Name)
             {
               property.SetValue(target, value);
+              
+              // Remove the attribute, so that we can check later on for unhandled ones
+              xmlAttribute.Remove();
               return;
             }
           }
@@ -478,6 +534,9 @@ namespace zenonApi.Serialization
         {
           throw new Exception($"Cannot convert types without an {nameof(IZenonSerializationConverter)}, which do not implement {nameof(IConvertible)}.");
         }
+
+        // Remove the attribute, so that we can check later on for unhandled ones
+        xmlAttribute.Remove();
       }
     }
 
@@ -525,6 +584,8 @@ namespace zenonApi.Serialization
             throw new Exception($"Cannot convert types without an {nameof(IZenonSerializationConverter)}, which do not implement {nameof(IConvertible)}.");
           }
         }
+
+        xmlNodes.Remove();
       }
     }
 
@@ -605,10 +666,45 @@ namespace zenonApi.Serialization
         }
 
         // We use the raw attribute only for items, which are not required by our team, therefore we print warnings if they are used
-        Debug.WriteLine($"Warning: Property {property.Name} is implemented with the {nameof(zenonSerializableRawFormatAttribute)} "
+        Debug.WriteLine($"zenonSerializable - Import Warning: Property {property.Name} is implemented with the {nameof(zenonSerializableRawFormatAttribute)} "
           + "attribute. If the usage of this property is not an exception, ask the API creators to implement an API supported version of it.");
 
         property.SetValue(target, xmlNodes.FirstOrDefault());
+        xmlNodes.Remove();
+      }
+    }
+
+
+    private static void importUnknownAttributes(TSelf target, XElement sourceXml)
+    {
+      // All attributes which were not yet removed are yet unhandled
+      foreach (var attribute in sourceXml.Attributes())
+      {
+        string name = attribute.Name.ToString();
+        target.UnknownAttributes.Add(name, attribute.Value);
+        Debug.WriteLine($"zenonSerializable - Import Warning: Unknown attribute {name} found for XML node {target.NodeName}.");
+      }
+    }
+
+    private static void importUnknownNodes(TSelf target, XElement sourceXml)
+    {
+      // All nodes which were not yet removed are yet unhandled
+      foreach(var node in sourceXml.Elements())
+      {
+        List<XElement> list;
+        string nodeName = node.Name.ToString();
+        if (target.UnknownNodes.ContainsKey(nodeName))
+        {
+          list = target.UnknownNodes[nodeName];
+        }
+        else
+        {
+          list = new List<XElement>();
+          target.UnknownNodes[nodeName] = list;
+        }
+
+        list.Add(node);
+        Debug.WriteLine($"zenonSerializable - Import Warning: Unknown sub-node {nodeName} found in node {target.NodeName}.");
       }
     }
     #endregion
