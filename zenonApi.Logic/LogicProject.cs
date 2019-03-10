@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Xml.Linq;
 using zenonApi.Logic.Internal;
 using zenonApi.Serialization;
 
@@ -27,6 +26,7 @@ namespace zenonApi.Logic
     [zenonSerializableAttribute("path", AttributeOrder = 1)]
     public string Path { get; protected set; }
 
+    //TODO: discuss about default constructor calls/init for this property and subproperties
     /// <summary>
     /// This tag groups all the settings of the project.
     /// </summary>

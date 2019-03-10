@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using zenonApi.Collections;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic
@@ -30,7 +30,7 @@ namespace zenonApi.Logic
     /// or a member of a structure. Basic data types do not have any data type variables.
     /// </summary>
     [zenonSerializableNode("var", NodeOrder = 3)]
-    public List<LogicVariable> DataTypeVariables { get; set; }
+    public ExtendedObservableCollection<LogicVariable> DataTypeVariables { get; set; }
 
     #endregion  
 

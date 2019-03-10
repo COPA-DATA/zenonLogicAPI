@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using zenonApi.Collections;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic
@@ -17,7 +17,7 @@ namespace zenonApi.Logic
     /// List of all defined data types.
     /// </summary>
     [zenonSerializableNode("type", NodeOrder = 0)]
-    public List<LogicDataType> DataTypes { get; set; }
+    public ExtendedObservableCollection<LogicDataType> DataTypes { get; set; }
     #endregion
   }
 }
