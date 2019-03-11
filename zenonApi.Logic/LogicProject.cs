@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Xml.Linq;
 using zenonApi.Logic.Internal;
+using zenonApi.Logic.Network;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic
@@ -38,9 +39,9 @@ namespace zenonApi.Logic
     [zenonSerializableRawFormat("libraries", NodeOrder = 3)]
     public XElement Libraries { get; set; }
 
-    ///// <summary>
-    ///// The tag groups all the defined data types.
-    ///// </summary>
+    /// <summary>
+    /// The tag groups all the defined data types.
+    /// </summary>
     [zenonSerializableNode("types", NodeOrder = 4)]
     public LogicDataTypesCollection DataTypes { get; protected set; }
 
@@ -50,11 +51,21 @@ namespace zenonApi.Logic
     [zenonSerializableNode("definitions", NodeOrder = 5)]
     public LogicDefinitions LogicDefinitions { get; set; }
 
+    //TODO: Ask StefanH about this property (not in docu)
+    [zenonSerializableRawFormat("libraries", NodeOrder = 6)]
+    public XElement Ios { get; set; }
+
     /// <summary>
     /// This tag groups all the global scope variable groups of the project.
     /// </summary>
     [zenonSerializableNode("variables", NodeOrder = 7)]
     public LogicGlobalVariables GlobalVariables { get; protected set; }
+
+    /// <summary>
+    /// This tag describes all network configuration.
+    /// </summary>
+    [zenonSerializableNode("networks", NodeOrder = 8)]
+    public LogicNetwork NetWorks { get; set; }
 
     /// <summary>
     /// Lists all programs, sub-programs and UDFBs of the project.
