@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Xml.Linq;
 using zenonApi.Logic.Internal;
 using zenonApi.Serialization;
 
@@ -33,11 +34,21 @@ namespace zenonApi.Logic
     [zenonSerializableNode("settings", NodeOrder = 2)]
     public LogicProjectSettings Settings { get; protected set; }
 
+    //TODO: Ask StefanH about this property (not in docu)
+    [zenonSerializableRawFormat("libraries", NodeOrder = 3)]
+    public XElement Libraries { get; set; }
+
     ///// <summary>
     ///// The tag groups all the defined data types.
     ///// </summary>
     [zenonSerializableNode("types", NodeOrder = 4)]
     public LogicDataTypesCollection DataTypes { get; protected set; }
+
+    /// <summary>
+    /// This tag groups the COMMON and GOLBAL definitions.
+    /// </summary>
+    [zenonSerializableNode("definitions", NodeOrder = 5)]
+    public LogicDefinitions LogicDefinitions { get; set; }
 
     /// <summary>
     /// This tag groups all the global scope variable groups of the project.
