@@ -1,11 +1,11 @@
 ﻿using zenonApi.Serialization;
 
-namespace zenonApi.Logic.SequenceFlowChart
+namespace zenonApi.Logic.SequentialFunctionChart
 {
   /// <summary>
-  /// The kind of a <see cref="SequenceFlowChartStep"/>.
+  /// The kind of a <see cref="SequentialFunctionChartStep"/>.
   /// </summary>
-  public enum SequenceFlowChartStepKind
+  public enum SequentialFunctionChartStepKind
   {
     /// <summary>A default step.</summary>
     [zenonSerializableEnum("default")]

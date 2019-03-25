@@ -1,11 +1,11 @@
 ﻿using zenonApi.Serialization;
 
-namespace zenonApi.Logic.SequenceFlowChart
+namespace zenonApi.Logic.SequentialFunctionChart
 {
   /// <summary>
-  /// Describes a jump symbol to a SFC <see cref="SequenceFlowChartStep"/>.
+  /// Describes a jump symbol to a SFC <see cref="SequentialFunctionChartStep"/>.
   /// </summary>
-  public class SequenceFlowChartJump : zenonSerializable<SequenceFlowChartJump>
+  public class SequentialFunctionChartJump : zenonSerializable<SequentialFunctionChartJump>
   {
     public override string NodeName => "SFCjump";
 

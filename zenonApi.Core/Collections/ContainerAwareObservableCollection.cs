@@ -59,7 +59,7 @@ namespace zenonApi.Collections
         {
           if (item != null)
           {
-            item.ContainerItemParent = value;
+            item.ItemContainerParent = value;
           }
         }
       }
@@ -80,7 +80,7 @@ namespace zenonApi.Collections
           {
 
           }
-          item.ContainerItemRoot = value;
+          item.ItemContainerRoot = value;
         }
       }
     }
@@ -108,8 +108,8 @@ namespace zenonApi.Collections
       }
 
       // Exactly one item is contained, remove the parent
-      item.ContainerItemParent = null;
-      item.ContainerItemRoot = null;
+      item.ItemContainerParent = null;
+      item.ItemContainerRoot = null;
       item.ItemContainer = null;
     }
 
@@ -126,20 +126,20 @@ namespace zenonApi.Collections
 
       if (this.parent == null && this.root == null && !this.parentAndRootDerivedFromFirstEverAddedChild)
       {
-        this.parent = item.ContainerItemParent;
-        this.root = item.ContainerItemRoot;
+        this.parent = item.ItemContainerParent;
+        this.root = item.ItemContainerRoot;
         this.parentAndRootDerivedFromFirstEverAddedChild = true;
       }
 
       // Check if the item has already a parent, if so, adding it is invalid
-      if ((item.ContainerItemParent != parent || item.ContainerItemRoot != root) && (item.ContainerItemParent != null || item.ContainerItemRoot != null))
+      if ((item.ItemContainerParent != parent || item.ItemContainerRoot != root) && (item.ItemContainerParent != null || item.ItemContainerRoot != null))
       {
         throw new InvalidOperationException("Cannot add a child if it is possessed by another parent or root.");
       }
 
       item.ItemContainer = this;
-      item.ContainerItemParent = parent;
-      item.ContainerItemRoot = root;
+      item.ItemContainerParent = parent;
+      item.ItemContainerRoot = root;
     }
 
     /// <summary>
@@ -194,6 +194,36 @@ namespace zenonApi.Collections
     {
       HandleChildAdd(item);
       base.InsertItem(index, item);
+    }
+
+    protected override void InsertItemRange(int index, IEnumerable<TChildren> collection)
+    {
+      foreach (var item in collection)
+      {
+        HandleChildAdd(item);
+      }
+      base.InsertItemRange(index, collection);
+    }
+
+    protected override void RemoveItemRange(IEnumerable<TChildren> collection)
+    {
+      foreach (var item in collection)
+      {
+        HandleChildRemoval(item);
+      }
+      base.RemoveItemRange(collection);
+    }
+
+    protected override void RemoveItemRange(int index, int count)
+    {
+      // Here we do not use the base class method, since we want to call HandleChildRemoval for all of them
+      // (so we have to iterate anyways, we do not need to do this twice)
+      for (int i = index + count - 1; i >= index; i--)
+      {
+        var item = this.Items[i];
+        HandleChildRemoval(item);
+        RemoveAt(i);
+      }
     }
     #endregion
   }

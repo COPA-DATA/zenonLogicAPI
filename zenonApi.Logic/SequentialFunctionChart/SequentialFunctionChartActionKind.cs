@@ -1,11 +1,11 @@
 ﻿using zenonApi.Serialization;
 
-namespace zenonApi.Logic.SequenceFlowChart
+namespace zenonApi.Logic.SequentialFunctionChart
 {
   /// <summary>
-  /// The kind of an <see cref="zenonApi.Logic.SequenceFlowChart.SequenceFlowChartAction"/>.
+  /// The kind of an <see cref="zenonApi.Logic.SequentialFunctionChart.SequentialFunctionChartAction"/>.
   /// </summary>
-  public enum SequenceFlowChartActionKind
+  public enum SequentialFunctionChartActionKind
   {
     /// <summary>List of simple action blocks in text format.</summary>
     [zenonSerializableEnum("default")]

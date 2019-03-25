@@ -2,20 +2,20 @@
 using zenonApi.Collections;
 using zenonApi.Serialization;
 
-namespace zenonApi.Logic.SequenceFlowChart
+namespace zenonApi.Logic.SequentialFunctionChart
 {
   /// <summary>
   /// Describes a SFC step.
   /// </summary>
-  public class SequenceFlowChartStep : zenonSerializable<SequenceFlowChartStep>
+  public class SequentialFunctionChartStep : zenonSerializable<SequentialFunctionChartStep>
   {
     public override string NodeName => "SFCstep";
 
     /// <summary>
-    /// The kind of a <see cref="SequenceFlowChartStep"/>.
+    /// The kind of a <see cref="SequentialFunctionChartStep"/>.
     /// </summary>
     [zenonSerializableAttribute("kind", AttributeOrder = 0)]
-    public SequenceFlowChartStepKind Kind { get; set; }
+    public SequentialFunctionChartStepKind Kind { get; set; }
 
     /// <summary>
     /// X coordinate in grid units (mandatory).
@@ -57,7 +57,7 @@ namespace zenonApi.Logic.SequenceFlowChart
     /// Describes an action block within a SFC step.
     /// </summary>
     [zenonSerializableNode("SFCaction", NodeOrder = 1, OmitIfNull = false)]
-    public ExtendedObservableCollection<SequenceFlowChartAction> Actions { get; protected set; }
-      = new ExtendedObservableCollection<SequenceFlowChartAction>();
+    public ExtendedObservableCollection<SequentialFunctionChartAction> Actions { get; protected set; }
+      = new ExtendedObservableCollection<SequentialFunctionChartAction>();
   }
 }

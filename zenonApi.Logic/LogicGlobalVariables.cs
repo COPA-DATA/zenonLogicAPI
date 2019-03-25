@@ -5,6 +5,10 @@ namespace zenonApi.Logic
 {
   public class LogicGlobalVariables : zenonSerializable<LogicGlobalVariables, LogicProject, LogicProject>
   {
+    private LogicGlobalVariables() { }
+
+    public LogicGlobalVariables(LogicProject parent) => this.Parent = this.Root = parent;
+
     #region zenonSerializable Implementation
     public override string NodeName => "variables";
     #endregion  

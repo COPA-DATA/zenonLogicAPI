@@ -5,6 +5,10 @@ namespace zenonApi.Logic
 {
   public class LogicProjectSettings : zenonSerializable<LogicProjectSettings, LogicProject, LogicProject>
   {
+    private LogicProjectSettings() { }
+
+    public LogicProjectSettings(LogicProject parent) => this.Parent = this.Root = parent;
+
     #region zenonSerializable Implementation
     public override string NodeName => "settings";
     #endregion  
@@ -13,7 +17,7 @@ namespace zenonApi.Logic
     /// This tag describes the triggering of runtime cycles in the project settings.
     /// </summary>
     [zenonSerializableNode("triggering", NodeOrder = 0)]
-    public LogicTriggeringSettings TriggerTime { get; set; } = new LogicTriggeringSettings();
+    public LogicTriggeringSettings TriggerTime { get; protected set; } = new LogicTriggeringSettings();
 
     /// <summary>
     /// This tag groups all the options for the compiler.
@@ -25,7 +29,7 @@ namespace zenonApi.Logic
     /// This tag groups all the options for the compiler regarding the On Line Change capability.
     /// </summary>
     [zenonSerializableNode("onlinechange", NodeOrder = 2)]
-    public LogicOnlineChangeSettings OnlineChangeSettings { get; protected set; }
+    public LogicOnlineChangeSettings OnlineChangeSettings { get; protected set; } = new LogicOnlineChangeSettings();
 
     //TODO: Ask StefanH about this property (not in docu)
     [zenonSerializableRawFormat("fbundef", NodeOrder = 3)]
@@ -34,6 +38,5 @@ namespace zenonApi.Logic
     //TODO: Ask StefanH about this property (not in docu)
     [zenonSerializableRawFormat("onlinecsts", NodeOrder = 4)]
     public XElement OnlineCasts { get; set; }
-
   }
 }

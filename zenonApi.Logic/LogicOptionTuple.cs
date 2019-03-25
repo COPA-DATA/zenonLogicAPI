@@ -10,10 +10,8 @@ namespace zenonApi.Logic
     public override string NodeName => "opt";
     #endregion
 
-    internal LogicOptionTuple()
-    {
-    }
-
+    internal LogicOptionTuple() { }
+    
     public LogicOptionTuple(string name, string value)
     {
       if (string.IsNullOrWhiteSpace(name))

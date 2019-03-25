@@ -9,6 +9,8 @@ namespace Tester
   {
     static void Main(string[] args)
     {
+      LogicProject project = new LogicProject("test");
+
       // Ugly, but better than excluding this from every commit or changing it everytime afterwards
       XDocument test = XDocument.Load($@"C:\Users\{Environment.UserName}\Desktop\TemplateBbLogicProjectExport.xml");
     

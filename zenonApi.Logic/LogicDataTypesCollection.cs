@@ -8,6 +8,10 @@ namespace zenonApi.Logic
   /// </summary>
   public class LogicDataTypesCollection : zenonSerializable<LogicDataTypesCollection, LogicProject, LogicProject>
   {
+    private LogicDataTypesCollection() { }
+
+    public LogicDataTypesCollection(LogicProject parent) => this.Parent = this.Root = parent;
+
     #region zenonSerializable Implementation
     public override string NodeName => "types";
     #endregion

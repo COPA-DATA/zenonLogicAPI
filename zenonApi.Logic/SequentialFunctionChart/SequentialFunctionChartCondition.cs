@@ -1,22 +1,22 @@
 ﻿using System.Xml.Linq;
 using zenonApi.Serialization;
 
-namespace zenonApi.Logic.SequenceFlowChart
+namespace zenonApi.Logic.SequentialFunctionChart
 {
   /// <summary>
   /// Describes the condition attached to a SFC transition.
   /// </summary>
-  public class SequenceFlowChartCondition : zenonSerializable<SequenceFlowChartCondition>
+  public class SequentialFunctionChartCondition : zenonSerializable<SequentialFunctionChartCondition>
   {
     public override string NodeName => "SFCcondition";
 
-    private string sourceCode;
-    private XElement ldDiagramDefinition;
+    private string sourceCode = "";
+    private XElement ladderDiagramDefinition;
 
     /// <summary>
     /// Contains a piece of ST/IL source code.
     /// If this property is set to a value other than null,
-    /// <see cref="LdDiagramDefinition"/> is automatically set to null.
+    /// <see cref="LadderDiagramDefinition"/> is automatically set to null.
     /// </summary>
     [zenonSerializableNode("sourceSTIL")]
     public string SourceCode
@@ -26,7 +26,7 @@ namespace zenonApi.Logic.SequenceFlowChart
       {
         if (value != null)
         {
-          ldDiagramDefinition = null;
+          ladderDiagramDefinition = null;
         }
 
         sourceCode = value;
@@ -39,9 +39,9 @@ namespace zenonApi.Logic.SequenceFlowChart
     /// <see cref="SourceCode"/> is automatically set to null.
     /// </summary>
     [zenonSerializableRawFormat("sourceLD")]
-    public XElement LdDiagramDefinition
+    public XElement LadderDiagramDefinition
     {
-      get => ldDiagramDefinition;
+      get => ladderDiagramDefinition;
       set
       {
         if (value != null)
@@ -49,7 +49,7 @@ namespace zenonApi.Logic.SequenceFlowChart
           sourceCode = null;
         }
 
-        ldDiagramDefinition = value;
+        ladderDiagramDefinition = value;
       }
     } // TODO: if LD is implemented, change this to the actual type and tag
   }

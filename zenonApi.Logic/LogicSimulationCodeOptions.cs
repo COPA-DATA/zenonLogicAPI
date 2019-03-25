@@ -12,7 +12,6 @@ namespace zenonApi.Logic
     /// <summary>
     /// Options of the definition of the code generated for simulation stored as key-value pairs.
     /// Default values of this property are the default settings for a zenon logic project version 8.00.
-    /// <value></value>
     /// </summary>
     /// <value>
     /// Property descriptions found in documentation:

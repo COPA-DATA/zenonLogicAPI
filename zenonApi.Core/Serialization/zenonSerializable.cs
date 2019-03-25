@@ -21,20 +21,20 @@ namespace zenonApi.Serialization
     public virtual TParent Parent
     {
       // Casts are required here, since we hide the interface properties in the base class
-      get => ((IContainerAwareCollectionItem)this).ContainerItemParent as TParent;
+      get => ((IContainerAwareCollectionItem)this).ItemContainerParent as TParent;
       protected set
       {
-        ((IContainerAwareCollectionItem)this).ContainerItemParent = value;
+        ((IContainerAwareCollectionItem)this).ItemContainerParent = value;
       }
     }
 
     public virtual TRoot Root
     {
       // Casts are required here, since we hide the interface properties in the base class
-      get => ((IContainerAwareCollectionItem)this).ContainerItemRoot as TRoot;
+      get => ((IContainerAwareCollectionItem)this).ItemContainerRoot as TRoot;
       protected set
       {
-        ((IContainerAwareCollectionItem)this).ContainerItemRoot = value;
+        ((IContainerAwareCollectionItem)this).ItemContainerRoot = value;
       }
     }
   }
@@ -334,7 +334,7 @@ namespace zenonApi.Serialization
         if (sourceValue != null)
         {
           // We use the raw attribute only for items, which are not required by our team, therefore we print warnings if they are used
-          Debug.WriteLine($"zenonSerializable - Export Warning: Property {property.Name} is implemented with the {nameof(zenonSerializableRawFormatAttribute)} "
+          Debug.WriteLine($"zenonSerializable - Export Warning: Property \"{property.Name}\" is implemented with the {nameof(zenonSerializableRawFormatAttribute)} "
             + "attribute. If the usage of this property is not an exception, ask the API creators to implement an API supported version of it.");
 
           target.Add(sourceValue);
@@ -357,7 +357,7 @@ namespace zenonApi.Serialization
       foreach (var attributeMapping in source.UnknownAttributes)
       {
         target.SetAttributeValue(attributeMapping.Key, attributeMapping.Value);
-        Debug.WriteLine($"zenonSerializable - Export Warning: Unknown attribute {attributeMapping.Key} found for XML node {source.NodeName}.");
+        Debug.WriteLine($"zenonSerializable - Export Warning: Unknown attribute \"{attributeMapping.Key}\" found for XML node \"{source.NodeName}\".");
       }
     }
 
@@ -384,7 +384,7 @@ namespace zenonApi.Serialization
           }
 
           target.Add(singleNode);
-          Debug.WriteLine($"zenonSerializable - Export Warning: Unknown sub-node {nodeMapping.Key} found in node {source.NodeName}.");
+          Debug.WriteLine($"zenonSerializable - Export Warning: Unknown sub-node \"{nodeMapping.Key}\" found in node \"{source.NodeName}\".");
         }
       }
     }
@@ -406,8 +406,8 @@ namespace zenonApi.Serialization
 
       if (result is IContainerAwareCollectionItem resultWithParent)
       {
-        resultWithParent.ContainerItemParent = parent;
-        resultWithParent.ContainerItemRoot = root;
+        resultWithParent.ItemContainerParent = parent;
+        resultWithParent.ItemContainerRoot = root;
       }
 
       // Find all the attributes and properties of the current type for deserialization
@@ -448,8 +448,8 @@ namespace zenonApi.Serialization
 
           if (parentContainer is IContainerAwareCollectionItem caItem)
           {
-            object root = caItem.ContainerItemRoot;
-            if (root == null && caItem.ContainerItemParent == null)
+            object root = caItem.ItemContainerRoot;
+            if (root == null && caItem.ItemContainerParent == null)
             {
               // the current object is most likely the desired root
               root = parentContainer;
@@ -557,7 +557,7 @@ namespace zenonApi.Serialization
           if (xmlNodes.Count == 1)
           {
             MethodInfo importMethod = property.PropertyType.GetMethod(nameof(Import), BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-            object root = (target as IContainerAwareCollectionItem)?.ContainerItemRoot;
+            object root = (target as IContainerAwareCollectionItem)?.ItemContainerRoot;
             var child = importMethod.Invoke(null, new object[] { xmlNodes.First(), target, root ?? target });
 
             property.SetValue(target, child);
@@ -656,7 +656,7 @@ namespace zenonApi.Serialization
         }
 
         // We use the raw attribute only for items, which are not required by our team, therefore we print warnings if they are used
-        Debug.WriteLine($"zenonSerializable - Import Warning: Property {property.Name} is implemented with the {nameof(zenonSerializableRawFormatAttribute)} "
+        Debug.WriteLine($"zenonSerializable - Import Warning: Property \"{property.Name}\" is implemented with the {nameof(zenonSerializableRawFormatAttribute)} "
           + "attribute. If the usage of this property is not an exception, ask the API creators to implement an API supported version of it.");
 
         property.SetValue(target, xmlNodes.FirstOrDefault());
@@ -672,7 +672,7 @@ namespace zenonApi.Serialization
       {
         string name = attribute.Name.ToString();
         target.UnknownAttributes.Add(name, attribute.Value);
-        Debug.WriteLine($"zenonSerializable - Import Warning: Unknown attribute {name} found for XML node {target.NodeName}.");
+        Debug.WriteLine($"zenonSerializable - Import Warning: Unknown attribute \"{name}\" found for XML node \"{target.NodeName}\".");
       }
     }
 
@@ -694,7 +694,7 @@ namespace zenonApi.Serialization
         }
 
         list.Add(node);
-        Debug.WriteLine($"zenonSerializable - Import Warning: Unknown sub-node {nodeName} found in node {target.NodeName}.");
+        Debug.WriteLine($"zenonSerializable - Import Warning: Unknown sub-node \"{nodeName}\" found in node \"{target.NodeName}\".");
       }
     }
     #endregion

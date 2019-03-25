@@ -21,7 +21,7 @@ namespace zenonApi.Logic
     SubProgram,
     /// <summary>
     /// Use this value to inidcate, that the <see cref="LogicProgram"/> is a
-    /// child of a <see cref="LogicProgramLanguage.SequenceFlowChart"/> program.
+    /// child of a <see cref="LogicProgramLanguage.SequentialFunctionChart"/> program.
     /// </summary>
     [zenonSerializableEnum("child")]
     Child,

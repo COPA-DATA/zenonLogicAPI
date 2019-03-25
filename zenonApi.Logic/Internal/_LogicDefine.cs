@@ -24,6 +24,6 @@ namespace zenonApi.Logic.Internal
     /// Formated text (extended ST format using #define pragmas).
     /// </summary>
     [zenonSerializableNodeContent]
-    public string SourceCode { get; set; }
+    public string SourceCode { get; set; } = "";
   }
 }

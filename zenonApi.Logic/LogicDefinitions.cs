@@ -5,6 +5,10 @@ namespace zenonApi.Logic
 {
   public class LogicDefinitions : zenonSerializable<LogicDefinitions, LogicProject, LogicProject>
   {
+    private LogicDefinitions() { }
+
+    public LogicDefinitions(LogicProject parent) => this.Parent = this.Root = parent;
+
     #region zenonSerializable Implementation
     public override string NodeName => "definitions";
     #endregion
@@ -14,10 +18,10 @@ namespace zenonApi.Logic
     /// There can be two <defines> tags for COMMON and GLOBAL definitions.
     /// </summary>
     [zenonSerializableNode("defines", NodeOrder = 0)]
-    public ExtendedObservableCollection<LogicDefine> Defines { get; protected set; } 
+    public ExtendedObservableCollection<LogicDefine> Defines { get; protected set; }
       = new ExtendedObservableCollection<LogicDefine>
-      {
-        new LogicDefine("(GLOBAL)")
-      };
+    {
+      new LogicDefine("(GLOBAL)")
+    };
   }
 }

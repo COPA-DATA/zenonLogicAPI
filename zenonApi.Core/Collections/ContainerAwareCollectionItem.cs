@@ -8,8 +8,8 @@ namespace zenonApi.Collections
   {
     // The following interface properties are hidden by intent
     IList IContainerAwareCollectionItem.ItemContainer { get; set; }
-    object IContainerAwareCollectionItem.ContainerItemParent { get; set; }
-    object IContainerAwareCollectionItem.ContainerItemRoot { get; set; }
+    object IContainerAwareCollectionItem.ItemContainerParent { get; set; }
+    object IContainerAwareCollectionItem.ItemContainerRoot { get; set; }
 
     /// <summary>
     /// Removes this child from its parent and root. No exception is thrown if no

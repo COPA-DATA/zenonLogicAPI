@@ -11,7 +11,7 @@ namespace zenonApi.Logic
 
     /// <summary>
     /// Name of the group.
-    /// This attribute is mendatory.
+    /// This attribute is mandatory.
     /// </summary>
     [zenonSerializableAttribute("name", AttributeOrder = 0)]
     public string Name { get; set; } // TODO: Check for correct naming? (StringExtensions.IsValidZenonLogicName)

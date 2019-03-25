@@ -5,8 +5,8 @@ namespace zenonApi.Collections
   public interface IContainerAwareCollectionItem
   {
     IList ItemContainer { get; set; }
-    object ContainerItemParent { get; set; }
-    object ContainerItemRoot { get; set; }
+    object ItemContainerParent { get; set; }
+    object ItemContainerRoot { get; set; }
 
     void Remove();
   }

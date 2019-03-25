@@ -1,11 +1,11 @@
 ﻿using zenonApi.Serialization;
 
-namespace zenonApi.Logic.SequenceFlowChart
+namespace zenonApi.Logic.SequentialFunctionChart
 {
   /// <summary>
   /// Describes a macro-step symbol in a SFC chart.
   /// </summary>
-  public class SequenceFlowChartMacro : zenonSerializable<SequenceFlowChartMacro>
+  public class SequentialFunctionChartMacro : zenonSerializable<SequentialFunctionChartMacro>
   {
     public override string NodeName => "SFCmacro";
 

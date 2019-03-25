@@ -8,6 +8,8 @@ namespace zenonApi.Logic
   {
     private ApplicationTree() { }
 
+    public ApplicationTree(LogicProject parent) => this.Parent = this.Root = parent;
+
     #region interface implementation
     public override string NodeName => "Appli";
     ILogicFileContainer IZenonSerializable<ILogicFileContainer, ILogicFileContainer, LogicProject>.Parent

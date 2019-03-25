@@ -1,12 +1,12 @@
 ﻿using zenonApi.Logic.SerializationConverters;
 using zenonApi.Serialization;
 
-namespace zenonApi.Logic.SequenceFlowChart
+namespace zenonApi.Logic.SequentialFunctionChart
 {
   /// <summary>
   /// Describes a line segment drawn in a cell of the SFC chart area.
   /// </summary>
-  public class SequenceFlowChartLine : zenonSerializable<SequenceFlowChartLine>
+  public class SequentialFunctionChartLine : zenonSerializable<SequentialFunctionChartLine>
   {
     public override string NodeName => "SFClines";
 

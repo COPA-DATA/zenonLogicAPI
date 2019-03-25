@@ -1,7 +1,7 @@
 ﻿using zenonApi.Serialization;
 using zenonApi.Collections;
 using zenonApi.Logic.FunctionBlockDiagrams;
-using zenonApi.Logic.SequenceFlowChart;
+using zenonApi.Logic.SequentialFunctionChart;
 using System.Xml.Linq;
 using zenonApi.Extensions;
 using System;
@@ -42,11 +42,11 @@ namespace zenonApi.Logic.Internal
     public override string NodeName => "pou";
     #endregion
 
-    private string sourceCode;
+    private string sourceCode = "";
     private FunctionBlockDiagramDefinition functionBlockDiagramDefinition;
-    private SequenceFlowChartDefinition sequenceFlowChartDefinition;
-    private XElement ldDiagramDefinition;
-    private string name;
+    private SequentialFunctionChartDefinition sequentialFunctionChartDefinition;
+    private XElement ladderDiagramDefinition;
+    private string name = "unknown";
 
     #region Specific properties
     /// <summary>
@@ -58,9 +58,9 @@ namespace zenonApi.Logic.Internal
       get => name;
       set
       {
-        if (!name.IsValidZenonLogicName())
+        if (!value.IsValidZenonLogicName())
         {
-          throw new Exception("Invalid zenon logic program name.");
+          throw new Exception($"Invalid zenon logic program name: {value}");
         }
 
         name = value;
@@ -131,19 +131,19 @@ namespace zenonApi.Logic.Internal
     /// Describes a group definition.
     /// </summary>
     [zenonSerializableNode("defines", NodeOrder = 2)]
-    public _LogicDefine Definitions { get; set; }
+    public _LogicDefine Definitions { get; protected set; } = new _LogicDefine();
 
     /// <summary>
     /// Contains pre-compiled code of an user defined function block imported
     /// without its source code.
     /// </summary>
     [zenonSerializableNode("pc5code", NodeOrder = 3)]
-    public string PrecompiledUdfbCode { get; set; }
+    public string PrecompiledUdfbCode { get; set; } // TODO: Should this be set to null if SourceCode is set and vice versa?
 
     /// <summary>
     /// Contains a piece of ST/IL source code.
     /// If this value is set to a value other than null, <see cref="FunctionBlockDiagramDefinition"/>,
-    /// <see cref="SequenceFlowChartDefinition"/> and <see cref="LdDiagramDefinition"/> are automatically set to null.
+    /// <see cref="SequentialFunctionChartDefinition"/> and <see cref="LadderDiagramDefinition"/> are automatically set to null.
     /// </summary>
     [zenonSerializableNode("sourceSTIL", NodeOrder = 4)]
     public string SourceCode
@@ -154,8 +154,8 @@ namespace zenonApi.Logic.Internal
         if (value != null)
         {
           functionBlockDiagramDefinition = null;
-          sequenceFlowChartDefinition = null;
-          ldDiagramDefinition = null;
+          sequentialFunctionChartDefinition = null;
+          ladderDiagramDefinition = null;
         }
 
         sourceCode = value;
@@ -165,7 +165,7 @@ namespace zenonApi.Logic.Internal
     /// <summary>
     /// Describes a function block diagram.
     /// If this value is set to a value other than null, <see cref="SourceCode"/>,
-    /// <see cref="SequenceFlowChartDefinition"/> and <see cref="LdDiagramDefinition"/> are automatically set to null.
+    /// <see cref="SequentialFunctionChartDefinition"/> and <see cref="LadderDiagramDefinition"/> are automatically set to null.
     /// </summary>
     [zenonSerializableNode("sourceFBD", NodeOrder = 5)]
     public FunctionBlockDiagramDefinition FunctionBlockDiagramDefinition
@@ -176,8 +176,8 @@ namespace zenonApi.Logic.Internal
         if (value != null)
         {
           sourceCode = null;
-          sequenceFlowChartDefinition = null;
-          ldDiagramDefinition = null;
+          sequentialFunctionChartDefinition = null;
+          ladderDiagramDefinition = null;
         }
 
         functionBlockDiagramDefinition = value;
@@ -187,46 +187,46 @@ namespace zenonApi.Logic.Internal
     /// <summary>
     /// Describes a LD diagram.
     /// If this value is set to a value other than null, <see cref="SourceCode"/>,
-    /// <see cref="SequenceFlowChartDefinition"/>
+    /// <see cref="SequentialFunctionChartDefinition"/>
     /// and <see cref="FunctionBlockDiagramDefinition"/> are automatically set to null.
     /// </summary>
     [zenonSerializableRawFormat("sourceLD", NodeOrder = 6)]
-    public XElement LdDiagramDefinition
+    public XElement LadderDiagramDefinition
     {
-      get => ldDiagramDefinition;
+      get => ladderDiagramDefinition;
       set
       {
         if (value != null)
         {
           sourceCode = null;
           functionBlockDiagramDefinition = null;
-          sequenceFlowChartDefinition = null;
+          sequentialFunctionChartDefinition = null;
         }
 
-        ldDiagramDefinition = value;
+        ladderDiagramDefinition = value;
       }
     }
 
     /// <summary>
     /// Describes a SFC program.
     /// If this value is set to a value other than null, <see cref="SourceCode"/>,
-    /// <see cref="LdDiagramDefinition"/> and <see cref="FunctionBlockDiagramDefinition"/>
+    /// <see cref="LadderDiagramDefinition"/> and <see cref="FunctionBlockDiagramDefinition"/>
     /// are automatically set to null.
     /// </summary>
     [zenonSerializableNode("sourceSFC", NodeOrder = 7)]
-    public SequenceFlowChartDefinition SequenceFlowChartDefinition
+    public SequentialFunctionChartDefinition SequentialFunctionChartDefinition
     {
-      get => sequenceFlowChartDefinition;
+      get => sequentialFunctionChartDefinition;
       set
       {
         if (value != null)
         {
           sourceCode = null;
           functionBlockDiagramDefinition = null;
-          ldDiagramDefinition = null;
+          ladderDiagramDefinition = null;
         }
 
-        sequenceFlowChartDefinition = value;
+        sequentialFunctionChartDefinition = value;
       }
     }
 

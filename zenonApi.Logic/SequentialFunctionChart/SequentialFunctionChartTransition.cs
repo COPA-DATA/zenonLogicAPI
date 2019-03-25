@@ -1,11 +1,11 @@
 ﻿using zenonApi.Serialization;
 
-namespace zenonApi.Logic.SequenceFlowChart
+namespace zenonApi.Logic.SequentialFunctionChart
 {
   /// <summary>
   /// Describes an SFC transition.
   /// </summary>
-  public class SequenceFlowChartTransition : zenonSerializable<SequenceFlowChartTransition>
+  public class SequentialFunctionChartTransition : zenonSerializable<SequentialFunctionChartTransition>
   {
     public override string NodeName => "SFCtrans";
 
@@ -50,6 +50,6 @@ namespace zenonApi.Logic.SequenceFlowChart
     /// Describes the condition attached to a SFC transition.
     /// </summary>
     [zenonSerializableNode("SFCcondition", NodeOrder = 1)]
-    public SequenceFlowChartCondition Condition { get; set; }
+    public SequentialFunctionChartCondition Condition { get; protected set; } = new SequentialFunctionChartCondition();
   }
 }

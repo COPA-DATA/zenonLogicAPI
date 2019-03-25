@@ -11,21 +11,41 @@ namespace zenonApi.Logic
   /// </summary>
   public class LogicProject : zenonSerializable<LogicProject, IZenonSerializable, LogicProject>
   {
+    private LogicProject()
+    {
+      // Initialize members which require the current object in their ctor-parameters:
+      this.Settings = new LogicProjectSettings(this);
+      this.DataTypes = new LogicDataTypesCollection(this);
+      this.LogicDefinitions = new LogicDefinitions(this);
+      this.GlobalVariables = new LogicGlobalVariables(this);
+      this.Networks = new LogicNetwork(this);
+      this.Programs = new _LogicProgramsCollection(this);
+      this.ApplicationTree = new ApplicationTree(this);
+    }
+
+    public LogicProject(string projectName) : this()
+    {
+      // TODO: Set path with project name, also check for valid name
+      this.Path = System.IO.Path.Combine("TODO_InsertRealPath", projectName); // TODO
+    }
+
     #region zenonSerializable Implementation
     public override string NodeName => "K5project";
     #endregion
 
     #region Specific properties
+    public string ProjectName => string.IsNullOrEmpty(this.Path) ? "<Unknown>" : System.IO.Path.GetFileName(this.Path);
+    
     /// <summary>
     /// The mandatory version of the K5 project.
     /// </summary>
     [zenonSerializableAttribute("version", AttributeOrder = 0)]
-    public string Version { get; protected set; }
+    public string Version { get; protected set; } = "1.1";
 
     /// <summary>
     /// The original pathname of the K5 project's folder.
     /// </summary>
-    [zenonSerializableAttribute("path", AttributeOrder = 1)]
+    [zenonSerializableAttribute("path", AttributeOrder = 1, OmitIfNull = false)]
     public string Path { get; protected set; }
 
     //TODO: discuss about default constructor calls/init for this property and subproperties
@@ -33,7 +53,7 @@ namespace zenonApi.Logic
     /// This tag groups all the settings of the project.
     /// </summary>
     [zenonSerializableNode("settings", NodeOrder = 2)]
-    public LogicProjectSettings Settings { get; protected set; } = new LogicProjectSettings();
+    public LogicProjectSettings Settings { get; protected set; }
 
     //TODO: Ask StefanH about this property (not in docu)
     [zenonSerializableRawFormat("libraries", NodeOrder = 3)]
@@ -49,10 +69,10 @@ namespace zenonApi.Logic
     /// This tag groups the COMMON and GOLBAL definitions.
     /// </summary>
     [zenonSerializableNode("definitions", NodeOrder = 5)]
-    public LogicDefinitions LogicDefinitions { get; set; }
+    public LogicDefinitions LogicDefinitions { get; protected set; }
 
     //TODO: Ask StefanH about this property (not in docu)
-    [zenonSerializableRawFormat("libraries", NodeOrder = 6)]
+    [zenonSerializableRawFormat("IOs", NodeOrder = 6)]
     public XElement Ios { get; set; }
 
     /// <summary>
@@ -65,7 +85,7 @@ namespace zenonApi.Logic
     /// This tag describes all network configuration.
     /// </summary>
     [zenonSerializableNode("networks", NodeOrder = 8)]
-    public LogicNetwork NetWorks { get; set; }
+    public LogicNetwork Networks { get; protected set; }
 
     /// <summary>
     /// Lists all programs, sub-programs and UDFBs of the project.
@@ -73,7 +93,7 @@ namespace zenonApi.Logic
     /// </summary>
     [Browsable(false)]
     [zenonSerializableNode("programs", NodeOrder = 10)]
-    internal _LogicProgramsCollection Programs { get; set; }
+    internal _LogicProgramsCollection Programs { get; private set; }
 
     /// <summary>
     /// Contains the logical folder structure of the programs and UDFBs.

@@ -26,26 +26,25 @@ namespace zenonApi.Logic
 
     /// <summary>
     /// Maximum length if the data type is STRING.
-    /// This attribute is mandatory for STRING variables, and should not appear
-    /// for other data types.
+    /// This attribute is mandatory for STRING variables, and should not appear for other data types.
     /// </summary>
     [zenonSerializableAttribute("len", AttributeOrder = 2)]
-    public string MaxStringLength { get; set; }
+    public int MaxStringLength { get; set; } = 255; // TODO: Should only be used when datatype is string
 
     /// <summary>
     /// Dimension(s) if the variable is an array.
-    /// There are at most 3 dimensions, seperated by commas.
+    /// There are at most 3 dimensions, separated by commas.
     /// This attribute is optional.
     /// </summary>
     [zenonSerializableAttribute("dim", AttributeOrder = 3, Converter = typeof(CoordinateConverter))]
-    public (int X, int Y, int Z)? ArrayDimension { get; set; }
+    public (int X, int Y, int Z)? ArrayDimension { get; set; } = null;
 
     /// <summary>
-    /// Attributes of the variable, seperated by comas.
+    /// Attributes of the variable, separated by comas.
     /// This attribute is optional.
     /// </summary>
     [zenonSerializableAttribute("attr", AttributeOrder = 4, Converter = typeof(LogicVariableAttributeConverter))]
-    public LogicVariableAttributes Attributes { get; set; }
+    public LogicVariableAttributes Attributes { get; protected set; } = new LogicVariableAttributes();
 
     /// <summary>
     /// Initial value of the variable.

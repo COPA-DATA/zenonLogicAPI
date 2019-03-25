@@ -98,7 +98,7 @@ namespace zenonApi.Extensions
       if (!self.IsValidZenonName(allowSpaces)
         || (!allowSpaces && self.Contains(" "))
         || self.Contains("__")
-        || !self.ToLower().IsValidCVarName(allowSpaces))
+        || !self.IsValidCVarName(allowSpaces))
       {
         // * Two followed underlines are not allowed in zenon Logic
         // * Taken standard C keywords are not allowed in zenon Logic

@@ -14,12 +14,7 @@ namespace zenonApi.Logic.Internal
     /// </summary>
     private _LogicProgramsCollection() { }
 
-    public _LogicProgramsCollection(LogicProject parent)
-    {
-      this.Parent = parent;
-      // For this class, the parent is the same as the root:
-      this.Root = parent;
-    }
+    public _LogicProgramsCollection(LogicProject parent) => this.Parent = this.Root = parent;
 
     public override string NodeName => "programs";
 

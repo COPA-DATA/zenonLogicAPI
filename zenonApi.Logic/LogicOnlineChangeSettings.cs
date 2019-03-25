@@ -12,7 +12,6 @@ namespace zenonApi.Logic
     /// <summary>
     /// Options for the compiler regarding the On Line Change capability.
     /// Default values for this property are the default settings for a zenon logic project version 8.00.
-    /// <value></value>
     /// </summary>
     /// <value>
     /// Property descriptions found in documentation:

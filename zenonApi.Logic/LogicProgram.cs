@@ -6,7 +6,7 @@ using zenonApi.Serialization;
 using zenonApi.Logic.Internal;
 using zenonApi.Collections;
 using zenonApi.Logic.FunctionBlockDiagrams;
-using zenonApi.Logic.SequenceFlowChart;
+using zenonApi.Logic.SequentialFunctionChart;
 using System.Xml.Linq;
 
 // TODO: Check if all public setters are really wanted, e.g. for non-primitive types, because the parent and root relationship can be corrupted
@@ -161,7 +161,7 @@ namespace zenonApi.Logic
     /// <summary>
     /// Contains a piece of ST/IL source code.
     /// If this value is set to a value other than null, <see cref="FunctionBlockDiagramDefinition"/>,
-    /// <see cref="SequenceFlowChartDefinition"/> and <see cref="LdDiagramDefinition"/> are automatically set to null.
+    /// <see cref="SequentialFunctionChartDefinition"/> and <see cref="LadderDiagramDefinition"/> are automatically set to null.
     /// </summary>
     public string SourceCode
     {
@@ -172,7 +172,7 @@ namespace zenonApi.Logic
     /// <summary>
     /// Describes a function block diagram.
     /// If this value is set to a value other than null, <see cref="SourceCode"/>,
-    /// <see cref="SequenceFlowChartDefinition"/> and <see cref="LdDiagramDefinition"/> are automatically set to null.
+    /// <see cref="SequentialFunctionChartDefinition"/> and <see cref="LadderDiagramDefinition"/> are automatically set to null.
     /// </summary>
     public FunctionBlockDiagramDefinition FunctionBlockDiagramDefinition
     {
@@ -183,25 +183,25 @@ namespace zenonApi.Logic
     /// <summary>
     /// Describes a LD diagram.
     /// If this value is set to a value other than null, <see cref="SourceCode"/>,
-    /// <see cref="SequenceFlowChartDefinition"/>
+    /// <see cref="SequentialFunctionChartDefinition"/>
     /// and <see cref="FunctionBlockDiagramDefinition"/> are automatically set to null.
     /// </summary>
-    public XElement LdDiagramDefinition
+    public XElement LadderDiagramDefinition
     {
       // TODO: If LD is implemented, change this from XElement to the according type
-      get => (XElement)getPouProperty(nameof(_Pou.LdDiagramDefinition));
-      set => setPouProperty(value, nameof(_Pou.LdDiagramDefinition));
+      get => (XElement)getPouProperty(nameof(_Pou.LadderDiagramDefinition));
+      set => setPouProperty(value, nameof(_Pou.LadderDiagramDefinition));
     }
 
     /// <summary>
     /// Describes a SFC program.
     /// If this value is set to a value other than null, <see cref="SourceCode"/>,
-    /// <see cref="LdDiagramDefinition"/> and <see cref="FunctionBlockDiagramDefinition"/>
+    /// <see cref="LadderDiagramDefinition"/> and <see cref="FunctionBlockDiagramDefinition"/>
     /// are automatically set to null.
     /// </summary>
-    public SequenceFlowChartDefinition SequenceFlowChartDefinition
+    public SequentialFunctionChartDefinition SequentialFunctionChartDefinition
     {
-      get => (SequenceFlowChartDefinition)getPouProperty();
+      get => (SequentialFunctionChartDefinition)getPouProperty();
       set => setPouProperty(value);
     }
 
@@ -229,7 +229,7 @@ namespace zenonApi.Logic
     #region Private/Internal methods and properties to handle connected _Pou instances
     private _Pou connectedPou;
 
-    internal _Pou GetOrCreateConnectedPou()
+    internal _Pou GetOrCreateConnectedPou(bool getOnly = false)
     {
       if (connectedPou != null)
       {
@@ -248,7 +248,7 @@ namespace zenonApi.Logic
 
       // If no POU was found so far, we need to create one. This may be the reason if the current Program instance
       // is not attached to any LogicProject tree yet and is created newly.
-      if (connectedPou == null)
+      if (connectedPou == null && !getOnly)
       {
         connectedPou = new _Pou()
         {

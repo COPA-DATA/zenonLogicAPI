@@ -1,26 +1,26 @@
 ﻿using System.Xml.Linq;
 using zenonApi.Serialization;
 
-namespace zenonApi.Logic.SequenceFlowChart
+namespace zenonApi.Logic.SequentialFunctionChart
 {
-  public class SequenceFlowChartAction : zenonSerializable<SequenceFlowChartAction>
+  public class SequentialFunctionChartAction : zenonSerializable<SequentialFunctionChartAction>
   {
-    private string sourceCode;
+    private string sourceCode = "";
     private FunctionBlockDiagrams.FunctionBlockDiagramDefinition functionBlockDiagramDefinition;
-    private XElement ldDiagramDefinition;
+    private XElement ladderDiagramDefinition;
 
     public override string NodeName => "SFCaction";
 
     /// <summary>
-    /// The kind of an <see cref="SequenceFlowChartAction"/>.
+    /// The kind of an <see cref="SequentialFunctionChartAction"/>.
     /// </summary>
     [zenonSerializableAttribute("kind", AttributeOrder = 0)]
-    public SequenceFlowChartActionKind Kind { get; set; }
+    public SequentialFunctionChartActionKind Kind { get; set; }
 
     /// <summary>
     /// Contains a piece of ST/IL source code.
     /// If this value is set to a value other than null, <see cref="FunctionBlockDiagramDefinition"/>
-    /// and <see cref="LdDiagramDefinition"/> are automatically set to null.
+    /// and <see cref="LadderDiagramDefinition"/> are automatically set to null.
     /// </summary>
     [zenonSerializableNode("sourceSTIL", NodeOrder = 0)]
     public string SourceCode
@@ -31,7 +31,7 @@ namespace zenonApi.Logic.SequenceFlowChart
         if (value != null)
         {
           functionBlockDiagramDefinition = null;
-          ldDiagramDefinition = null;
+          ladderDiagramDefinition = null;
         }
 
         sourceCode = value;
@@ -41,7 +41,7 @@ namespace zenonApi.Logic.SequenceFlowChart
     /// <summary>
     /// Describes a function block diagram.
     /// If this value is set to a value other than null, <see cref="SourceCode"/>
-    /// and <see cref="LdDiagramDefinition"/> are automatically set to null.
+    /// and <see cref="LadderDiagramDefinition"/> are automatically set to null.
     /// </summary>
     [zenonSerializableNode("sourceFBD", NodeOrder = 1)]
     public FunctionBlockDiagrams.FunctionBlockDiagramDefinition FunctionBlockDiagramDefinition
@@ -52,7 +52,7 @@ namespace zenonApi.Logic.SequenceFlowChart
         if (value != null)
         {
           sourceCode = null;
-          ldDiagramDefinition = null;
+          ladderDiagramDefinition = null;
         }
 
         functionBlockDiagramDefinition = value;
@@ -65,9 +65,9 @@ namespace zenonApi.Logic.SequenceFlowChart
     /// and <see cref="FunctionBlockDiagramDefinition"/> are automatically set to null.
     /// </summary>
     [zenonSerializableNode("sourceLD", NodeOrder = 2)]
-    public XElement LdDiagramDefinition
+    public XElement LadderDiagramDefinition
     {
-      get => ldDiagramDefinition;
+      get => ladderDiagramDefinition;
       set
       {
         if (value != null)
@@ -76,7 +76,7 @@ namespace zenonApi.Logic.SequenceFlowChart
           functionBlockDiagramDefinition = null;
         }
 
-        ldDiagramDefinition = value;
+        ladderDiagramDefinition = value;
       }
     } // TODO: If Ld diagrams are implemented, correct the type here
   }

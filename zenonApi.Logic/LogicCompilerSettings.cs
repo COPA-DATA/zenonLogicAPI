@@ -12,18 +12,18 @@ namespace zenonApi.Logic
     /// This property groups all the general options for the compiler.
     /// </summary>
     [zenonSerializableNode("cmpoptions", NodeOrder = 0)]
-    public LogicCompilerOptions CompilerOptions { get; protected set; }
+    public LogicCompilerOptions CompilerOptions { get; protected set; } = new LogicCompilerOptions();
 
     /// <summary>
     /// This property groups all the options for the definition of the code generated for simulation.
     /// </summary>
     [zenonSerializableNode("cmpsimulcode", NodeOrder = 1)]
-    public LogicSimulationCodeOptions SimulationCodeOptions { get; protected set; }
+    public LogicSimulationCodeOptions SimulationCodeOptions { get; protected set; } = new LogicSimulationCodeOptions();
 
     /// <summary>
     /// This property groups all the options for the definition of the code generated for the target runtime.
     /// </summary>
     [zenonSerializableNode("cmptargetcode", NodeOrder = 2)]
-    public LogicTargetCodeOptions TargetCodeOptions { get; protected set; }
+    public LogicTargetCodeOptions TargetCodeOptions { get; protected set; } = new LogicTargetCodeOptions();
   }
 }
