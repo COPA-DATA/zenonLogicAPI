@@ -44,7 +44,7 @@ namespace zenonApi.Logic
       get => name;
       set
       {
-        // TODO: Validation if not null, if not empty, if conform with zenon logic
+        // Validation is done via the setter of _Pou.Name.
         name = value;
         setPouProperty(value);
       }

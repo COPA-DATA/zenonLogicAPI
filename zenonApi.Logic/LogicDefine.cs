@@ -21,7 +21,7 @@ namespace zenonApi.Logic
         //throw new ArgumentException(Strings.LogicDefinesConstrucArgExcp);
       }
 
-      Name = name;
+      Name = name; // TODO: Check for correct naming? (StringExtensions.IsValidZenonLogicName)
     }
 
     /// <summary>
@@ -30,7 +30,7 @@ namespace zenonApi.Logic
     /// (GLOBAL) : global definitions of the project
     /// </summary>
     [zenonSerializableAttribute("name", AttributeOrder = 0)]
-    public string Name { get; set; }
+    public string Name { get; protected set; }
 
     /// <summary>
     /// Formated text (extended ST format using #define pragmas)

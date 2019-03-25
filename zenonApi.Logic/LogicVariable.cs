@@ -15,7 +15,7 @@ namespace zenonApi.Logic
     /// This attribute is mandatory.
     /// </summary>
     [zenonSerializableAttribute("name", AttributeOrder = 0)]
-    public string Name { get; set; }
+    public string Name { get; set; } // TODO: Check for correct naming? (StringExtensions.IsValidZenonLogicName)
 
     /// <summary>
     /// Name of the data type of the variable.

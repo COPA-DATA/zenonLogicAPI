@@ -59,7 +59,7 @@ namespace zenonApi.Serialization
 
     internal override bool InternalOmitIfNull => this.OmitIfNull;
 
-    internal override Type InternalConverter => null; // TODO: If Converters are supported in the future, return the correct prop here
+    internal override Type InternalConverter => null; // No converters are allowed for nodes
     #endregion
   }
 }

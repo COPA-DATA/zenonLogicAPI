@@ -21,14 +21,14 @@ namespace zenonApi.Logic
         //throw new ArgumentException(string.Format(Strings.LogicOptionTupleConstrucArgExcp, nameof(LogicOptionTuple)));
       }
 
-      Name = name;
+      Name = name; // TODO: Check for correct naming? (StringExtensions.IsValidZenonLogicName)
       Value = value;
     }
 
     [zenonSerializableAttribute("name", AttributeOrder = 0)]
-    public string Name { get; set; }
+    public string Name { get; protected set; }
 
     [zenonSerializableAttribute("value", AttributeOrder = 1)]
-    public string Value { get; set; }
+    public string Value { get; protected set; }
   }
 }

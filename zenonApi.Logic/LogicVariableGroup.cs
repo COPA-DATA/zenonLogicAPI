@@ -14,7 +14,7 @@ namespace zenonApi.Logic
     /// This attribute is mendatory.
     /// </summary>
     [zenonSerializableAttribute("name", AttributeOrder = 0)]
-    public string Name { get; set; }
+    public string Name { get; set; } // TODO: Check for correct naming? (StringExtensions.IsValidZenonLogicName)
 
     /// <summary>
     /// Kind of variable group.

@@ -63,7 +63,6 @@ namespace zenonApi.Serialization
 
 
     #region Private/Protected methods
-    // TODO: Clear the converter cache after serialization/deserialization?
     /// <summary>
     /// Protected member, containing all converters which were previously initialized during Serialization/Deserialization.
     /// </summary>
@@ -217,10 +216,6 @@ namespace zenonApi.Serialization
           XElement child = (XElement)exportMethod.Invoke(sourceValue, null);
 
           target.Add(child);
-        }
-        else if (property.PropertyType.IsEnum)
-        {
-          // TODO: zenonSerializableEnum? Required at all?
         }
         else if (typeof(IList).IsAssignableFrom(property.PropertyType))
         {
@@ -501,8 +496,6 @@ namespace zenonApi.Serialization
         else if (property.PropertyType.IsEnum)
         {
           // If no converter is registered, try to convert it manually
-          // TODO: Special types like guids would be nice to consider here
-
           foreach (var value in Enum.GetValues(property.PropertyType))
           {
             var field = property.PropertyType.GetField(value.ToString());
@@ -572,7 +565,6 @@ namespace zenonApi.Serialization
         }
         else if (xmlNodes.Count == 1)
         {
-          // TODO: There are no converters yet for this case (no zenonSerializable)
           // Just try to deserialize the value directly
           if (typeof(IConvertible).IsAssignableFrom(property.PropertyType))
           {
@@ -609,8 +601,6 @@ namespace zenonApi.Serialization
         else if (property.PropertyType.IsEnum)
         {
           // If no converter is registered, try to convert it manually
-          // TODO: Special types like guids would be nice to consider here
-
           foreach (var value in Enum.GetValues(property.PropertyType))
           {
             var field = property.PropertyType.GetField(value.ToString());

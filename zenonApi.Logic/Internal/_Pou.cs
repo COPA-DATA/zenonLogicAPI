@@ -3,6 +3,8 @@ using zenonApi.Collections;
 using zenonApi.Logic.FunctionBlockDiagrams;
 using zenonApi.Logic.SequenceFlowChart;
 using System.Xml.Linq;
+using zenonApi.Extensions;
+using System;
 
 namespace zenonApi.Logic.Internal
 {
@@ -44,13 +46,26 @@ namespace zenonApi.Logic.Internal
     private FunctionBlockDiagramDefinition functionBlockDiagramDefinition;
     private SequenceFlowChartDefinition sequenceFlowChartDefinition;
     private XElement ldDiagramDefinition;
+    private string name;
 
     #region Specific properties
     /// <summary>
     /// The name of the POU, which is mandatory.
     /// </summary>
     [zenonSerializableAttribute("name", AttributeOrder = 0)]
-    public string Name { get; set; } // TODO: Validation if not null, if not empty, if conform with zenon logic
+    public string Name
+    {
+      get => name;
+      set
+      {
+        if (!name.IsValidZenonLogicName())
+        {
+          throw new Exception("Invalid zenon logic program name.");
+        }
+
+        name = value;
+      }
+    }
 
     /// <summary>
     /// The kind of the POU, which is mandatory.
@@ -69,7 +84,7 @@ namespace zenonApi.Logic.Internal
     /// <see cref="LogicProgramType.Child"/> SFC programs.
     /// </summary>
     [zenonSerializableAttribute("parent", AttributeOrder = 3)]
-    public string ParentPou { get; set; } // TOOD; Shouldn't we use a reference to another pou?
+    public string ParentPou { get; set; } // TOOD; Shouldn't we use a reference to another pou? Validation of naming otherwise?
 
     /// <summary>
     /// The execution period (number of cycles) at runtime.

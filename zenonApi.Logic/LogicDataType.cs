@@ -17,7 +17,7 @@ namespace zenonApi.Logic
     /// Name of the data type.
     /// </summary>
     [zenonSerializableAttribute("name", AttributeOrder = 0)]
-    public string Name { get; set; }
+    public string Name { get; set; } // TODO: Check for correct naming?
 
     /// <summary>
     /// Indicates the kind of data type.

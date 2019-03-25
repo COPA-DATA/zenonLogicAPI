@@ -23,7 +23,7 @@ namespace zenonApi.Logic
     protected bool Expand { get; set; } = true;
 
     [zenonSerializableAttribute("Name")]
-    public string Name { get; set; }
+    public string Name { get; set; } // TODO: What is allowed here as a name?
     #endregion
   }
 }
