@@ -5,7 +5,7 @@ namespace zenonApi.Logic.SequenceFlowChart
   /// <summary>
   /// Describes an SFC transition.
   /// </summary>
-  public class Transition : zenonSerializable<Transition>
+  public class SequenceFlowChartTransition : zenonSerializable<SequenceFlowChartTransition>
   {
     public override string NodeName => "SFCtrans";
 
@@ -50,6 +50,6 @@ namespace zenonApi.Logic.SequenceFlowChart
     /// Describes the condition attached to a SFC transition.
     /// </summary>
     [zenonSerializableNode("SFCcondition", NodeOrder = 1)]
-    public Condition Condition { get; set; }
+    public SequenceFlowChartCondition Condition { get; set; }
   }
 }

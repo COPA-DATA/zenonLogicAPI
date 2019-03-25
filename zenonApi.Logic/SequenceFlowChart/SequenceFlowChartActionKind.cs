@@ -3,9 +3,9 @@
 namespace zenonApi.Logic.SequenceFlowChart
 {
   /// <summary>
-  /// The kind of an <see cref="zenonApi.Logic.SequenceFlowChart.Action"/>.
+  /// The kind of an <see cref="zenonApi.Logic.SequenceFlowChart.SequenceFlowChartAction"/>.
   /// </summary>
-  public enum ActionKind
+  public enum SequenceFlowChartActionKind
   {
     /// <summary>List of simple action blocks in text format.</summary>
     [zenonSerializableEnum("default")]

@@ -3,9 +3,9 @@
 namespace zenonApi.Logic.SequenceFlowChart
 {
   /// <summary>
-  /// Describes a jump symbol to a SFC <see cref="Step"/>.
+  /// Describes a jump symbol to a SFC <see cref="SequenceFlowChartStep"/>.
   /// </summary>
-  public class Jump : zenonSerializable<Jump>
+  public class SequenceFlowChartJump : zenonSerializable<SequenceFlowChartJump>
   {
     public override string NodeName => "SFCjump";
 

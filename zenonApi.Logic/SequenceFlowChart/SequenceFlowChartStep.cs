@@ -7,15 +7,15 @@ namespace zenonApi.Logic.SequenceFlowChart
   /// <summary>
   /// Describes a SFC step.
   /// </summary>
-  public class Step : zenonSerializable<Step>
+  public class SequenceFlowChartStep : zenonSerializable<SequenceFlowChartStep>
   {
     public override string NodeName => "SFCstep";
 
     /// <summary>
-    /// The kind of a <see cref="Step"/>.
+    /// The kind of a <see cref="SequenceFlowChartStep"/>.
     /// </summary>
     [zenonSerializableAttribute("kind", AttributeOrder = 0)]
-    public StepKind Kind { get; set; }
+    public SequenceFlowChartStepKind Kind { get; set; }
 
     /// <summary>
     /// X coordinate in grid units (mandatory).
@@ -57,7 +57,7 @@ namespace zenonApi.Logic.SequenceFlowChart
     /// Describes an action block within a SFC step.
     /// </summary>
     [zenonSerializableNode("SFCaction", NodeOrder = 1, OmitIfNull = false)]
-    public ExtendedObservableCollection<Action> Actions { get; protected set; }
-      = new ExtendedObservableCollection<Action>();
+    public ExtendedObservableCollection<SequenceFlowChartAction> Actions { get; protected set; }
+      = new ExtendedObservableCollection<SequenceFlowChartAction>();
   }
 }

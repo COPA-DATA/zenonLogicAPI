@@ -5,7 +5,7 @@ namespace zenonApi.Logic.SequenceFlowChart
   /// <summary>
   /// Describes a macro-step symbol in a SFC chart.
   /// </summary>
-  public class Macro : zenonSerializable<Macro>
+  public class SequenceFlowChartMacro : zenonSerializable<SequenceFlowChartMacro>
   {
     public override string NodeName => "SFCmacro";
 

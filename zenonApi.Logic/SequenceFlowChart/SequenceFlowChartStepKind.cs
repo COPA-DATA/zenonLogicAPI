@@ -3,9 +3,9 @@
 namespace zenonApi.Logic.SequenceFlowChart
 {
   /// <summary>
-  /// The kind of a <see cref="Step"/>.
+  /// The kind of a <see cref="SequenceFlowChartStep"/>.
   /// </summary>
-  public enum StepKind
+  public enum SequenceFlowChartStepKind
   {
     /// <summary>A default step.</summary>
     [zenonSerializableEnum("default")]

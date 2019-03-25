@@ -28,35 +28,35 @@ namespace zenonApi.Logic.SequenceFlowChart
     /// Describes a SFC transition.
     /// </summary>
     [zenonSerializableNode("SFCtrans", NodeOrder = 0)]
-    public ExtendedObservableCollection<Transition> Transitions { get; protected set; }
-      = new ExtendedObservableCollection<Transition>();
+    public ExtendedObservableCollection<SequenceFlowChartTransition> Transitions { get; protected set; }
+      = new ExtendedObservableCollection<SequenceFlowChartTransition>();
 
     /// <summary>
     /// Describes SFC steps.
     /// </summary>
     [zenonSerializableNode("SFCstep", NodeOrder = 1)]
-    public ExtendedObservableCollection<Step> Steps { get; protected set; }
-      = new ExtendedObservableCollection<Step>();
+    public ExtendedObservableCollection<SequenceFlowChartStep> Steps { get; protected set; }
+      = new ExtendedObservableCollection<SequenceFlowChartStep>();
 
     /// <summary>
     /// Describes the jumps to SFC steps.
     /// </summary>
     [zenonSerializableNode("SFCjump", NodeOrder = 2)]
-    public ExtendedObservableCollection<Jump> Jumps { get; protected set; }
-      = new ExtendedObservableCollection<Jump>();
+    public ExtendedObservableCollection<SequenceFlowChartJump> Jumps { get; protected set; }
+      = new ExtendedObservableCollection<SequenceFlowChartJump>();
 
     /// <summary>
     /// Describes the macro-step symbols in a SFC chart.
     /// </summary>
     [zenonSerializableNode("SFCmacro", NodeOrder = 3)]
-    public ExtendedObservableCollection<Macro> Macros { get; protected set; }
-      = new ExtendedObservableCollection<Macro>();
+    public ExtendedObservableCollection<SequenceFlowChartMacro> Macros { get; protected set; }
+      = new ExtendedObservableCollection<SequenceFlowChartMacro>();
 
     /// <summary>
     /// Describes line segments drawn in the SFC chart area.
     /// </summary>
     [zenonSerializableNode("SFClines", NodeOrder = 4)]
-    public ExtendedObservableCollection<Line> Lines { get; protected set; }
-      = new ExtendedObservableCollection<Line>();
+    public ExtendedObservableCollection<SequenceFlowChartLine> Lines { get; protected set; }
+      = new ExtendedObservableCollection<SequenceFlowChartLine>();
   }
 }

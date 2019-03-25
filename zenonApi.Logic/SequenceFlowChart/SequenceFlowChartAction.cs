@@ -3,7 +3,7 @@ using zenonApi.Serialization;
 
 namespace zenonApi.Logic.SequenceFlowChart
 {
-  public class Action : zenonSerializable<Action>
+  public class SequenceFlowChartAction : zenonSerializable<SequenceFlowChartAction>
   {
     private string sourceCode;
     private FunctionBlockDiagrams.FunctionBlockDiagramDefinition functionBlockDiagramDefinition;
@@ -12,10 +12,10 @@ namespace zenonApi.Logic.SequenceFlowChart
     public override string NodeName => "SFCaction";
 
     /// <summary>
-    /// The kind of an <see cref="Action"/>.
+    /// The kind of an <see cref="SequenceFlowChartAction"/>.
     /// </summary>
     [zenonSerializableAttribute("kind", AttributeOrder = 0)]
-    public ActionKind Kind { get; set; }
+    public SequenceFlowChartActionKind Kind { get; set; }
 
     /// <summary>
     /// Contains a piece of ST/IL source code.

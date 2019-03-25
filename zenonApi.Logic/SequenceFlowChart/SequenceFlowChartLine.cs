@@ -6,7 +6,7 @@ namespace zenonApi.Logic.SequenceFlowChart
   /// <summary>
   /// Describes a line segment drawn in a cell of the SFC chart area.
   /// </summary>
-  public class Line : zenonSerializable<Line>
+  public class SequenceFlowChartLine : zenonSerializable<SequenceFlowChartLine>
   {
     public override string NodeName => "SFClines";
 
