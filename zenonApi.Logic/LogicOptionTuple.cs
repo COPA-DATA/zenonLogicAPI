@@ -20,7 +20,7 @@ namespace zenonApi.Logic
     {
       if (string.IsNullOrWhiteSpace(name))
       {
-        throw new ArgumentException(string.Format(Strings.LogicOptionTupleConstrucArgExcp, nameof(LogicOptionTuple)));
+        //throw new ArgumentException(string.Format(Strings.LogicOptionTupleConstrucArgExcp, nameof(LogicOptionTuple)));
       }
 
       Name = name;

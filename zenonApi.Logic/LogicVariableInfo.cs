@@ -11,7 +11,6 @@ namespace zenonApi.Logic
 
     /// <summary>
     /// Type of information contained in the Data attribute.
-    /// TODO add information here about possible values - the doku differs from the example file
     /// </summary>
     [zenonSerializableAttribute("type", AttributeOrder = 0)]
     public LogicVariableInformationTypeKind Type { get; set; }

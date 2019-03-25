@@ -29,8 +29,6 @@ namespace zenonApi.Logic.SerializationConverters
         return true;
       }
 
-      // TODO: Maybe throw exceptions if not a valid value?
-
       return false;
     }
   }

@@ -6,8 +6,8 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
   /// Abstract class, which is the base for all function block diagram objects.
   /// </summary>
   /// <typeparam name="TSelf"></typeparam>
-  public abstract class FunctionBlockDiagramObject<TSelf> : zenonSerializable<TSelf, FunctionBlockDiagramDefinition, LogicProject>
-    where TSelf : zenonSerializable<TSelf, FunctionBlockDiagramDefinition, LogicProject>
+  public abstract class FunctionBlockDiagramObject<TSelf> : zenonSerializable<TSelf>
+    where TSelf : zenonSerializable<TSelf>
   {
     /// <summary>
     /// The ID of the FBD object, which is mandatory.

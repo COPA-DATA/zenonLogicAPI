@@ -6,6 +6,8 @@ using zenonApi.Serialization;
 using zenonApi.Logic.Internal;
 using zenonApi.Collections;
 using zenonApi.Logic.FunctionBlockDiagrams;
+using zenonApi.Logic.SequenceFlowChart;
+using System.Xml.Linq;
 
 // TODO: Check if all public setters are really wanted, e.g. for non-primitive types, because the parent and root relationship can be corrupted
 
@@ -158,6 +160,8 @@ namespace zenonApi.Logic
 
     /// <summary>
     /// Contains a piece of ST/IL source code.
+    /// If this value is set to a value other than null, <see cref="FunctionBlockDiagramDefinition"/>,
+    /// <see cref="SequenceFlowChartDefinition"/> and <see cref="LdDiagramDefinition"/> are automatically set to null.
     /// </summary>
     public string SourceCode
     {
@@ -165,10 +169,10 @@ namespace zenonApi.Logic
       set => setPouProperty(value);
     }
 
-    // TODO: FunctionBlockDiagramDefinition, FB-LD, FB-SFC are exclusive and cannot appear together --> shall we set the other to null on setting them?
-
     /// <summary>
     /// Describes a function block diagram.
+    /// If this value is set to a value other than null, <see cref="SourceCode"/>,
+    /// <see cref="SequenceFlowChartDefinition"/> and <see cref="LdDiagramDefinition"/> are automatically set to null.
     /// </summary>
     public FunctionBlockDiagramDefinition FunctionBlockDiagramDefinition
     {
@@ -176,9 +180,30 @@ namespace zenonApi.Logic
       set => setPouProperty(value);
     }
 
-    // TODO sourceLD, order = 6
+    /// <summary>
+    /// Describes a LD diagram.
+    /// If this value is set to a value other than null, <see cref="SourceCode"/>,
+    /// <see cref="SequenceFlowChartDefinition"/>
+    /// and <see cref="FunctionBlockDiagramDefinition"/> are automatically set to null.
+    /// </summary>
+    public XElement LdDiagramDefinition
+    {
+      // TODO: If LD is implemented, change this from XElement to the according type
+      get => (XElement)getPouProperty(nameof(_Pou.LdDiagramDefinition));
+      set => setPouProperty(value, nameof(_Pou.LdDiagramDefinition));
+    }
 
-    // TODO sourceSFC, order = 7
+    /// <summary>
+    /// Describes a SFC program.
+    /// If this value is set to a value other than null, <see cref="SourceCode"/>,
+    /// <see cref="LdDiagramDefinition"/> and <see cref="FunctionBlockDiagramDefinition"/>
+    /// are automatically set to null.
+    /// </summary>
+    public SequenceFlowChartDefinition SequenceFlowChartDefinition
+    {
+      get => (SequenceFlowChartDefinition)getPouProperty();
+      set => setPouProperty(value);
+    }
 
     /// <summary>
     /// Undocumented zenon Logic node. Contains columns displayed in the
