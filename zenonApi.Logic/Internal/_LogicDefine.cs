@@ -5,12 +5,9 @@ namespace zenonApi.Logic.Internal
   /// <summary>
   /// Describes a group of definitions.
   /// </summary>
-  internal class _LogicDefine : zenonSerializable<_LogicDefine, _Pou, LogicProject>
+  internal class _LogicDefine : zenonSerializable<_LogicDefine>
   {
     #region Interface implementation
-    public override _Pou Parent { get; protected set; }
-    public override LogicProject Root { get; protected set; }
-
     public override string NodeName => "defines";
     #endregion
 

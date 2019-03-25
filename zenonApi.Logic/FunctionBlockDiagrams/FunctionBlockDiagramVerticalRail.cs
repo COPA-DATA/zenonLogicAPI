@@ -5,7 +5,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
   /// <summary>
   /// Represents a vertical bar (rail) in a FBD diagram.
   /// </summary>
-  public class FunctionBlockDiagramVerticalRail : zenonSerializable<FunctionBlockDiagramVerticalRail, FunctionBlockDiagramDefinition, LogicProject>
+  public class FunctionBlockDiagramVerticalRail : zenonSerializable<FunctionBlockDiagramVerticalRail>
   {
     public override string NodeName => "FBDvrail";
 

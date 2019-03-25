@@ -7,7 +7,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
   /// <summary>
   /// Represents a connection line in a FBD diagram.
   /// </summary>
-  public class FunctionBlockDiagramLine : zenonSerializable<FunctionBlockDiagramLine, FunctionBlockDiagramDefinition, LogicProject>
+  public class FunctionBlockDiagramLine : zenonSerializable<FunctionBlockDiagramLine>
   {
     public override string NodeName => "FBDline";
 

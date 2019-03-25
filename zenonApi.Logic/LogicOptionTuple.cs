@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using zenonApi.Logic.Resources;
+﻿using System.Diagnostics;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic

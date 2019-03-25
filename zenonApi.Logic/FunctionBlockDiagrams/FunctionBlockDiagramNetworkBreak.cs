@@ -5,7 +5,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
   /// <summary>
   /// Represents a network break separation line in a FBD diagram.
   /// </summary>
-  public class FunctionBlockDiagramNetworkBreak : zenonSerializable<FunctionBlockDiagramNetworkBreak, FunctionBlockDiagramDefinition, LogicProject>
+  public class FunctionBlockDiagramNetworkBreak : zenonSerializable<FunctionBlockDiagramNetworkBreak>
   {
     public override string NodeName => "FBDbreak";
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic.SequenceFlowChart
@@ -26,7 +23,8 @@ namespace zenonApi.Logic.SequenceFlowChart
     /// and <see cref="LdDiagramDefinition"/> are automatically set to null.
     /// </summary>
     [zenonSerializableNode("sourceSTIL", NodeOrder = 0)]
-    public string SourceCode {
+    public string SourceCode
+    {
       get => sourceCode;
       set
       {
@@ -67,7 +65,8 @@ namespace zenonApi.Logic.SequenceFlowChart
     /// and <see cref="FunctionBlockDiagramDefinition"/> are automatically set to null.
     /// </summary>
     [zenonSerializableNode("sourceLD", NodeOrder = 2)]
-    public XElement LdDiagramDefinition {
+    public XElement LdDiagramDefinition
+    {
       get => ldDiagramDefinition;
       set
       {

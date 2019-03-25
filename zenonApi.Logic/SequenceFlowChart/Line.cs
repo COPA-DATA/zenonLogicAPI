@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using zenonApi.Logic.SerializationConverters;
+﻿using zenonApi.Logic.SerializationConverters;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic.SequenceFlowChart

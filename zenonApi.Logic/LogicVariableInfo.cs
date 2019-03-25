@@ -5,7 +5,7 @@ namespace zenonApi.Logic
 {
   //TODO talk with StefanH about this class, the values are not clear for me
   [DebuggerDisplay("Type = {Type}")]
-  public class LogicVariableInfo : zenonSerializable<LogicVariableInfo, LogicVariable, LogicProject>
+  public class LogicVariableInfo : zenonSerializable<LogicVariableInfo>
   {
     public override string NodeName => "varinfo";
 

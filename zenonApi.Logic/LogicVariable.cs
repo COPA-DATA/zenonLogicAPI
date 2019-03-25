@@ -4,7 +4,7 @@ using zenonApi.Serialization;
 
 namespace zenonApi.Logic
 {
-  public class LogicVariable : zenonSerializable<LogicVariable, LogicVariableGroup, LogicProject>
+  public class LogicVariable : zenonSerializable<LogicVariable>
   {
     #region zenonSerializable Implementation
     public override string NodeName => "var";

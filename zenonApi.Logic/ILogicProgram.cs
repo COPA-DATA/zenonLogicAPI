@@ -2,7 +2,5 @@
 
 namespace zenonApi.Logic
 {
-  public interface ILogicProgram : IZenonSerializable
-  {
-  }
+  public interface ILogicProgram : IZenonSerializable { }
 }

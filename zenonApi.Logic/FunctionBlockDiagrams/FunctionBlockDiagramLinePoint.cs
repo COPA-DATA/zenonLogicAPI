@@ -5,7 +5,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
   /// <summary>
   /// Represents a significant point for drawing of a FBD connection line.
   /// </summary>
-  public class FunctionBlockDiagramLinePoint : zenonSerializable<FunctionBlockDiagramLinePoint, FunctionBlockDiagramLine, LogicProject>
+  public class FunctionBlockDiagramLinePoint : zenonSerializable<FunctionBlockDiagramLinePoint>
   {
     public override string NodeName => "FBDlinepoint";
 

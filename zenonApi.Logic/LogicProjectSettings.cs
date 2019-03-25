@@ -13,13 +13,13 @@ namespace zenonApi.Logic
     /// This tag describes the triggering of runtime cycles in the project settings.
     /// </summary>
     [zenonSerializableNode("triggering", NodeOrder = 0)]
-    public LogicTriggeringSettings TriggerTime { get; set; }
+    public LogicTriggeringSettings TriggerTime { get; set; } = new LogicTriggeringSettings();
 
     /// <summary>
     /// This tag groups all the options for the compiler.
     /// </summary>
     [zenonSerializableNode("compiler", NodeOrder = 1)]
-    public LogicCompilerSettings CompilerSettings { get; protected set; }
+    public LogicCompilerSettings CompilerSettings { get; protected set; } = new LogicCompilerSettings();
 
     /// <summary>
     /// This tag groups all the options for the compiler regarding the On Line Change capability.

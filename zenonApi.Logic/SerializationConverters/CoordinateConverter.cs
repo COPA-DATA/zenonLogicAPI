@@ -18,7 +18,7 @@ namespace zenonApi.Logic.SerializationConverters
         return $"{coords.Item1},{coords.Item2},{coords.Item3}";
       }
 
-     throw new FormatException(string.Format(Strings.CoordConverterFormatExcp, nameof(CoordinateConverter)));
+      throw new FormatException(string.Format(Strings.CoordConverterFormatExcp, nameof(CoordinateConverter)));
     }
 
     public object Convert(string source)

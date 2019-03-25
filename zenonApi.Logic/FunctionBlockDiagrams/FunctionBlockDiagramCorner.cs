@@ -5,7 +5,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
   /// <summary>
   /// Represents a user defined corner in a FBD diagram.
   /// </summary>
-  public class FunctionBlockDiagramCorner : zenonSerializable<FunctionBlockDiagramCorner, FunctionBlockDiagramDefinition, LogicProject>
+  public class FunctionBlockDiagramCorner : zenonSerializable<FunctionBlockDiagramCorner>
   {
     public override string NodeName => "FBDcorner";
 

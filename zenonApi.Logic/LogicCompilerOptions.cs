@@ -12,7 +12,6 @@ namespace zenonApi.Logic
     /// <summary>
     /// Compiler options stored as key-value pairs.
     /// Default values of this property are the default settings for a zenon logic project version 8.00.
-    /// <value></value>
     /// </summary>
     /// <value>
     /// Property descriptions found in documentation:
@@ -28,7 +27,7 @@ namespace zenonApi.Logic
     /// warning: Display warning messages
     /// </value>
     [zenonSerializableNode("opt", NodeOrder = 0)]
-    public ExtendedObservableCollection<LogicOptionTuple> OptionTuples { get; protected set; } 
+    public ExtendedObservableCollection<LogicOptionTuple> OptionTuples { get; protected set; }
       = new ExtendedObservableCollection<LogicOptionTuple>
       {
         new LogicOptionTuple("simul","ON"),

@@ -33,7 +33,7 @@ namespace zenonApi.Logic
     /// This tag groups all the settings of the project.
     /// </summary>
     [zenonSerializableNode("settings", NodeOrder = 2)]
-    public LogicProjectSettings Settings { get; protected set; }
+    public LogicProjectSettings Settings { get; protected set; } = new LogicProjectSettings();
 
     //TODO: Ask StefanH about this property (not in docu)
     [zenonSerializableRawFormat("libraries", NodeOrder = 3)]
