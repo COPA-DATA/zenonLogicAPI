@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using zenonApi.Collections;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic.SequenceFlowChart
@@ -56,6 +57,7 @@ namespace zenonApi.Logic.SequenceFlowChart
     /// Describes an action block within a SFC step.
     /// </summary>
     [zenonSerializableNode("SFCaction", NodeOrder = 1, OmitIfNull = false)]
-    public List<Action> Actions { get; set; }
+    public ExtendedObservableCollection<Action> Actions { get; protected set; }
+      = new ExtendedObservableCollection<Action>();
   }
 }

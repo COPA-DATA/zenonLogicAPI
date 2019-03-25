@@ -24,6 +24,7 @@ namespace zenonApi.Logic.Internal
     public override string NodeName => "programs";
 
     [zenonSerializableNode("pou")]
-    public ContainerAwareObservableCollection<_Pou> ProgramOrganizationUnits { get; set; }
+    public ContainerAwareObservableCollection<_Pou> ProgramOrganizationUnits { get; protected set; }
+      = new ContainerAwareObservableCollection<_Pou>();
   }
 }

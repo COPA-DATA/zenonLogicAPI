@@ -14,7 +14,7 @@ namespace zenonApi.Logic.Network
     /// </summary>
     [zenonSerializableNode("binditem", NodeOrder = 0)]
     public ExtendedObservableCollection<LogicBindingItem> BindingItems { get; protected set; }
-    = new ExtendedObservableCollection<LogicBindingItem>();
+      = new ExtendedObservableCollection<LogicBindingItem>();
 
   }
 }

@@ -21,10 +21,12 @@ namespace zenonApi.Logic
     public bool Expand { get; protected set; } = true;
 
     [zenonSerializableNode("Folder")]
-    public ContainerAwareObservableCollection<LogicFolder> Folders { get; set; }
+    public ContainerAwareObservableCollection<LogicFolder> Folders { get; protected set; }
+      = new ContainerAwareObservableCollection<LogicFolder>();
 
     [zenonSerializableNode("Program")]
-    public ContainerAwareObservableCollection<LogicProgram> Programs { get; set; }
+    public ContainerAwareObservableCollection<LogicProgram> Programs { get; protected set; }
+      = new ContainerAwareObservableCollection<LogicProgram>();
 
 
 

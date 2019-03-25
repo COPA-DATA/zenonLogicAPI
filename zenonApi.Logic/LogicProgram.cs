@@ -136,7 +136,7 @@ namespace zenonApi.Logic
     public ExtendedObservableCollection<LogicVariableGroup> VariableGroups
     {
       get => (ExtendedObservableCollection<LogicVariableGroup>)getPouProperty();
-      set => setPouProperty(value);
+      protected set => setPouProperty(value);
     }
 
     /// <summary>

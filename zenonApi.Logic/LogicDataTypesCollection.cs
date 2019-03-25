@@ -17,7 +17,8 @@ namespace zenonApi.Logic
     /// List of all defined data types.
     /// </summary>
     [zenonSerializableNode("type", NodeOrder = 0)]
-    public ExtendedObservableCollection<LogicDataType> DataTypes { get; set; }
+    public ExtendedObservableCollection<LogicDataType> DataTypes { get; protected set; }
+      = new ExtendedObservableCollection<LogicDataType>();
     #endregion
   }
 }

@@ -59,6 +59,7 @@ namespace zenonApi.Logic
     /// Indicates additional information for the variable it belongs to.
     /// </summary>
     [zenonSerializableNode("varinfo", NodeOrder = 6)]
-    public ExtendedObservableCollection<LogicVariableInfo> VariableInfos { get; set; }
+    public ExtendedObservableCollection<LogicVariableInfo> VariableInfos { get; protected set; }
+      = new ExtendedObservableCollection<LogicVariableInfo>();
   }
 }

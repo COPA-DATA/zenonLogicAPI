@@ -109,7 +109,8 @@ namespace zenonApi.Logic.Internal
     /// Groups variables of the same variable group.
     /// </summary>
     [zenonSerializableNode("vargroup", NodeOrder = 1)]
-    public ExtendedObservableCollection<LogicVariableGroup> VariableGroups { get; set; }
+    public ExtendedObservableCollection<LogicVariableGroup> VariableGroups { get; protected set; }
+      = new ExtendedObservableCollection<LogicVariableGroup>();
 
     /// <summary>
     /// Describes a group definition.

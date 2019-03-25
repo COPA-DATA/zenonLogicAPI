@@ -45,6 +45,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
     /// Significant points for drawing connection lines in FBD diagrams.
     /// </summary>
     [zenonSerializableAttribute("FBDlinepoint", AttributeOrder = 5)]
-    public ExtendedObservableCollection<FunctionBlockDiagramLinePoint> DrawingPoints { get; set; }
+    public ExtendedObservableCollection<FunctionBlockDiagramLinePoint> DrawingPoints { get; protected set; }
+      = new ExtendedObservableCollection<FunctionBlockDiagramLinePoint>();
   }
 }

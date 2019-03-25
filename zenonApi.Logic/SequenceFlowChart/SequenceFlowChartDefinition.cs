@@ -28,30 +28,35 @@ namespace zenonApi.Logic.SequenceFlowChart
     /// Describes a SFC transition.
     /// </summary>
     [zenonSerializableNode("SFCtrans", NodeOrder = 0)]
-    public ExtendedObservableCollection<Transition> Transitions { get; set; }
+    public ExtendedObservableCollection<Transition> Transitions { get; protected set; }
+      = new ExtendedObservableCollection<Transition>();
 
     /// <summary>
     /// Describes SFC steps.
     /// </summary>
     [zenonSerializableNode("SFCstep", NodeOrder = 1)]
-    public ExtendedObservableCollection<Step> Steps { get; set; }
+    public ExtendedObservableCollection<Step> Steps { get; protected set; }
+      = new ExtendedObservableCollection<Step>();
 
     /// <summary>
     /// Describes the jumps to SFC steps.
     /// </summary>
     [zenonSerializableNode("SFCjump", NodeOrder = 2)]
-    public ExtendedObservableCollection<Jump> Jumps { get; set; }
+    public ExtendedObservableCollection<Jump> Jumps { get; protected set; }
+      = new ExtendedObservableCollection<Jump>();
 
     /// <summary>
     /// Describes the macro-step symbols in a SFC chart.
     /// </summary>
     [zenonSerializableNode("SFCmacro", NodeOrder = 3)]
-    public ExtendedObservableCollection<Macro> Macros { get; set; }
+    public ExtendedObservableCollection<Macro> Macros { get; protected set; }
+      = new ExtendedObservableCollection<Macro>();
 
     /// <summary>
     /// Describes line segments drawn in the SFC chart area.
     /// </summary>
     [zenonSerializableNode("SFClines", NodeOrder = 4)]
-    public ExtendedObservableCollection<Line> Lines { get; set; }
+    public ExtendedObservableCollection<Line> Lines { get; protected set; }
+      = new ExtendedObservableCollection<Line>();
   }
 }

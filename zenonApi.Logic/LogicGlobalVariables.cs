@@ -15,5 +15,6 @@ namespace zenonApi.Logic
     /// </summary>
     [zenonSerializableNode("vargroup", NodeOrder = 0)]
     public ExtendedObservableCollection<LogicVariableGroup> VariableGroups { get; protected set; }
+      = new ExtendedObservableCollection<LogicVariableGroup>();
   }
 }

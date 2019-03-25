@@ -27,6 +27,7 @@ namespace zenonApi.Logic
     /// List of variables of the group.
     /// </summary>
     [zenonSerializableNode("var", NodeOrder = 2)]
-    public ExtendedObservableCollection<LogicVariable> Variables { get; set; }
+    public ExtendedObservableCollection<LogicVariable> Variables { get; protected set; }
+      = new ExtendedObservableCollection<LogicVariable>();
   }
 }
