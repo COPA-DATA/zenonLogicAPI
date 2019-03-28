@@ -111,6 +111,12 @@ namespace zenonApi.Logic
     [zenonSerializableRawFormat("gridresources", NodeOrder = 14)]
     public XElement GridResources { get; set; }
 
+    [zenonSerializableRawFormat("K5HMI", NodeOrder = 15)]
+    public XElement HumanMachineInterface { get; set; }
+
+    [zenonSerializableRawFormat("files", NodeOrder = 16)]
+    public XElement Files { get; set; }
+    
     /// <summary>
     /// Contains the logical folder structure of the programs and UDFBs.
     /// </summary>

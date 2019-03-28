@@ -25,28 +25,35 @@ namespace zenonApi.Logic
     #region Ctor
     private LogicProgram() { }
 
-    internal LogicProgram(LogicFolder parent)
+    public LogicProgram(LogicFolder parent)
     {
       this.Parent = parent;
-      this.Root = parent.Root;
+      this.Root = parent?.Root;
     }
     #endregion
 
     #region Specific properties with their fields
-    private string name;
+    /// <summary>
+    /// We require this property for serialization, since the name is also linked to the connected POU.
+    /// This means, if we would set the name during serialization, no 
+    /// <see cref="zenonSerializable{TSelf, TParent, TRoot}.Root"/> is known at this point although it would be set
+    /// during the further serialization steps. The method <see cref="GetOrCreateConnectedPou(bool)"/> would generate
+    /// a new POU on accessing the <see cref="Name"/> instead and we would loose the reference.
+    /// </summary>
+    [zenonSerializableAttribute("Name", AttributeOrder = 0)]
+    private string name { get; set; }
 
     /// <summary>
     /// The name of the program, which is mandatory.
     /// </summary>
-    [zenonSerializableAttribute("Name", AttributeOrder = 0)]
     public string Name
     {
       get => name;
       set
       {
         // Validation is done via the setter of _Pou.Name.
-        name = value;
         setPouProperty(value);
+        name = value;
       }
     }
     #endregion
@@ -122,7 +129,7 @@ namespace zenonApi.Logic
     }
 
     /// <summary>
-    /// Provides a multiline description attached to a program.
+    /// Provides a multi-line description attached to a program.
     /// </summary>
     public string MultiLineDescription
     {

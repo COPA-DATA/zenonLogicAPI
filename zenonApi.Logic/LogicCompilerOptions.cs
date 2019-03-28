@@ -1,4 +1,5 @@
-﻿using zenonApi.Collections;
+﻿using System.Linq;
+using zenonApi.Collections;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic
@@ -37,6 +38,7 @@ namespace zenonApi.Logic
       new LogicOptionTuple("embedsymbols","OFF"),
       new LogicOptionTuple("embedsybcase","ON"),
       new LogicOptionTuple("warning","ON"),
+      new LogicOptionTuple("warniserr","ON"),
       new LogicOptionTuple("sfcsafe","ON"),
       new LogicOptionTuple("fbdoptim","OFF"),
       new LogicOptionTuple("ldoptim","OFF"),
@@ -74,5 +76,26 @@ namespace zenonApi.Logic
       new LogicOptionTuple("tracetime","OFF"),
       new LogicOptionTuple("mapuint","ON")
     };
+
+    public string this[string key]
+    {
+      get
+      {
+        var option = this.OptionTuples.Where(x => x.Name == key).FirstOrDefault();
+        return option?.Value;
+      }
+      set
+      {
+        var option = this.OptionTuples.Where(x => x.Name == key).FirstOrDefault();
+        if (option == null)
+        {
+          this.OptionTuples.Add(new LogicOptionTuple(key, value));
+        }
+        else
+        {
+          option.Value = value;
+        }
+      }
+    }
   }
 }

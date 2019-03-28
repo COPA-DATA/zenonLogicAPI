@@ -28,8 +28,8 @@ namespace zenonApi.Logic
     /// Maximum length if the data type is STRING.
     /// This attribute is mandatory for STRING variables, and should not appear for other data types.
     /// </summary>
-    //[zenonSerializableAttribute("len", AttributeOrder = 2)]
-    //public int MaxStringLength { get; set; } = 255; // TODO: Should only be used when datatype is string//TODO: Include again
+    [zenonSerializableAttribute("len", AttributeOrder = 2)]
+    public string MaxStringLength { get; set; } = null; // TODO: Should only be used when datatype is string //TODO: should be nullable int
 
     /// <summary>
     /// Dimension(s) if the variable is an array.
@@ -57,7 +57,7 @@ namespace zenonApi.Logic
     /// <summary>
     /// Indicates additional information for the variable it belongs to.
     /// </summary>
-    [zenonSerializableNode("varinfo", NodeOrder = 6)]
+    [zenonSerializableNode("varinfo", NodeOrder = 0)]
     public ExtendedObservableCollection<LogicVariableInfo> VariableInfos { get; protected set; }
       = new ExtendedObservableCollection<LogicVariableInfo>();
   }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 using zenonApi.Logic;
 
@@ -24,17 +26,36 @@ namespace Tester
       program.SourceCode += "\n// Second Comment";
 
       // Navigate to the application tree
-      var applicationTree = program.Parent;
+      var folderAgain = program.Parent;
 
-      // Remove the program from its current container
-      program.Remove();
+      // Change the cycle timing
+      project.Settings.TriggerTime.CycleTime = 12345;
+      project.Settings.CompilerSettings.CompilerOptions["warniserr"] = "OFF";
 
-      // Insert the program to this new location
-      applicationTree.Programs.Add(program);
-      
+      // Modify variables
+      var variable = program.VariableGroups.FirstOrDefault()?.Variables.FirstOrDefault();
+      variable.Name = "RenamedVariable";
+      variable.Attributes.In = true;
+      variable.Attributes.Out = true;
+      variable.VariableInfos.Add(new LogicVariableInfo() { Type = LogicVariableInformationTypeKind.Embed, Data = "<syb>" });
+
+      // Remove a folder
+      project.ApplicationTree.Folders.Where(x => x.Name == "Signals").FirstOrDefault()?.Remove();
+
       // Export and save the project again
-      XElement modifiedProject = project.Export();
-      modifiedProject.Save($@"C:\Users\{Environment.UserName}\Desktop\DemoProjectModified.xml");
+      XElement modifiedProject = project.Export ();
+      XDocument document = new XDocument()
+      {
+        Declaration = new XDeclaration("1.0", "iso-8859-1", "yes")
+      };
+
+      document.Add(modifiedProject);
+      using (XmlTextWriter writer = new XmlTextWriter($@"C:\Users\{Environment.UserName}\Desktop\DemoProjectModified.xml", Encoding.GetEncoding("iso-8859-1")))
+      {
+        writer.Indentation = 3;
+        writer.Formatting = Formatting.Indented;
+        document.Save(writer);
+      }
     }
   }
 }

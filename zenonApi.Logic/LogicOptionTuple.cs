@@ -30,6 +30,6 @@ namespace zenonApi.Logic
     public string Name { get; protected set; }
 
     [zenonSerializableAttribute("value", AttributeOrder = 1)]
-    public string Value { get; protected set; }
+    public string Value { get; set; }
   }
 }

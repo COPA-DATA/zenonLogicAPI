@@ -490,7 +490,7 @@ namespace zenonApi.Serialization
           else
           {
             // The child is not capable of handling parents and roots, therefore pass null
-            child = importMethod.Invoke(null, new object[] { xmlNode, parentContainer, null });
+            child = importMethod.Invoke(null, new object[] { xmlNode, parentContainer, root });
             list.Add(child);
           }
         }
