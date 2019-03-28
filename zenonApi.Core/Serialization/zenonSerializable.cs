@@ -233,12 +233,29 @@ namespace zenonApi.Serialization
               String.Format(Strings.MsgErrorInvalidSerializationListType, nameof(IZenonSerializable)));
           }
 
-          foreach (IZenonSerializable listItem in list)
+          if (nodeAttribute.InternalEncapsulateChildsIfList)
           {
-            MethodInfo exportMethod = genericParameterType.GetMethod(nameof(Export), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
-            XElement child = (XElement)exportMethod.Invoke(listItem, null);
+            XElement listWithChilds = new XElement(nodeAttribute.InternalName);
 
-            target.Add(child);
+            foreach (IZenonSerializable listItem in list)
+            {
+              MethodInfo exportMethod = genericParameterType.GetMethod(nameof(Export), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+              XElement child = (XElement)exportMethod.Invoke(listItem, null);
+
+              listWithChilds.Add(child);
+            }
+
+            target.Add(listWithChilds);
+          }
+          else
+          {
+            foreach (IZenonSerializable listItem in list)
+            {
+              MethodInfo exportMethod = genericParameterType.GetMethod(nameof(Export), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+              XElement child = (XElement)exportMethod.Invoke(listItem, null);
+
+              target.Add(child);
+            }
           }
         }
         else
@@ -433,7 +450,8 @@ namespace zenonApi.Serialization
       return result;
     }
 
-    private static void importChilds(PropertyInfo targetListProperty, TSelf parentContainer, List<XElement> xmlNodes)
+
+    private static void importChilds(PropertyInfo targetListProperty, TSelf parentContainer, List<XElement> xmlNodes, zenonSerializableNodeAttribute attribute)
     {
       IList list = (IList)Activator.CreateInstance(targetListProperty.PropertyType, true);
 
@@ -441,29 +459,38 @@ namespace zenonApi.Serialization
       Type genericParameter = targetListProperty.PropertyType.GetGenericArguments().First();
       if (typeof(IZenonSerializable).IsAssignableFrom(genericParameter))
       {
+        MethodInfo importMethod = genericParameter.GetMethod(nameof(Import), BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+        IContainerAwareCollectionItem caItem = parentContainer as IContainerAwareCollectionItem;
+        object root = null;
+
+        if (caItem != null)
+        {
+          root = caItem.ItemContainerRoot;
+          if (root == null && caItem.ItemContainerParent == null)
+          {
+            // the current object is most likely the desired root
+            root = parentContainer;
+          }
+        }
+
         foreach (var xmlNode in xmlNodes)
         {
-          MethodInfo importMethod = genericParameter.GetMethod(nameof(Import), BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
           object child = null;
 
-          if (parentContainer is IContainerAwareCollectionItem caItem)
+          if (attribute.EncapsulateChildsIfList)
           {
-            object root = caItem.ItemContainerRoot;
-            if (root == null && caItem.ItemContainerParent == null)
+            foreach (var subNode in xmlNode.Elements())
             {
-              // the current object is most likely the desired root
-              root = parentContainer;
+              child = importMethod.Invoke(null, new object[] { subNode, parentContainer, root });
+              list.Add(child);
             }
-
-            child = importMethod.Invoke(null, new object[] { xmlNode, parentContainer, root });
           }
           else
           {
             // The child is not capable of handling parents and roots, therefore pass null
             child = importMethod.Invoke(null, new object[] { xmlNode, parentContainer, null });
+            list.Add(child);
           }
-
-          list.Add(child);
         }
       }
       else
@@ -506,7 +533,7 @@ namespace zenonApi.Serialization
               || xmlAttribute.Value == field.Name)
             {
               property.SetValue(target, value);
-              
+
               // Remove the attribute, so that we can check later on for unhandled ones
               xmlAttribute.Remove();
               return;
@@ -536,16 +563,16 @@ namespace zenonApi.Serialization
 
     private static void importNode(TSelf target, XElement sourceXml, PropertyInfo property)
     {
-      var prop = property.GetCustomAttribute<zenonSerializableNodeAttribute>();
-      if (prop != null)
+      var attribute = property.GetCustomAttribute<zenonSerializableNodeAttribute>();
+      if (attribute != null)
       {
-        var xmlNodes = sourceXml.Elements(prop.NodeName).OfType<XNode>().Cast<XElement>().ToList();
+        var xmlNodes = sourceXml.Elements(attribute.NodeName).OfType<XNode>().Cast<XElement>().ToList();
 
         // Currently we only support deserializing to a concrete List types, not IEnumerable or similar, maybe in the future
         if (typeof(IList).IsAssignableFrom(property.PropertyType))
         {
           // Create the list which will hold the instances
-          importChilds(property, target, xmlNodes);
+          importChilds(property, target, xmlNodes, attribute);
         }
         else if (typeof(IZenonSerializable).IsAssignableFrom(property.PropertyType))
         {
@@ -679,7 +706,7 @@ namespace zenonApi.Serialization
     private static void importUnknownNodes(TSelf target, XElement sourceXml)
     {
       // All nodes which were not yet removed are yet unhandled
-      foreach(var node in sourceXml.Elements())
+      foreach (var node in sourceXml.Elements())
       {
         List<XElement> list;
         string nodeName = node.Name.ToString();

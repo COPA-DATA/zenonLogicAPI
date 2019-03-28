@@ -25,7 +25,7 @@ namespace zenonApi.Logic
     [zenonSerializableAttribute("kind", AttributeOrder = 1)]
     public LogicDataTypeKind Kind { get; set; }
 
-    [zenonSerializableAttribute("lge", AttributeOrder = 2)]
+    [zenonSerializableAttribute("lge", AttributeOrder = 2)] // TODO: Should only appear for Kind = UDFBs
     public LogicProgramLanguage Type { get; set; }
 
     /// <summary>

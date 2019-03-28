@@ -35,9 +35,16 @@ namespace zenonApi.Serialization
     }
 
     /// <summary>
-    /// The name of the propertie's representation as a node in XML.
+    /// The name of the properties' representation as a node in XML.
     /// </summary>
     public string NodeName { get; private set; }
+
+    /// <summary>
+    /// If the <see cref="zenonSerializableNodeAttribute"/> is applied to an IList, then this property defines
+    /// if a node for every item is generated (false, default), or if an extra node layer with the <see cref="NodeName"/>
+    /// is created and filled with the child nodes.
+    /// </summary>
+    public bool EncapsulateChildsIfList { get; set; }
 
     /// <summary>
     /// Controls the serialization order of properties within an <see cref="IZenonSerializable"/>.
@@ -56,6 +63,8 @@ namespace zenonApi.Serialization
     internal override byte InternalOrder => this.NodeOrder;
 
     internal override string InternalName => this.NodeName;
+
+    internal override bool InternalEncapsulateChildsIfList => this.EncapsulateChildsIfList;
 
     internal override bool InternalOmitIfNull => this.OmitIfNull;
 

@@ -14,6 +14,8 @@ namespace Tester
       // Ugly, but better than excluding this from every commit or changing it everytime afterwards
       XDocument test = XDocument.Load($@"C:\Users\{Environment.UserName}\Desktop\TemplateBbLogicProjectExport.xml");
     
+      // TODO: After importing, the original XDocument is changed, therefore we MUST copy the XElement first in our final "Import" method
+      // The current method should be kept internal anyway
       LogicProject proj = LogicProject.Import(test.Element("K5project"));
       LogicFolder folder = proj.ApplicationTree.Folders.First();
       LogicProgram prog = folder.Programs.FirstOrDefault();
@@ -24,6 +26,7 @@ namespace Tester
       pouTest.Remove();
 
       XElement testresult = proj.Export();
+      testresult.Save($@"C:\Users\{Environment.UserName}\Desktop\TemplateBbLogicProjectExport2.xml");
     }
   }
 }

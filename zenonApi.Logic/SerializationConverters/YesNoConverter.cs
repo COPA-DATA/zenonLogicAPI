@@ -13,9 +13,10 @@ namespace zenonApi.Logic.SerializationConverters
         {
           return "YES";
         }
+        return "NO";
       }
 
-      return "NO";
+      return null;
     }
 
     public object Convert(string source)

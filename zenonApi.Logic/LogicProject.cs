@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Xml.Linq;
+using zenonApi.Collections;
 using zenonApi.Logic.Internal;
 using zenonApi.Logic.Network;
 using zenonApi.Serialization;
@@ -15,7 +16,7 @@ namespace zenonApi.Logic
     {
       // Initialize members which require the current object in their ctor-parameters:
       this.Settings = new LogicProjectSettings(this);
-      this.DataTypes = new LogicDataTypesCollection(this);
+      this.DataTypes = new ExtendedObservableCollection<LogicDataType>();
       this.LogicDefinitions = new LogicDefinitions(this);
       this.GlobalVariables = new LogicGlobalVariables(this);
       this.Networks = new LogicNetwork(this);
@@ -62,8 +63,8 @@ namespace zenonApi.Logic
     /// <summary>
     /// The tag groups all the defined data types.
     /// </summary>
-    [zenonSerializableNode("types", NodeOrder = 4)]
-    public LogicDataTypesCollection DataTypes { get; protected set; }
+    [zenonSerializableNode("types", NodeOrder = 4, EncapsulateChildsIfList = true)]
+    public ExtendedObservableCollection<LogicDataType> DataTypes { get; protected set; }
 
     /// <summary>
     /// This tag groups the COMMON and GOLBAL definitions.

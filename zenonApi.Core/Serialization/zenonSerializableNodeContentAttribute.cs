@@ -29,6 +29,8 @@ namespace zenonApi.Serialization
 
     internal override bool InternalOmitIfNull => true;
 
+    internal override bool InternalEncapsulateChildsIfList => false;
+
     internal override Type InternalConverter => this.Converter;
     #endregion
   }
