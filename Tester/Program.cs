@@ -9,24 +9,32 @@ namespace Tester
   {
     static void Main(string[] args)
     {
-      LogicProject project = new LogicProject("test");
-
-      // Ugly, but better than excluding this from every commit or changing it everytime afterwards
-      XDocument test = XDocument.Load($@"C:\Users\{Environment.UserName}\Desktop\TemplateBbLogicProjectExport.xml");
+      XDocument demoProject = XDocument.Load($@"C:\Users\{Environment.UserName}\Desktop\DemoProject.xml");
     
-      // TODO: After importing, the original XDocument is changed, therefore we MUST copy the XElement first in our final "Import" method
-      // The current method should be kept internal anyway
-      LogicProject proj = LogicProject.Import(test.Element("K5project"));
-      LogicFolder folder = proj.ApplicationTree.Folders.First();
-      LogicProgram prog = folder.Programs.FirstOrDefault();
+      // Import the project from the XML
+      LogicProject project = LogicProject.Import(demoProject.Element("K5project"));
+      LogicFolder folder = project.ApplicationTree
+        .Folders.FirstOrDefault(x => x.Name == "Programs")
+        .Folders.FirstOrDefault(x => x.Name == "testFolder");
 
-      var tree = folder.Parent;
+      folder.Name = "RenamedTestFolder";
 
-      var pouTest = proj.ApplicationTree.Folders[2].Programs.First();
-      pouTest.Remove();
+      LogicProgram program = folder.Programs.FirstOrDefault();
+      program.Name = "RenamedMyProgram";
+      program.SourceCode += "\n// Second Comment";
 
-      XElement testresult = proj.Export();
-      testresult.Save($@"C:\Users\{Environment.UserName}\Desktop\TemplateBbLogicProjectExport2.xml");
+      // Navigate to the application tree
+      var applicationTree = program.Parent;
+
+      // Remove the program from its current container
+      program.Remove();
+
+      // Insert the program to this new location
+      applicationTree.Programs.Add(program);
+      
+      // Export and save the project again
+      XElement modifiedProject = project.Export();
+      modifiedProject.Save($@"C:\Users\{Environment.UserName}\Desktop\DemoProjectModified.xml");
     }
   }
 }

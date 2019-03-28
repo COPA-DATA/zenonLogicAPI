@@ -36,16 +36,24 @@ namespace zenonApi.Logic.SerializationConverters
         throw new ArgumentOutOfRangeException(Strings.CoordConverterArgumOutOfRangeExcp);
       }
 
-      var success = int.TryParse(splitString[0], out int xCoord);
-      success &= int.TryParse(splitString[1], out int yCoord);
-      success &= int.TryParse(splitString[2], out int zCoord);
+      int xCoord = 0, yCoord = 0, zCoord = 0;
+
+      var success = int.TryParse(splitString[0], out xCoord);
+      if (splitString.Length > 1)
+      {
+        success &= int.TryParse(splitString[1], out yCoord);
+      }
+      if (splitString.Length > 2)
+      {
+        success &= int.TryParse(splitString[2], out zCoord);
+      }
 
       if (!success)
       {
         throw new FormatException(Strings.CoordConverterParseException);
       }
 
-      return new Tuple<int, int, int>(xCoord, yCoord, zCoord);
+      return (xCoord, yCoord, zCoord);
     }
   }
 }

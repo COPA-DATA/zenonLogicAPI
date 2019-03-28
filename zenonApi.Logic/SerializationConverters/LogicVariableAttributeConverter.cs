@@ -42,7 +42,13 @@ namespace zenonApi.Logic.SerializationConverters
           sb.Append("external");
         }
 
-        return sb.ToString();
+        string result = sb.ToString();
+        if (string.IsNullOrWhiteSpace(result))
+        {
+          return null;
+        }
+
+        return result;
       }
 
       return null;

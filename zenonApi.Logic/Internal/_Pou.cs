@@ -76,14 +76,14 @@ namespace zenonApi.Logic.Internal
     /// <summary>
     /// The language of the POU, which is mandatory.
     /// </summary>
-    [zenonSerializableAttribute("lge", AttributeOrder = 2)]
+    [zenonSerializableAttribute("lge", AttributeOrder = 5)]
     public LogicProgramLanguage Language { get; set; }
 
     /// <summary>
     /// Name of the parent program. This attribute is mandatory for
     /// <see cref="LogicProgramType.Child"/> SFC programs.
     /// </summary>
-    [zenonSerializableAttribute("parent", AttributeOrder = 3)]
+    [zenonSerializableAttribute("parent", AttributeOrder = 2)]
     public string ParentPou { get; set; } // TOOD; Shouldn't we use a reference to another pou? Validation of naming otherwise?
 
     /// <summary>
@@ -91,14 +91,14 @@ namespace zenonApi.Logic.Internal
     /// This property is optional and its value is only used in main programs
     /// (for other <see cref="LogicProgramType"/>s it will be ignored).
     /// </summary>
-    [zenonSerializableAttribute("period", AttributeOrder = 4)]
+    [zenonSerializableAttribute("period", AttributeOrder = 3)]
     public uint Period { get; set; }
 
     /// <summary>
     /// Phase for the execution period (number of cycles) at runtime.
     /// This property is optional and its value is only used in main programs.
     /// </summary>
-    [zenonSerializableAttribute("phase", AttributeOrder = 5)]
+    [zenonSerializableAttribute("phase", AttributeOrder = 4)]
     public uint Phase { get; set; }
 
     /// <summary>
@@ -134,10 +134,17 @@ namespace zenonApi.Logic.Internal
     public _LogicDefine Definitions { get; protected set; } = new _LogicDefine();
 
     /// <summary>
+    /// Undocumented zenon Logic node. Contains columns displayed in the
+    /// Workbench and further information.
+    /// </summary>
+    [zenonSerializableNode("srcdic", NodeOrder = 3)]
+    public string SourceDictionary { get; set; }
+
+    /// <summary>
     /// Contains pre-compiled code of an user defined function block imported
     /// without its source code.
     /// </summary>
-    [zenonSerializableNode("pc5code", NodeOrder = 3)]
+    [zenonSerializableNode("pc5code", NodeOrder = 4)]
     public string PrecompiledUdfbCode { get; set; } // TODO: Should this be set to null if SourceCode is set and vice versa?
 
     /// <summary>
@@ -145,7 +152,7 @@ namespace zenonApi.Logic.Internal
     /// If this value is set to a value other than null, <see cref="FunctionBlockDiagramDefinition"/>,
     /// <see cref="SequentialFunctionChartDefinition"/> and <see cref="LadderDiagramDefinition"/> are automatically set to null.
     /// </summary>
-    [zenonSerializableNode("sourceSTIL", NodeOrder = 4)]
+    [zenonSerializableNode("sourceSTIL", NodeOrder = 5)]
     public string SourceCode
     {
       get => sourceCode;
@@ -167,7 +174,7 @@ namespace zenonApi.Logic.Internal
     /// If this value is set to a value other than null, <see cref="SourceCode"/>,
     /// <see cref="SequentialFunctionChartDefinition"/> and <see cref="LadderDiagramDefinition"/> are automatically set to null.
     /// </summary>
-    [zenonSerializableNode("sourceFBD", NodeOrder = 5)]
+    [zenonSerializableNode("sourceFBD", NodeOrder = 6)]
     public FunctionBlockDiagramDefinition FunctionBlockDiagramDefinition
     {
       get => functionBlockDiagramDefinition;
@@ -190,7 +197,7 @@ namespace zenonApi.Logic.Internal
     /// <see cref="SequentialFunctionChartDefinition"/>
     /// and <see cref="FunctionBlockDiagramDefinition"/> are automatically set to null.
     /// </summary>
-    [zenonSerializableRawFormat("sourceLD", NodeOrder = 6)]
+    [zenonSerializableRawFormat("sourceLD", NodeOrder = 7)]
     public XElement LadderDiagramDefinition
     {
       get => ladderDiagramDefinition;
@@ -213,7 +220,7 @@ namespace zenonApi.Logic.Internal
     /// <see cref="LadderDiagramDefinition"/> and <see cref="FunctionBlockDiagramDefinition"/>
     /// are automatically set to null.
     /// </summary>
-    [zenonSerializableNode("sourceSFC", NodeOrder = 7)]
+    [zenonSerializableNode("sourceSFC", NodeOrder = 8)]
     public SequentialFunctionChartDefinition SequentialFunctionChartDefinition
     {
       get => sequentialFunctionChartDefinition;
@@ -229,13 +236,6 @@ namespace zenonApi.Logic.Internal
         sequentialFunctionChartDefinition = value;
       }
     }
-
-    /// <summary>
-    /// Undocumented zenon Logic node. Contains columns displayed in the
-    /// Workbench and further information.
-    /// </summary>
-    [zenonSerializableNode("srcdic", NodeOrder = 8)]
-    public string SourceDictionary { get; set; }
 
     /// <summary>
     /// Undocumented zenon Logic node.

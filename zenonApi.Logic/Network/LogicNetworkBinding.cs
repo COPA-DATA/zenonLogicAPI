@@ -12,12 +12,12 @@ namespace zenonApi.Logic.Network
     /// This tag groups all the public variables configurated for binding.
     /// </summary>
     [zenonSerializableNode("bindpublic", NodeOrder = 0)]
-    public LogicPublicBinding PublicBinding { get; protected set; } = new LogicPublicBinding();
+    public LogicPublicBinding PublicBinding { get; set; }
 
     /// <summary>
     /// This tag groups all public and extern definitions for binding.
     /// </summary>
     [zenonSerializableNode("bindextern", NodeOrder = 1)]
-    public LogicExternBinding ExternBinding { get; protected set; } = new LogicExternBinding();
+    public LogicExternBinding ExternBinding { get; set; }
   }
 }

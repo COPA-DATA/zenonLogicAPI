@@ -411,6 +411,8 @@ namespace zenonApi.Serialization
     #region Import from XElement
     public static TSelf Import(XElement source, object parent = null, object root = null)
     {
+      // TODO: After importing, the original XDocument is changed, therefore we MUST copy the XElement first in our final "Import" method
+      // The current method should be kept internal anyway
       // Create an instance of the current type
       Type t = typeof(TSelf);
       var result = (TSelf)Activator.CreateInstance(t, true);

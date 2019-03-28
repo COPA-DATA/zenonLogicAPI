@@ -88,6 +88,9 @@ namespace zenonApi.Logic
     [zenonSerializableNode("networks", NodeOrder = 8)]
     public LogicNetwork Networks { get; protected set; }
 
+    [zenonSerializableRawFormat("fieldbus", NodeOrder = 9)]
+    public XElement FieldBus { get; set; }
+
     /// <summary>
     /// Lists all programs, sub-programs and UDFBs of the project.
     /// It is not intended to be manipulated by users of this API directly.
@@ -95,6 +98,18 @@ namespace zenonApi.Logic
     [Browsable(false)]
     [zenonSerializableNode("programs", NodeOrder = 10)]
     internal _LogicProgramsCollection Programs { get; private set; }
+
+    [zenonSerializableRawFormat("spylists", NodeOrder = 11)]
+    public XElement SpyLists { get; set; }
+
+    [zenonSerializableRawFormat("recipes", NodeOrder = 12)]
+    public XElement Recipes { get; set; }
+
+    [zenonSerializableRawFormat("graphics", NodeOrder = 13)]
+    public XElement Graphics { get; set; }
+
+    [zenonSerializableRawFormat("gridresources", NodeOrder = 14)]
+    public XElement GridResources { get; set; }
 
     /// <summary>
     /// Contains the logical folder structure of the programs and UDFBs.
