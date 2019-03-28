@@ -18,7 +18,7 @@ namespace zenonApi.Logic
     {
       if (string.IsNullOrWhiteSpace(name))
       {
-        //throw new ArgumentException(Strings.LogicDefinesConstrucArgExcp);
+        throw new ArgumentException(Strings.LogicDefinesConstructorArgumentException);
       }
 
       Name = name; // TODO: Check for correct naming? (StringExtensions.IsValidZenonLogicName)

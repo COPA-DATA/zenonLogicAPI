@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using zenonApi.Logic.Resources;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic
@@ -16,7 +18,8 @@ namespace zenonApi.Logic
     {
       if (string.IsNullOrWhiteSpace(name))
       {
-        //throw new ArgumentException(string.Format(Strings.LogicOptionTupleConstrucArgExcp, nameof(LogicOptionTuple)));
+        throw new ArgumentException(string.Format(Strings.LogicOptionTupleConstructorArgumentException,
+          nameof(LogicOptionTuple)));
       }
 
       Name = name; // TODO: Check for correct naming? (StringExtensions.IsValidZenonLogicName)

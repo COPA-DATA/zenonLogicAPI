@@ -126,10 +126,10 @@
   <data name="CoordConverterParseException" xml:space="preserve">
     <value>Error while parsing int Datatype values.</value>
   </data>
-  <data name="LogicDefinesConstrucArgExcp" xml:space="preserve">
+  <data name="LogicDefinesConstructorArgumentException" xml:space="preserve">
     <value>Invalid constructor call of type {0}. Argument of constructor cannot be null or whitespace.</value>
   </data>
-  <data name="LogicOptionTupleConstrucArgExcp" xml:space="preserve">
+  <data name="LogicOptionTupleConstructorArgumentException" xml:space="preserve">
     <value>Invalid constructor call of type {0}. Arguments of constructor cannot be null or whitespace.</value>
   </data>
 </root>
