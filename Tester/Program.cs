@@ -15,6 +15,32 @@ namespace Tester
     
       // Import the project from the XML
       LogicProject project = LogicProject.Import(demoProject.Element("K5project"));
+
+      var varGrp = project.GlobalVariables.VariableGroups.FirstOrDefault();
+      for (int i = 0; i < 50; i++)
+      {
+        var asdf = new LogicVariable()
+        {
+          InitialValue = "5",
+          MaxStringLength = "255",
+          Type = "STRING",
+          Name = "MyVariable" + i,
+        };
+        asdf.VariableInfos.Add(new LogicVariableInfo()
+        {
+          Data = "<syb>",
+          Type = LogicVariableInformationTypeKind.Embed
+        });
+
+        asdf.VariableInfos.Add(new LogicVariableInfo()
+        {
+          Data = "STRATON",
+          Type = LogicVariableInformationTypeKind.Profile
+        });
+
+        varGrp.Variables.Add(asdf);
+      }
+
       LogicFolder folder = project.ApplicationTree
         .Folders.FirstOrDefault(x => x.Name == "Programs")
         .Folders.FirstOrDefault(x => x.Name == "testFolder");
