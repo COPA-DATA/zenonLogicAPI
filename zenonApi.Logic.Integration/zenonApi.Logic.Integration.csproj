@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Scada.AddIn.Contracts">
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\COPA-DATA\zenon 8.00 SP0\AddInFramework\Scada.AddIn.Contracts.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -55,4 +58,10 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <ScadaBuildTarget>$(registry:HKEY_LOCAL_MACHINE\SOFTWARE\COPA-DATA\DataDir@ProgramDir32_Common)\AddInFramework\AddInFramework.Build.Common.targets</ScadaBuildTarget>
+  </PropertyGroup>
+  <Target Name="CheckPrerequisites">
+    <Error Text="Unable to build the project! Possible reason: no SCADA system installed." Condition="!Exists('$(ScadaBuildTarget)')" />
+  </Target>
 </Project>
