@@ -40,6 +40,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,15 +49,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Helper\TemporaryFileCreator.cs" />
+    <Compile Include="StratonUtilities\StratonFolderPath.cs" />
+    <Compile Include="K5Prp\K5ToolSet.cs" />
+    <Compile Include="ZenonLogicIntegration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\zenonApi.Core\zenonApi.Core.csproj">
+      <Project>{3F6755C8-48D2-4551-B734-383476DC39B6}</Project>
+      <Name>zenonApi.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\zenonApi.Logic\zenonApi.Logic.csproj">
       <Project>{ee3b8095-9286-4ea5-9d4f-f41387c5dc8f}</Project>
       <Name>zenonApi.Logic</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <ScadaBuildTarget>$(registry:HKEY_LOCAL_MACHINE\SOFTWARE\COPA-DATA\DataDir@ProgramDir32_Common)\AddInFramework\AddInFramework.Build.Common.targets</ScadaBuildTarget>
