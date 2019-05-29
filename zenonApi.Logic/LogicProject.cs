@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Xml.Linq;
 using zenonApi.Collections;
 using zenonApi.Logic.Internal;
@@ -10,6 +11,7 @@ namespace zenonApi.Logic
   /// <summary>
   /// The root of a K5 project structure.
   /// </summary>
+  [DebuggerDisplay("zenon Logic project name: {" + nameof(ProjectName) + "}")]
   public class LogicProject : zenonSerializable<LogicProject, IZenonSerializable, LogicProject>
   {
     private LogicProject()
@@ -35,7 +37,8 @@ namespace zenonApi.Logic
     #endregion
 
     #region Specific properties
-    public string ProjectName => string.IsNullOrEmpty(this.Path) ? "<Unknown>" : System.IO.Path.GetFileName(this.Path);
+    public string ProjectName => string.IsNullOrEmpty(this.Path) ? "<Unknown>" : 
+      System.IO.Path.GetFileName(this.Path.TrimEnd(System.IO.Path.DirectorySeparatorChar));
     
     /// <summary>
     /// The mandatory version of the K5 project.

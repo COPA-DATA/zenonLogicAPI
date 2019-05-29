@@ -1,9 +1,11 @@
-﻿using zenonApi.Serialization;
-using zenonApi.Logic.SerializationConverters;
+﻿using System.Diagnostics;
 using zenonApi.Collections;
+using zenonApi.Logic.SerializationConverters;
+using zenonApi.Serialization;
 
 namespace zenonApi.Logic
 {
+  [DebuggerDisplay("Folder name: {" + nameof(Name) + "}")]
   public class LogicFolder : zenonSerializable<LogicFolder, ILogicFileContainer, LogicProject>, ILogicFileContainer
   {
     #region zenonSerializable implementation

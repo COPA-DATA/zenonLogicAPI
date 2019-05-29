@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
+using zenonApi.Logic.Integration.Helper;
 
 namespace zenonApi.Logic.Integration.K5Prp
 {
@@ -10,6 +15,16 @@ namespace zenonApi.Logic.Integration.K5Prp
   /// </summary>
   internal class K5ToolSet
   {
+    /// <summary>
+    /// Encoding which is used for straton XML import/export files
+    /// </summary>
+    private const string StratonXmlEncoding = "iso-8859-1";
+
+    /// <summary>
+    /// Standard indentation value which is used in straton XML import/export files
+    /// </summary>
+    private const int StratonXmlIndentation = 3;
+
     /// <summary>
     /// Import of extern dll method contained in K5Prp.dll.
     /// Methode represents CLI to set of commands for interaction with straton.
@@ -41,6 +56,48 @@ namespace zenonApi.Logic.Integration.K5Prp
       InitializeEnvironmentPathVariable();
     }
 
+    internal bool ImportZenonLogicProject(LogicProject zenonLogicProject)
+    {
+      string xmlFilePathToImport = SerializeZenonLogicProjectToXmlFile(zenonLogicProject);
+      bool commandSuccessful = ExecuteK5PrpCommand($"XmlImport {xmlFilePathToImport}", out string returnMessage, out _);
+
+      if (!commandSuccessful)
+      {
+        throw new Exception(returnMessage);
+      }
+      return true;
+    }
+
+    private string SerializeZenonLogicProjectToXmlFile(LogicProject zenonLogicProject)
+    {
+      XElement serializedZenonLogicProject = zenonLogicProject.Export();
+      XDocument stratonConformXdocument = GetXdocumentWithStratonDeclaration();
+      stratonConformXdocument.Add(serializedZenonLogicProject);
+      string xmlFilePathToImport = WriteStratonXdocumentToFile(stratonConformXdocument);
+      return xmlFilePathToImport;
+    }
+
+    private string WriteStratonXdocumentToFile(XDocument stratonXdocument)
+    {
+      string xmlFilePath = TemporaryFileCreator.GetRandomTemporaryFilePathWithExtension("xml");
+      using (XmlTextWriter writer = new XmlTextWriter(xmlFilePath, Encoding.GetEncoding(StratonXmlEncoding)))
+      {
+        writer.Indentation = StratonXmlIndentation;
+        writer.Formatting = Formatting.Indented;
+        stratonXdocument.Save(writer);
+      }
+
+      return xmlFilePath;
+    }
+
+    private static XDocument GetXdocumentWithStratonDeclaration()
+    {
+      return new XDocument
+      {
+        Declaration = new XDeclaration("1.0", StratonXmlEncoding, "yes")
+      };
+    }
+
     /// <summary>
     /// XML export of the zenon Logic project to the stated XML file.
     /// </summary>
@@ -55,7 +112,7 @@ namespace zenonApi.Logic.Integration.K5Prp
       }
       return true;
     }
-   
+
     /// <summary>
     /// Calls the exported CLI method of the K5Prp.dll
     /// </summary>
@@ -107,7 +164,13 @@ namespace zenonApi.Logic.Integration.K5Prp
       }
 
       string pathEnvironmentVariableContent = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
-      pathEnvironmentVariableContent += $";{string.Join(";", currentProcessFilePath)}";
+      var splitPathEnvironmentVariableContent = pathEnvironmentVariableContent.Split(';');
+      if (splitPathEnvironmentVariableContent.Contains(currentProcessFilePath))
+      {
+        return;
+      }
+
+      pathEnvironmentVariableContent += $";{currentProcessFilePath}";
       Environment.SetEnvironmentVariable("PATH", pathEnvironmentVariableContent);
     }
   }

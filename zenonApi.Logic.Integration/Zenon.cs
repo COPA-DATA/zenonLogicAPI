@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Management.Instrumentation;
 using System.Xml.Linq;
 using zenonApi.Logic.Integration.Helper;
 using zenonApi.Logic.Integration.K5Prp;
@@ -11,7 +13,7 @@ using zenonApi.Logic.Integration.StratonUtilities;
 namespace zenonApi.Logic.Integration
 {
   [DebuggerDisplay("zenon project name: {" + nameof(ZenonProjectName) + "}")]
-  public abstract class ZenonLogicIntegration
+  public class Zenon
   {
     private IProject ZenonProject { get; }
     protected string ZenonProjectName { get; private set; }
@@ -29,9 +31,9 @@ namespace zenonApi.Logic.Integration
     /// <summary>
     /// Sequence of loaded zenon Logic projects.
     /// </summary>
-    public IEnumerable<LogicProject> LogicProjects { get; private set; }
+    public List<LogicProject> LogicProjects { get; private set; }
 
-    protected ZenonLogicIntegration(IProject zenonProject)
+    public Zenon(IProject zenonProject)
     {
       ZenonProject = zenonProject ?? throw new ArgumentNullException(string.Format(Strings.ZenonProjectReferenceNull,
                        nameof(zenonProject)));
@@ -41,7 +43,54 @@ namespace zenonApi.Logic.Integration
       // if this folder path does not exist there can not be a zenon Logic project to load
       if (Directory.Exists(ZenonLogicDirectory))
       {
-        LogicProjects = LoadZenonLogicProjects();
+        LogicProjects = LoadZenonLogicProjects().ToList();
+      }
+    }
+
+    ~Zenon()
+    {
+      // delete temporary files which were created during lifetime
+      TemporaryFileCreator.CleanupTemporaryFiles();
+    }
+
+    /// <summary>
+    /// Imports the zenon Logic project with specified project name into zenon
+    /// </summary>
+    /// <param name="zenonLogicProjectName"></param>
+    public void ImportLogicProjectIntoZenonByName(string zenonLogicProjectName)
+    {
+      if (string.IsNullOrWhiteSpace(zenonLogicProjectName))
+      {
+        throw new ArgumentNullException(string.Format(Strings.MethodArgumentNullException, 
+          nameof(zenonLogicProjectName), nameof(ImportLogicProjectIntoZenonByName)));
+      }
+
+      IEnumerable<LogicProject> logicProjectsWithSearchedNames = LogicProjects.Where(logicProject => 
+        logicProject.ProjectName.Equals(zenonLogicProjectName));
+
+      if (!logicProjectsWithSearchedNames.Any())
+      {
+        throw new InstanceNotFoundException(string.Format(Strings.LogicProjectWithSpecifiedProjectNameNotFound,
+          zenonLogicProjectName));
+      }
+
+      ImportLogicProjectsIntoZenon(logicProjectsWithSearchedNames);
+    }
+
+    /// <summary>
+    /// Imports all zenon Logic projects which are stored in <see cref="LogicProjects"/> into zenon
+    /// </summary>
+    public void ImportLogicProjectsIntoZenon()
+    {
+      ImportLogicProjectsIntoZenon(LogicProjects);
+    }
+
+    private void ImportLogicProjectsIntoZenon(IEnumerable<LogicProject> zenonLogicProjectsToImport)
+    {
+      foreach (LogicProject logicProject in zenonLogicProjectsToImport)
+      {
+        K5ToolSet k5ToolSet = new K5ToolSet(logicProject.Path);
+        k5ToolSet.ImportZenonLogicProject(logicProject);
       }
     }
 

@@ -132,6 +132,10 @@
     <value>Error while calling external K5Prp.dll. Initial exception message: {0}</value>
     <comment>0 = initial exception message</comment>
   </data>
+  <data name="LogicProjectWithSpecifiedProjectNameNotFound" xml:space="preserve">
+    <value>Error while retreiving zenon Logic project with name {0}. Unable to import zenon Logic project into zenon.</value>
+    <comment>0 = name of zenon Logic project to import</comment>
+  </data>
   <data name="MethodArgumentNullException" xml:space="preserve">
     <value>Parameter {0} of method {1} must not be null.</value>
     <comment>0 = parameter name which is null, 1 = name of method</comment>

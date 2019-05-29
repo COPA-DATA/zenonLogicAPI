@@ -97,6 +97,15 @@ namespace zenonApi.Logic.Integration {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error while retreiving zenon Logic project with name {0}. Unable to import zenon Logic project into zenon..
+        /// </summary>
+        internal static string LogicProjectWithSpecifiedProjectNameNotFound {
+            get {
+                return ResourceManager.GetString("LogicProjectWithSpecifiedProjectNameNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Parameter {0} of method {1} must not be null..
         /// </summary>
         internal static string MethodArgumentNullException {
