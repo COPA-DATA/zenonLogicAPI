@@ -24,7 +24,7 @@ namespace zenonApi.Logic.Integration.Helper
       string fileNameWithExtension = $"{Guid.NewGuid()}.{RemoveDotOfFileExtension(fileExtension)}";
       string filePathWithExtension = Path.Combine(userTemporaryFolderDirectory, fileNameWithExtension);
 
-      StoreFilePathForDeletion(filePathWithExtension);
+      TemporaryFilePathsToCleanup.Add(filePathWithExtension);
       return filePathWithExtension;
     }
 
@@ -43,16 +43,7 @@ namespace zenonApi.Logic.Integration.Helper
       }
     }
 
-    private static string RemoveDotOfFileExtension(string fileExntensionWithDot) =>
-      string.IsNullOrWhiteSpace(fileExntensionWithDot) ? string.Empty : fileExntensionWithDot.TrimStart('.');
-
-    /// <summary>
-    /// Stores the created temporary files which were created to delete them if they are not needed any more.
-    /// </summary>
-    /// <param name="createdFilePath"></param>
-    private static void StoreFilePathForDeletion(string createdFilePath)
-    {
-      TemporaryFilePathsToCleanup.Add(createdFilePath);
-    }
+    private static string RemoveDotOfFileExtension(string fileExtensionWithDot) =>
+      string.IsNullOrWhiteSpace(fileExtensionWithDot) ? string.Empty : fileExtensionWithDot.TrimStart('.');
   }
 }

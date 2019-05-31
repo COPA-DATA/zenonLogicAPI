@@ -126,6 +126,12 @@
   <data name="CoordConverterParseException" xml:space="preserve">
     <value>Error while parsing int Datatype values.</value>
   </data>
+  <data name="GeneralMethodArgumentNullException" xml:space="preserve">
+    <value>Invalid call of method {0}. Argument {1} cannot be null or whitespace.</value>
+  </data>
+  <data name="K5XmlExportRootNodeName" xml:space="preserve">
+    <value>K5project</value>
+  </data>
   <data name="LogicDefinesConstructorArgumentException" xml:space="preserve">
     <value>Invalid constructor call of type {0}. Argument of constructor cannot be null or whitespace.</value>
   </data>

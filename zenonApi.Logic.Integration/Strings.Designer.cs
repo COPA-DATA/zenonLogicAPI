@@ -79,20 +79,20 @@ namespace zenonApi.Logic.Integration {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error while initializing K5 toolset object. Directory {0} does not exist but is required for initialization..
-        /// </summary>
-        internal static string DirectoryNotFoundInK5UtilitiesContructor {
-            get {
-                return ResourceManager.GetString("DirectoryNotFoundInK5UtilitiesContructor", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Error while calling external K5Prp.dll. Initial exception message: {0}.
         /// </summary>
         internal static string ExternalK5PrpCallError {
             get {
                 return ResourceManager.GetString("ExternalK5PrpCallError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to K5project.
+        /// </summary>
+        internal static string K5XmlExportRootNodeName {
+            get {
+                return ResourceManager.GetString("K5XmlExportRootNodeName", resourceCulture);
             }
         }
         

@@ -4,7 +4,7 @@ using zenonApi.Serialization;
 
 namespace zenonApi.Logic
 {
-  [DebuggerDisplay("Name = {Name}")]
+  [DebuggerDisplay("{" + nameof(Name) + "}")]
   public class LogicDataType : zenonSerializable<LogicDataType>
   {
     #region zenonSerializable Implementation

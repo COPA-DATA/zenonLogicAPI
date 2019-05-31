@@ -5,7 +5,7 @@ using zenonApi.Serialization;
 
 namespace zenonApi.Logic
 {
-  [DebuggerDisplay("Name = {Name}")]
+  [DebuggerDisplay("{" + nameof(Name) + "}")]
   public class LogicDefine : zenonSerializable<LogicDefine>
   {
     #region zenonSerializable Implementation

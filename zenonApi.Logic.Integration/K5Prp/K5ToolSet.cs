@@ -35,21 +35,21 @@ namespace zenonApi.Logic.Integration.K5Prp
     /// <param name="dwDataIn"></param>
     /// <param name="dwDataOut"></param>
     /// <returns></returns>
-    [DllImport(@"K5Prp.dll", CallingConvention = CallingConvention.StdCall)]
+    [DllImport("K5Prp.dll", CallingConvention = CallingConvention.StdCall)]
     private static extern IntPtr K5PRPCall(string szProject, string szCommand, ref uint dwOk, ref uint dwDataIn, ref uint dwDataOut);
 
     /// <summary>
     /// Directory of the zenon Logic projects which belong to the zenon project.
     /// </summary>
-    /// <example> C:\ProgramData\COPA-DATA\SQL2012\83fe2bc7-6182-4652-9e48-3b71257b9851\FILES\straton </example>
+    /// <example> C:\ProgramData\COPA-DATA\SQL2012\"zenon project GUID"\FILES\straton\"zenon Logic project name" </example>
     internal string ZenonLogicProjectDirectory { get; private set; }
 
     internal K5ToolSet(string zenonLogicProjectDirectory)
     {
-      if (!Directory.Exists(zenonLogicProjectDirectory))
+      if (string.IsNullOrWhiteSpace(zenonLogicProjectDirectory))
       {
-        throw new DirectoryNotFoundException(string.Format(Strings.DirectoryNotFoundInK5UtilitiesContructor,
-          zenonLogicProjectDirectory));
+        throw new ArgumentNullException(string.Format(Strings.MethodArgumentNullException,
+          nameof(zenonLogicProjectDirectory), nameof(K5ToolSet)));
       }
 
       ZenonLogicProjectDirectory = zenonLogicProjectDirectory;
@@ -99,6 +99,20 @@ namespace zenonApi.Logic.Integration.K5Prp
     }
 
     /// <summary>
+    /// Creates a default zenon Logic project
+    /// </summary>
+    /// <returns></returns>
+    internal bool CreateDefaultZenonLogicProject()
+    {
+      bool commandSuccessful = ExecuteK5PrpCommand("CreateProject", out string returnMessage, out _);
+      if (!commandSuccessful)
+      {
+        throw new Exception(returnMessage);
+      }
+      return true;
+    }
+
+    /// <summary>
     /// XML export of the zenon Logic project to the stated XML file.
     /// </summary>
     /// <param name="xmlExportFilePath">XML file path which is used for export.</param>
@@ -127,7 +141,7 @@ namespace zenonApi.Logic.Integration.K5Prp
         uint dwOk = 0;
         uint dwDataIn = 0;
         uint dwDataOut = 0;
-
+        
         IntPtr commandResult = K5PRPCall(ZenonLogicProjectDirectory, k5Command, ref dwOk, ref dwDataIn, ref dwDataOut);
 
         returnMessage = Marshal.PtrToStringAnsi(commandResult);

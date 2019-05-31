@@ -1,9 +1,11 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Xml.Linq;
 using zenonApi.Collections;
 using zenonApi.Logic.Internal;
 using zenonApi.Logic.Network;
+using zenonApi.Logic.Resources;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic
@@ -11,7 +13,7 @@ namespace zenonApi.Logic
   /// <summary>
   /// The root of a K5 project structure.
   /// </summary>
-  [DebuggerDisplay("zenon Logic project name: {" + nameof(ProjectName) + "}")]
+  [DebuggerDisplay("{" + nameof(ProjectName) + "}")]
   public class LogicProject : zenonSerializable<LogicProject, IZenonSerializable, LogicProject>
   {
     private LogicProject()
@@ -26,10 +28,29 @@ namespace zenonApi.Logic
       this.ApplicationTree = new ApplicationTree(this);
     }
 
-    public LogicProject(string projectName) : this()
+    /// <summary>
+    /// Returns instance of <see cref="LogicProject"/> with the loaded information of the k5XmlExport and the
+    /// specified zenon Logic project name.
+    /// </summary>
+    /// <param name="k5XmlExport">K5 XML export of a zenon Logic project</param>
+    /// <param name="zenonLogicProjectName">Name which should be set for the zenon Logic project</param>
+    /// <param name="stratonDirectoryOfZenonProject">Directory path of the straton folder of a zenon project.
+    /// Example path: "C:\ProgramData\COPA-DATA\SQL2012\"zenon project GUID"\FILES\straton"</param>
+    /// <returns></returns>
+    public static LogicProject Import(XDocument k5XmlExport, string stratonDirectoryOfZenonProject = null, string zenonLogicProjectName = null)
     {
-      // TODO: Set path with project name, also check for valid name
-      this.Path = System.IO.Path.Combine("TODO_InsertRealPath", projectName); // TODO
+      var zenonLogicProject = LogicProject.Import(k5XmlExport.Element(Strings.K5XmlExportRootNodeName));
+      if (zenonLogicProjectName != null)
+      {
+        zenonLogicProject.ProjectName = zenonLogicProjectName;
+      }
+
+      if (stratonDirectoryOfZenonProject != null)
+      {
+        zenonLogicProject.ModifyStratonDirectoryPartOfPath(stratonDirectoryOfZenonProject);
+      }
+
+      return zenonLogicProject;
     }
 
     #region zenonSerializable Implementation
@@ -37,9 +58,45 @@ namespace zenonApi.Logic
     #endregion
 
     #region Specific properties
-    public string ProjectName => string.IsNullOrEmpty(this.Path) ? "<Unknown>" : 
-      System.IO.Path.GetFileName(this.Path.TrimEnd(System.IO.Path.DirectorySeparatorChar));
-    
+    /// <summary>
+    /// zenon Logic project name
+    /// Note that this property gets the value from the last part of the <see cref="Path"/> property.
+    /// Changes made to this property will affect the according part of the <see cref="Path"/> property.
+    /// </summary>
+    public string ProjectName
+    {
+      // gets the name of the zenon Logic project from the last part of the k5Project path xml attribute
+      get => string.IsNullOrEmpty(this.Path) ? "Unknown" 
+        : System.IO.Path.GetFileName(this.Path.TrimEnd(System.IO.Path.DirectorySeparatorChar));
+      // writes the new name on the according position of the k5project path xml attribute
+      set
+      {
+        string currentProjectPath = this.Path.TrimEnd(System.IO.Path.DirectorySeparatorChar);
+        string[] splitResult = currentProjectPath.Split(System.IO.Path.DirectorySeparatorChar);
+
+        splitResult[splitResult.Length - 1] = value;
+        this.Path = $"{string.Join(System.IO.Path.DirectorySeparatorChar.ToString(), splitResult)}";
+      }
+    }
+
+    /// <summary>
+    /// Sets the part of the directory stored in the <see cref="Path"/> property which belongs to the
+    /// zenon project´s straton folder.
+    /// </summary>
+    /// <param name="stratonDirectoryOfZenonProject">Example value:
+    /// "C:\ProgramData\COPA-DATA\SQL2012\"zenon project GUID"\FILES\straton"
+    /// </param>
+    public void ModifyStratonDirectoryPartOfPath(string stratonDirectoryOfZenonProject)
+    {
+      if (string.IsNullOrWhiteSpace(stratonDirectoryOfZenonProject))
+      {
+        throw new ArgumentNullException(String.Format(Strings.GeneralMethodArgumentNullException, 
+          nameof(ModifyStratonDirectoryPartOfPath), nameof(stratonDirectoryOfZenonProject)));
+      }
+
+      this.Path = System.IO.Path.Combine(stratonDirectoryOfZenonProject, this.ProjectName);
+    }
+
     /// <summary>
     /// The mandatory version of the K5 project.
     /// </summary>
@@ -47,7 +104,7 @@ namespace zenonApi.Logic
     public string Version { get; protected set; } = "1.1";
 
     /// <summary>
-    /// The original pathname of the K5 project's folder.
+    /// The pathname of the K5 project's folder.
     /// </summary>
     [zenonSerializableAttribute("path", AttributeOrder = 1, OmitIfNull = false)]
     public string Path { get; protected set; }
@@ -119,7 +176,7 @@ namespace zenonApi.Logic
 
     [zenonSerializableRawFormat("files", NodeOrder = 16)]
     public XElement Files { get; set; }
-    
+
     /// <summary>
     /// Contains the logical folder structure of the programs and UDFBs.
     /// </summary>

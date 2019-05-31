@@ -5,7 +5,8 @@ using zenonApi.Serialization;
 
 namespace zenonApi.Logic
 {
-  [DebuggerDisplay("Folder name: {" + nameof(Name) + "}")]
+
+  [DebuggerDisplay("{" + nameof(Name) + "}")]
   public class LogicFolder : zenonSerializable<LogicFolder, ILogicFileContainer, LogicProject>, ILogicFileContainer
   {
     #region zenonSerializable implementation

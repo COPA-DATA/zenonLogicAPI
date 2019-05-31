@@ -124,13 +124,12 @@
     <value>Error while getting zenon Logic project folder paths. Directory {0} does not exist.</value>
     <comment>0 = straton directory of zenon project which does not exist</comment>
   </data>
-  <data name="DirectoryNotFoundInK5UtilitiesContructor" xml:space="preserve">
-    <value>Error while initializing K5 toolset object. Directory {0} does not exist but is required for initialization.</value>
-    <comment>0 = zenon logic project directory which does not exist</comment>
-  </data>
   <data name="ExternalK5PrpCallError" xml:space="preserve">
     <value>Error while calling external K5Prp.dll. Initial exception message: {0}</value>
     <comment>0 = initial exception message</comment>
+  </data>
+  <data name="K5XmlExportRootNodeName" xml:space="preserve">
+    <value>K5project</value>
   </data>
   <data name="LogicProjectWithSpecifiedProjectNameNotFound" xml:space="preserve">
     <value>Error while retreiving zenon Logic project with name {0}. Unable to import zenon Logic project into zenon.</value>
