@@ -97,6 +97,33 @@ namespace zenonApi.Logic.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error while initializing ini file. File not found at: {0}.
+        /// </summary>
+        internal static string IniFileNotFoundException {
+            get {
+                return ResourceManager.GetString("IniFileNotFoundException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid constructor call of type {0}. The specified path must belong to a K5DBXS.INI file..
+        /// </summary>
+        internal static string K5DbxsIniFileConstructorInvalidDataException {
+            get {
+                return ResourceManager.GetString("K5DbxsIniFileConstructorInvalidDataException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to K5DBXS.INI.
+        /// </summary>
+        internal static string K5DbxsIniFileName {
+            get {
+                return ResourceManager.GetString("K5DbxsIniFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to K5project.
         /// </summary>
         internal static string K5XmlExportRootNodeName {

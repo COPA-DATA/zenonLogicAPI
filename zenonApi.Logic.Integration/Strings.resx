@@ -139,6 +139,9 @@
     <value>Parameter {0} of method {1} must not be null.</value>
     <comment>0 = parameter name which is null, 1 = name of method</comment>
   </data>
+  <data name="StratonNgDriverDescription" xml:space="preserve">
+    <value>StratonNG driver created by zenon Logic API.</value>
+  </data>
   <data name="ZenonProjectReferenceNull" xml:space="preserve">
     <value>Error while initializing zenon Logic integration object. Parameter {0} must not be null. </value>
     <comment>0 = name of parameter that is null</comment>

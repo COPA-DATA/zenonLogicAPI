@@ -1,4 +1,5 @@
 ﻿using Scada.AddIn.Contracts;
+using Scada.AddIn.Contracts.Variable;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Management.Instrumentation;
 using System.Xml.Linq;
+using zenonApi.Logic.Helper;
 using zenonApi.Logic.Integration.Helper;
 using zenonApi.Logic.Integration.K5Prp;
 using zenonApi.Logic.Integration.StratonUtilities;
@@ -106,10 +108,70 @@ namespace zenonApi.Logic.Integration
         {
           // create default zenon Logic project as XML import requires a project to exist
           k5ToolSet.CreateDefaultZenonLogicProject();
+
+          string nextFreeZenonLogicMainPort = GetNextFreeZenonLogicMainPort();
+          // free main port has to be used as parameter here as it is not yet set for the new zenon Logic project in the 
+          // k5dbxs ini file.
+          string newStratonNgDriverId = CreateStratonNgDriverForZenonLogicProject(logicProject.ProjectName,
+            nextFreeZenonLogicMainPort);
+
+          K5DbxsIniFile.CreateK5DbxsIniFile(this.ZenonProjectGuid, logicProject.K5DbxsIniFilePath, nextFreeZenonLogicMainPort,
+            newStratonNgDriverId);
         }
 
         k5ToolSet.ImportZenonLogicProject(logicProject);
       }
+    }
+
+    /// <summary>
+    /// Creates a StratonNG driver for the current zenon project and configures it by setting the specified parameters
+    /// in the config file.
+    /// </summary>
+    /// <param name="zenonLogicProjectName"></param>
+    /// <param name="nextFreeZenonLogicMainPort"></param>
+    /// <returns>Returns the driver ID of the created StratonNG driver.</returns>
+    private string CreateStratonNgDriverForZenonLogicProject(string zenonLogicProjectName, string nextFreeZenonLogicMainPort)
+    {
+      IDriver newStratonNgDriver = this.ZenonProject.DriverCollection
+        .Create($"zenon Logic: {zenonLogicProjectName}", "STRATONNG", false);
+
+      newStratonNgDriver.InitializeConfiguration();
+      newStratonNgDriver.CreateDynamicProperty("DrvConfig.Connections");
+
+      newStratonNgDriver.SetDynamicProperty("DrvConfig.Connections.ConnectionName", zenonLogicProjectName);
+      newStratonNgDriver.SetDynamicProperty("DrvConfig.Connections.PrimaryTCPPort", nextFreeZenonLogicMainPort);
+
+      newStratonNgDriver.SetDynamicProperty("Description", Strings.StratonNgDriverDescription);
+
+      newStratonNgDriver.EndConfiguration(true);
+
+      return newStratonNgDriver.GetDynamicProperty("DriverId").ToString();
+    }
+
+    /// <summary>
+    /// Gets the next available mainport number by querying the already taken port numbers and returning the next
+    /// highest port number.
+    /// </summary>
+    /// <returns></returns>
+    private string GetNextFreeZenonLogicMainPort()
+    {
+      // zenon Logic projects which do not already have a K5dbxs.ini file which stores their Mainport setting return
+      // the value string.empty here and have to be filtered out by the where clause
+      IEnumerable<string> takenMainPorts = this.LogicProjects.Where(project => !string.IsNullOrWhiteSpace(project.MainPort))
+        .Select(project => project.MainPort);
+
+      // if none of the stated logic projects really exist in zenon we asume that all of them were configured within
+      // this application session and have to be created. In the case that there is no zenon logic project we can
+      // return with 1200 because this is the default port which gets used for the first created zenon logic project
+      // in a zenon project
+      if (!takenMainPorts.Any())
+      {
+        return 1200.ToString();
+      }
+
+      int highestTakenPortNumber = takenMainPorts.Select(int.Parse).Max();
+      int nextFreePortNumber = highestTakenPortNumber + 1;
+      return nextFreePortNumber.ToString();
     }
 
     private IEnumerable<LogicProject> LoadZenonLogicProjects()

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Xml.Linq;
 using zenonApi.Collections;
+using zenonApi.Logic.Helper;
 using zenonApi.Logic.Internal;
 using zenonApi.Logic.Network;
 using zenonApi.Logic.Resources;
@@ -57,7 +58,8 @@ namespace zenonApi.Logic
     public override string NodeName => "K5project";
     #endregion
 
-    #region Specific properties
+    #region zenon Logic specific properties
+
     /// <summary>
     /// zenon Logic project name
     /// Note that this property gets the value from the last part of the <see cref="Path"/> property.
@@ -66,7 +68,7 @@ namespace zenonApi.Logic
     public string ProjectName
     {
       // gets the name of the zenon Logic project from the last part of the k5Project path xml attribute
-      get => string.IsNullOrEmpty(this.Path) ? "Unknown" 
+      get => string.IsNullOrEmpty(this.Path) ? "Unknown"
         : System.IO.Path.GetFileName(this.Path.TrimEnd(System.IO.Path.DirectorySeparatorChar));
       // writes the new name on the according position of the k5project path xml attribute
       set
@@ -90,12 +92,53 @@ namespace zenonApi.Logic
     {
       if (string.IsNullOrWhiteSpace(stratonDirectoryOfZenonProject))
       {
-        throw new ArgumentNullException(String.Format(Strings.GeneralMethodArgumentNullException, 
+        throw new ArgumentNullException(String.Format(Strings.GeneralMethodArgumentNullException,
           nameof(ModifyStratonDirectoryPartOfPath), nameof(stratonDirectoryOfZenonProject)));
       }
 
       this.Path = System.IO.Path.Combine(stratonDirectoryOfZenonProject, this.ProjectName);
     }
+
+    /// <summary>
+    /// Directory of ini file which stores the integration settings between zenon and zenon Logic.
+    /// </summary>
+    /// <remarks>
+    /// This property is not in use for straton only usage.
+    /// </remarks>
+    public string K5DbxsIniFilePath => System.IO.Path.Combine(Path, Strings.K5DbxsIniFileName);
+
+    private K5DbxsIniFile _k5DbxsIniFile;
+    /// <summary>
+    /// Object for read and write access to the K5dbxs.ini file of the current zenon Logic project.
+    /// </summary>
+    private K5DbxsIniFile K5DbxsIniFile
+    {
+      get
+      {
+        if (_k5DbxsIniFile != null)
+        {
+          return _k5DbxsIniFile;
+        }
+
+        _k5DbxsIniFile = new K5DbxsIniFile(K5DbxsIniFilePath);
+        return _k5DbxsIniFile;
+      }
+    }
+
+    /// <summary>
+    /// Mainport which is used by the current zenon Logic project for communication with zenon.
+    /// The Mainport configuration has to be unique for each zenon Logic project within a
+    /// zenon project.
+    /// </summary>
+    public string MainPort
+    {
+      get => K5DbxsIniFile.MainPort;
+      set => K5DbxsIniFile.MainPort = value;
+    }
+
+    #endregion
+
+    #region Specific properties
 
     /// <summary>
     /// The mandatory version of the K5 project.

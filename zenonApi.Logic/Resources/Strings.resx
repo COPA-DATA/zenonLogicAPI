@@ -128,6 +128,18 @@
   </data>
   <data name="GeneralMethodArgumentNullException" xml:space="preserve">
     <value>Invalid call of method {0}. Argument {1} cannot be null or whitespace.</value>
+    <comment>0 = name of method, 1 = argument that was null or whitespace</comment>
+  </data>
+  <data name="IniFileNotFoundException" xml:space="preserve">
+    <value>Error while initializing ini file. File not found at: {0}</value>
+    <comment>0 = stated ini file path</comment>
+  </data>
+  <data name="K5DbxsIniFileConstructorInvalidDataException" xml:space="preserve">
+    <value>Invalid constructor call of type {0}. The specified path must belong to a K5DBXS.INI file.</value>
+    <comment>0 = type name of K5Dbxs ini file</comment>
+  </data>
+  <data name="K5DbxsIniFileName" xml:space="preserve">
+    <value>K5DBXS.INI</value>
   </data>
   <data name="K5XmlExportRootNodeName" xml:space="preserve">
     <value>K5project</value>

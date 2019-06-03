@@ -115,6 +115,15 @@ namespace zenonApi.Logic.Integration {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to StratonNG driver created by zenon Logic API..
+        /// </summary>
+        internal static string StratonNgDriverDescription {
+            get {
+                return ResourceManager.GetString("StratonNgDriverDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error while initializing zenon Logic integration object. Parameter {0} must not be null. .
         /// </summary>
         internal static string ZenonProjectReferenceNull {
