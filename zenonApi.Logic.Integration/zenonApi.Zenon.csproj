@@ -7,7 +7,7 @@
     <ProjectGuid>{8F1B19E1-56BF-436F-9D99-1A360538B241}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>zenonApi.Logic.Integration</RootNamespace>
+    <RootNamespace>zenonApi.Zenon</RootNamespace>
     <AssemblyName>zenonApi.Logic.Integration</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

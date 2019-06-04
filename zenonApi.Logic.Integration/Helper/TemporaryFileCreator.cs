@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace zenonApi.Logic.Integration.Helper
+namespace zenonApi.Zenon.Helper
 {
   /// <summary>
   /// Class provides the functionality to get a file path with random name and specified file extension

@@ -6,9 +6,10 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
-using zenonApi.Logic.Integration.Helper;
+using zenonApi.Logic;
+using zenonApi.Zenon.Helper;
 
-namespace zenonApi.Logic.Integration.K5Prp
+namespace zenonApi.Zenon.K5Prp
 {
   /// <summary>
   /// Toolset for more convenient work with the K5Prp.dll

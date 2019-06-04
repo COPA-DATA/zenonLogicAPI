@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace zenonApi.Logic.Integration.StratonUtilities
+namespace zenonApi.Zenon.StratonUtilities
 {
   internal static class StratonFolderPath
   {

@@ -5,7 +5,7 @@ using zenonApi.Serialization;
 
 namespace zenonApi.Logic
 {
-  [DebuggerDisplay("{" + nameof(Name) + "}")]
+  [DebuggerDisplay("{" + nameof(Name) + "}={" + nameof(Value) + "}")]
   public class LogicOptionTuple : zenonSerializable<LogicOptionTuple>
   {
     #region zenonSerializable Implementation

@@ -9,12 +9,13 @@ using System.IO;
 using System.Linq;
 using System.Management.Instrumentation;
 using System.Xml.Linq;
+using zenonApi.Logic;
 using zenonApi.Logic.Helper;
-using zenonApi.Logic.Integration.Helper;
-using zenonApi.Logic.Integration.K5Prp;
-using zenonApi.Logic.Integration.StratonUtilities;
+using zenonApi.Zenon.Helper;
+using zenonApi.Zenon.K5Prp;
+using zenonApi.Zenon.StratonUtilities;
 
-namespace zenonApi.Logic.Integration
+namespace zenonApi.Zenon
 {
   [DebuggerDisplay("{" + nameof(ZenonProjectName) + "}")]
   public class Zenon : IDisposable
@@ -48,7 +49,7 @@ namespace zenonApi.Logic.Integration
       // if this folder path does not exist there can not be a zenon Logic project to load
       if (Directory.Exists(ZenonLogicDirectory))
       {
-        LogicProjects = new ObservableCollection<LogicProject>(LoadZenonLogicProjects().ToList());
+        LogicProjects = new ObservableCollection<LogicProject>(LoadZenonLogicProjects());
       }
       else
       {
