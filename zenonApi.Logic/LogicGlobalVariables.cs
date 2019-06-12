@@ -1,4 +1,5 @@
-﻿using zenonApi.Collections;
+﻿using System.Linq;
+using zenonApi.Collections;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic
@@ -18,7 +19,10 @@ namespace zenonApi.Logic
     /// There is one variable group for each listed group.
     /// </summary>
     [zenonSerializableNode("vargroup", NodeOrder = 0)]
-    public ExtendedObservableCollection<LogicVariableGroup> VariableGroups { get; protected set; }
+    public ExtendedObservableCollection<LogicVariableGroup> VariableGroups { get; set; }
       = new ExtendedObservableCollection<LogicVariableGroup>();
+
+    public LogicVariableGroup this[LogicVariableKind kind] =>
+      VariableGroups.FirstOrDefault(variableGroup => variableGroup.Kind == kind);
   }
 }

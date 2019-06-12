@@ -6,9 +6,13 @@ namespace zenonApi.Logic
 {
   public class ApplicationTree : zenonSerializable<ApplicationTree, LogicProject, LogicProject>, ILogicFileContainer
   {
-    private ApplicationTree() { }
+    private ApplicationTree()
+    {
+      Programs = new LogicProgramCollection(this, null);
+      Folders = new ContainerAwareObservableCollection<LogicFolder>(this);
+    }
 
-    public ApplicationTree(LogicProject parent) => this.Parent = this.Root = parent;
+    public ApplicationTree(LogicProject parent) => Parent = Root = parent;
 
     #region interface implementation
     public override string NodeName => "Appli";
@@ -24,13 +28,9 @@ namespace zenonApi.Logic
 
     [zenonSerializableNode("Folder")]
     public ContainerAwareObservableCollection<LogicFolder> Folders { get; protected set; }
-      = new ContainerAwareObservableCollection<LogicFolder>();
 
     [zenonSerializableNode("Program")]
-    public ContainerAwareObservableCollection<LogicProgram> Programs { get; protected set; }
-      = new ContainerAwareObservableCollection<LogicProgram>();
-
-
+    public LogicProgramCollection Programs { get; protected set; }
 
     //[zenonSerializableNode("FieldBus")]
     //protected object FieldBus { get; set; }
@@ -46,6 +46,12 @@ namespace zenonApi.Logic
     //protected object Variables { get; set; }
     //[zenonSerializableNode("Types")]
     //protected object Types { get; set; }
+    #endregion
+
+    #region Convenience methods
+    public void Add(LogicFolder folder) => Folders.Add(folder);
+
+    public void Add(LogicProgram program) => Programs.Add(program);
     #endregion
   }
 }

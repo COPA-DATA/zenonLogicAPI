@@ -1,10 +1,10 @@
-﻿using zenonApi.Serialization;
+﻿using System;
+using System.Xml.Linq;
 using zenonApi.Collections;
+using zenonApi.Extensions;
 using zenonApi.Logic.FunctionBlockDiagrams;
 using zenonApi.Logic.SequentialFunctionChart;
-using System.Xml.Linq;
-using zenonApi.Extensions;
-using System;
+using zenonApi.Serialization;
 
 namespace zenonApi.Logic.Internal
 {

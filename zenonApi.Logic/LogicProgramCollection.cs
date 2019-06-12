@@ -13,7 +13,9 @@ namespace zenonApi.Logic
     /// This way we can ensure, that the contained programs do always contain a root, which we require for several
     /// methods to find the connected <see cref="_Pou"/>.
     /// </summary>
-    internal LogicProgramCollection() : base() { }
+    internal LogicProgramCollection(ILogicFileContainer parent, LogicProject root) : base(parent, root) { }
+
+    private LogicProgramCollection() { }
 
     protected override void ClearItems()
     {
@@ -24,7 +26,7 @@ namespace zenonApi.Logic
 
       // Besides deleting all items in the user-visible list, we have to also delete them from
       // LogicProject > _Programs.
-      this.Items.FirstOrDefault()?.Root.Programs.ProgramOrganizationUnits.Clear();
+      this.Items.FirstOrDefault()?.Root?.Programs?.ProgramOrganizationUnits?.Clear();
       base.ClearItems();
     }
 
@@ -43,7 +45,7 @@ namespace zenonApi.Logic
       // Also find the corresponding _Pou container, to also add the corresponding _Pou there
       var connectedPou = item.GetOrCreateConnectedPou();
       connectedPou.Remove();
-      item.Root.Programs.ProgramOrganizationUnits.Add(connectedPou);
+      item.Root?.Programs?.ProgramOrganizationUnits?.Add(connectedPou);
     }
 
     protected override void InsertItemRange(int index, IEnumerable<LogicProgram> collection)
@@ -57,7 +59,7 @@ namespace zenonApi.Logic
       {
         var connectedPou = item.GetOrCreateConnectedPou();
         connectedPou.Remove();
-        item.Root.Programs.ProgramOrganizationUnits.Add(connectedPou);
+        item.Root?.Programs?.ProgramOrganizationUnits?.Add(connectedPou);
       }
     }
 
@@ -98,7 +100,7 @@ namespace zenonApi.Logic
       oldConnectedPou.Remove();
 
       base.SetItem(index, item);
-      item.Root.Programs.ProgramOrganizationUnits.Add(oldConnectedPou);
+      item.Root?.Programs?.ProgramOrganizationUnits?.Add(oldConnectedPou);
     }
   }
 }

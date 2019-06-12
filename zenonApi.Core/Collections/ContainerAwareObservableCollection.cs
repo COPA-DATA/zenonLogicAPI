@@ -92,7 +92,7 @@ namespace zenonApi.Collections
     /// Protected method to handle removal of children, therefore removal of their parent and root if appropriate.
     /// </summary>
     /// <param name="item">The item for which the parent and root shall be removed.</param>
-    protected void HandleChildRemoval(TChildren item)
+    protected virtual void HandleChildRemoval(TChildren item)
     {
       if (item == null)
       {
@@ -117,7 +117,7 @@ namespace zenonApi.Collections
     /// Protected method to handle adding children, therefore setting their parent and root.
     /// </summary>
     /// <param name="item">The item to assign the parent and root.</param>
-    protected void HandleChildAdd(TChildren item)
+    protected virtual void HandleChildAdd(TChildren item)
     {
       if (item == null)
       {

@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using zenonApi.Serialization;
-using zenonApi.Logic.Internal;
+using System.Xml.Linq;
 using zenonApi.Collections;
 using zenonApi.Logic.FunctionBlockDiagrams;
+using zenonApi.Logic.Internal;
+using zenonApi.Logic.Resources;
 using zenonApi.Logic.SequentialFunctionChart;
-using System.Xml.Linq;
+using zenonApi.Serialization;
 
 // TODO: Check if all public setters are really wanted, e.g. for non-primitive types, because the parent and root relationship can be corrupted
 
@@ -16,19 +20,39 @@ namespace zenonApi.Logic
   /// <summary>
   /// Represents a program, sub-program or user defined function block.
   /// </summary>
+  [DebuggerDisplay("{" + nameof(Name) + "}")]
   public class LogicProgram : zenonSerializable<LogicProgram, ILogicFileContainer, LogicProject>, ILogicProgram
   {
+    private const uint DefaultPeriodValueForStProgram = 1;
+    private const uint DefaultPhaseValueForStProgram = 0;
+
     #region Interface implementation
     public override string NodeName => "Program";
     #endregion
 
-    #region Ctor
+    #region Ctor and factory methods
     private LogicProgram() { }
 
-    public LogicProgram(LogicFolder parent)
+    public static LogicProgram CreateStructuredTextProgram(string programName, LogicProgramType programType = LogicProgramType.Program)
     {
-      this.Parent = parent;
-      this.Root = parent?.Root;
+      if (string.IsNullOrWhiteSpace(programName))
+      {
+        throw new ArgumentNullException(
+          string.Format(Strings.GeneralMethodArgumentNullException, nameof(CreateStructuredTextProgram), nameof(programName)));
+      } 
+
+      LogicProgram logicProgram = new LogicProgram
+      {
+        Name = programName,
+        Kind = programType,
+        Period = DefaultPeriodValueForStProgram,
+        Phase = DefaultPhaseValueForStProgram,
+        Language = LogicProgramLanguage.StructuredText
+      };
+
+      logicProgram.VariableGroups.Add(LogicVariableGroup.Create(logicProgram.Name));
+
+      return logicProgram;
     }
     #endregion
 
@@ -51,15 +75,15 @@ namespace zenonApi.Logic
       get => name;
       set
       {
+        name = value;
         // Validation is done via the setter of _Pou.Name.
         setPouProperty(value);
-        name = value;
       }
     }
     #endregion
 
-
     #region Properties, which are serialized/deserialized in external class _Pou
+
     /// <summary>
     /// The kind of the program, which is mandatory.
     /// </summary>
@@ -230,10 +254,11 @@ namespace zenonApi.Logic
       get => (string)getPouProperty();
       set => setPouProperty(value);
     }
+
     #endregion
 
-
     #region Private/Internal methods and properties to handle connected _Pou instances
+
     private _Pou connectedPou;
 
     internal _Pou GetOrCreateConnectedPou(bool getOnly = false)
@@ -303,5 +328,49 @@ namespace zenonApi.Logic
       property.SetValue(pou, value);
     }
     #endregion
+
+    #region Overrides
+
+    public override LogicProject Root
+    {
+      get
+      {
+        if (base.Root != Parent?.Root)
+        {
+          base.Root = Parent?.Root;
+          GetOrCreateConnectedPou();
+        }
+
+        return base.Root;
+      }
+      protected set => base.Root = value;
+    }
+
+    #endregion
   }
+
+  #region extension methods for program management
+
+  [Browsable(false)]
+  public static class LogicProgramExtensions
+  {
+    public static LogicProgram GetByName(this IEnumerable<LogicProgram> self, string programName,
+      StringComparison comparison = StringComparison.Ordinal)
+    {
+      if (string.IsNullOrEmpty(programName))
+      {
+        return null;
+      }
+
+      return self.FirstOrDefault(logicProgram => logicProgram?.Name.Equals(programName, comparison) ?? false);
+    }
+
+    public static bool Contains(this IEnumerable<LogicProgram> self, string programName,
+      StringComparison comparison = StringComparison.Ordinal)
+    {
+      return self.GetByName(programName, comparison) != null;
+    }
+  }
+
+  #endregion
 }

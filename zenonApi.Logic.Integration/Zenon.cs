@@ -20,19 +20,19 @@ namespace zenonApi.Zenon
   [DebuggerDisplay("{" + nameof(ZenonProjectName) + "}")]
   public class Zenon : IDisposable
   {
-    private IProject ZenonProject { get; }
-    protected string ZenonProjectName { get; private set; }
-    protected string ZenonProjectGuid { get; private set; }
+    public IProject ZenonProject { get; private set; }
+    public string ZenonProjectName { get; private set; }
+    public string ZenonProjectGuid { get; private set; }
     /// <summary>
     /// Directory of the zenon editor project.
     /// </summary>
     /// <example> C:\ProgramData\COPA-DATA\SQL2012\83fe2bc7-6182-4652-9e48-3b71257b9851\FILES </example>
-    protected string ZenonProjectDirectory { get; private set; }
+    public string ZenonProjectDirectory { get; private set; }
     /// <summary>
     /// Directory of the zenon Logic projects which belong to the zenon project.
     /// </summary>
     /// <example> C:\ProgramData\COPA-DATA\SQL2012\83fe2bc7-6182-4652-9e48-3b71257b9851\FILES\straton </example>
-    protected string ZenonLogicDirectory => Path.Combine(ZenonProjectDirectory, "straton");
+    public string ZenonLogicDirectory => Path.Combine(ZenonProjectDirectory, "straton");
 
     /// <summary>
     /// Sequence of loaded zenon Logic projects.
@@ -90,6 +90,35 @@ namespace zenonApi.Zenon
     public void ImportLogicProjectsIntoZenon()
     {
       ImportLogicProjectsIntoZenon(LogicProjects);
+    }
+
+    /// <summary>
+    /// Returns zenon Logic project reference for the stated project name.
+    /// </summary>
+    /// <param name="zenonLogicProjectName"></param>
+    /// <returns></returns>
+    public LogicProject GetLogicProjectByName(string zenonLogicProjectName)
+    {
+      if (string.IsNullOrEmpty(zenonLogicProjectName))
+      {
+        throw new ArgumentNullException(string.Format(Strings.ErrorGettingZenonProjektByNameArgumentNull,
+          nameof(zenonLogicProjectName)));
+      }
+
+      IEnumerable<LogicProject> foundLogicProjectsByName = LogicProjects.Where(project => string.Equals(project.ProjectName, 
+        zenonLogicProjectName));
+
+      if (!foundLogicProjectsByName.Any())
+      {
+        throw new NullReferenceException(string.Format(Strings.ErrorNoZenonLogicProjectFoundForName, zenonLogicProjectName));
+      }
+
+      if (foundLogicProjectsByName.Count() > 1)
+      {
+        throw new InvalidDataException(string.Format(Strings.ErrorDuplicateLogicProjectFoundForName, zenonLogicProjectName));
+      }
+
+      return foundLogicProjectsByName.First();
     }
 
     /// <summary>

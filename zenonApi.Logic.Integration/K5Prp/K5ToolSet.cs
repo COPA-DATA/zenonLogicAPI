@@ -1,31 +1,19 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
 using zenonApi.Logic;
 using zenonApi.Zenon.Helper;
 
 namespace zenonApi.Zenon.K5Prp
 {
   /// <summary>
-  /// Toolset for more convenient work with the K5Prp.dll
+  /// Toolset for more convenient work with the K5Prp.dll and K5B.exe
   /// </summary>
   internal class K5ToolSet
   {
-    /// <summary>
-    /// Encoding which is used for straton XML import/export files
-    /// </summary>
-    private const string StratonXmlEncoding = "iso-8859-1";
-
-    /// <summary>
-    /// Standard indentation value which is used in straton XML import/export files
-    /// </summary>
-    private const int StratonXmlIndentation = 3;
-
     /// <summary>
     /// Import of extern dll method contained in K5Prp.dll.
     /// Methode represents CLI to set of commands for interaction with straton.
@@ -38,6 +26,40 @@ namespace zenonApi.Zenon.K5Prp
     /// <returns></returns>
     [DllImport("K5Prp.dll", CallingConvention = CallingConvention.StdCall)]
     private static extern IntPtr K5PRPCall(string szProject, string szCommand, ref uint dwOk, ref uint dwDataIn, ref uint dwDataOut);
+
+    private string _k5BexeFilePath;
+    /// <summary>
+    /// File path of the K5B.
+    /// </summary>
+    /// <remarks>
+    /// Filepath is created depending on registered version of zenon extracted from registry.
+    /// </remarks>
+    private string K5BexeFilePath
+    {
+      get
+      {
+        if (_k5BexeFilePath != null)
+        {
+          return _k5BexeFilePath;
+        }
+
+        RegistryKey localMachine = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+        RegistryKey zenonRegistryDataDirKey = localMachine.OpenSubKey(Strings.ZenonRegistrySoftwareDataDirPath, false);
+        if (zenonRegistryDataDirKey == null)
+        {
+          throw new NullReferenceException(Strings.ZenonRegistryPathNotFound);
+        }
+
+        string currentRegisteredZenonVersionDirectory = (string)zenonRegistryDataDirKey.GetValue(Strings.ZenonRegistryCurrentRegisteredVersionKey);
+        if (string.IsNullOrWhiteSpace(currentRegisteredZenonVersionDirectory))
+        {
+          throw new NullReferenceException(Strings.ZenonRegistryCurrentRegistredVersionEntryNotFound);
+        }
+
+        _k5BexeFilePath = Path.Combine(currentRegisteredZenonVersionDirectory, Strings.K5BexeFileName);
+        return _k5BexeFilePath;
+      }
+    }
 
     /// <summary>
     /// Directory of the zenon Logic projects which belong to the zenon project.
@@ -57,46 +79,45 @@ namespace zenonApi.Zenon.K5Prp
       InitializeEnvironmentPathVariable();
     }
 
+    /// <summary>
+    /// Imports the stated <see cref="LogicProject"/> into zenon Logic.
+    /// </summary>
+    /// <param name="zenonLogicProject"></param>
+    /// <returns></returns>
     internal bool ImportZenonLogicProject(LogicProject zenonLogicProject)
     {
       string xmlFilePathToImport = SerializeZenonLogicProjectToXmlFile(zenonLogicProject);
-      bool commandSuccessful = ExecuteK5PrpCommand($"XmlImport {xmlFilePathToImport}", out string returnMessage, out _);
 
-      if (!commandSuccessful)
+      ProcessStartInfo startInfo = new ProcessStartInfo(K5BexeFilePath,
+        $"XMLMERGE {this.ZenonLogicProjectDirectory} {xmlFilePathToImport}")
+      { CreateNoWindow = false, WindowStyle = ProcessWindowStyle.Hidden };
+
+      Process stratonXmlImportProcess = new Process{StartInfo = startInfo};
+      if (!stratonXmlImportProcess.Start())
       {
-        throw new Exception(returnMessage);
+        return false;
       }
+
+      stratonXmlImportProcess.WaitForExit();
+
+      string appliXmlFilePathToImport = TemporaryFileCreator.GetRandomTemporaryFilePathWithExtension("xml");
+      zenonLogicProject.ApplicationTree.ExportAsFile(appliXmlFilePathToImport);
+
+      var appliFilePath = Path.Combine(this.ZenonLogicProjectDirectory, "appli.xml");
+      if (File.Exists(appliFilePath))
+      {
+        File.Delete(appliFilePath);
+      }
+
+      File.Copy(appliXmlFilePathToImport, appliFilePath);
       return true;
     }
 
     private string SerializeZenonLogicProjectToXmlFile(LogicProject zenonLogicProject)
     {
-      XElement serializedZenonLogicProject = zenonLogicProject.Export();
-      XDocument stratonConformXdocument = GetXdocumentWithStratonDeclaration();
-      stratonConformXdocument.Add(serializedZenonLogicProject);
-      string xmlFilePathToImport = WriteStratonXdocumentToFile(stratonConformXdocument);
+      string xmlFilePathToImport = TemporaryFileCreator.GetRandomTemporaryFilePathWithExtension("xml");
+      zenonLogicProject.ExportAsFile(xmlFilePathToImport);
       return xmlFilePathToImport;
-    }
-
-    private string WriteStratonXdocumentToFile(XDocument stratonXdocument)
-    {
-      string xmlFilePath = TemporaryFileCreator.GetRandomTemporaryFilePathWithExtension("xml");
-      using (XmlTextWriter writer = new XmlTextWriter(xmlFilePath, Encoding.GetEncoding(StratonXmlEncoding)))
-      {
-        writer.Indentation = StratonXmlIndentation;
-        writer.Formatting = Formatting.Indented;
-        stratonXdocument.Save(writer);
-      }
-
-      return xmlFilePath;
-    }
-
-    private static XDocument GetXdocumentWithStratonDeclaration()
-    {
-      return new XDocument
-      {
-        Declaration = new XDeclaration("1.0", StratonXmlEncoding, "yes")
-      };
     }
 
     /// <summary>
@@ -120,11 +141,19 @@ namespace zenonApi.Zenon.K5Prp
     /// <returns>Exception if error occurs during export.</returns>
     internal bool ExportZenonLogicProjectAsXml(string xmlExportFilePath)
     {
-      bool commandSuccessful = ExecuteK5PrpCommand($"XmlExport {xmlExportFilePath}", out string returnMessage, out _);
-      if (!commandSuccessful)
+      ProcessStartInfo startInfo = new ProcessStartInfo(K5BexeFilePath,
+          $"X {this.ZenonLogicProjectDirectory} {Strings.K5BxmlExportFormatString} {xmlExportFilePath}")
+        { CreateNoWindow = false, WindowStyle = ProcessWindowStyle.Hidden };
+
+      Process stratonXmlExportProcess = new Process{StartInfo = startInfo};
+
+      if (!stratonXmlExportProcess.Start())
       {
-        throw new Exception(returnMessage);
+        return false;
       }
+
+      stratonXmlExportProcess.WaitForExit();
+
       return true;
     }
 
@@ -142,7 +171,7 @@ namespace zenonApi.Zenon.K5Prp
         uint dwOk = 0;
         uint dwDataIn = 0;
         uint dwDataOut = 0;
-        
+
         IntPtr commandResult = K5PRPCall(ZenonLogicProjectDirectory, k5Command, ref dwOk, ref dwDataIn, ref dwDataOut);
 
         returnMessage = Marshal.PtrToStringAnsi(commandResult);

@@ -150,7 +150,8 @@ namespace zenonApi.Logic
     /// The pathname of the K5 project's folder.
     /// </summary>
     [zenonSerializableAttribute("path", AttributeOrder = 1, OmitIfNull = false)]
-    public string Path { get; protected set; }
+    public string 
+      Path { get; protected set; }
 
     //TODO: discuss about default constructor calls/init for this property and subproperties
     /// <summary>

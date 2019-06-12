@@ -1,11 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using System.Reflection;
 using System.Collections;
-using zenonApi.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Xml;
+using System.Xml.Linq;
+using zenonApi.Collections;
 
 // TODO: Nullables to be allowed
 // TODO: Exception and other messages in Resource file
@@ -42,6 +45,17 @@ namespace zenonApi.Serialization
   public abstract class zenonSerializable<TSelf> : IZenonSerializable<TSelf>
     where TSelf : class, IZenonSerializable<TSelf>
   {
+
+    /// <summary>
+    /// Encoding which is used for straton XML import/export files
+    /// </summary>
+    private const string StratonXmlEncoding = "iso-8859-1";
+
+    /// <summary>
+    /// Standard indentation value which is used in straton XML import/export files
+    /// </summary>
+    private const int StratonXmlIndentation = 3;
+
     #region Interface implementation
     /// <summary>
     /// The name of the item in its XML representation.
@@ -60,7 +74,6 @@ namespace zenonApi.Serialization
     /// </summary>
     public Dictionary<string, string> UnknownAttributes { get; } = new Dictionary<string, string>();
     #endregion
-
 
     #region Private/Protected methods
     /// <summary>
@@ -92,7 +105,12 @@ namespace zenonApi.Serialization
 
 
     #region Export to XElement
-    public virtual XElement Export()
+
+    /// <summary>
+    /// Exports current object as XElement
+    /// </summary>
+    /// <returns></returns>
+    public virtual XElement ExportAsXElement()
     {
       // Create a node for the current element, check for all properties with a zenonSerializableAttribute-
       // or zenonSerializableNode-Attribute and append them
@@ -139,6 +157,63 @@ namespace zenonApi.Serialization
       return current;
     }
 
+    /// <summary>
+    /// Exports current object as xml formatted string
+    /// </summary>
+    /// <returns></returns>
+    public virtual string ExportAsString()
+    {
+      XElement self = this.ExportAsXElement();
+      XDocument document = new XDocument
+
+      {
+        Declaration = new XDeclaration("1.0", StratonXmlEncoding, "yes")
+      };
+
+      document.Add(self);
+
+      using (MemoryStream memoryStream = new MemoryStream())
+      using (XmlTextWriter writer = new XmlTextWriter(memoryStream, Encoding.GetEncoding(StratonXmlEncoding)))
+      {
+        writer.Indentation = StratonXmlIndentation;
+        writer.Formatting = Formatting.Indented;
+        document.Save(writer);
+        writer.Flush();
+
+        memoryStream.Position = 0;
+        using (StreamReader sr = new StreamReader(memoryStream))
+        {
+          return sr.ReadToEnd();
+        }
+      }
+    }
+
+    /// <summary>
+    /// Exports current object in xml format into stated file
+    /// </summary>
+    /// <param name="fileName"></param>
+    public virtual void ExportAsFile(string fileName)
+    {
+      if (string.IsNullOrEmpty(fileName))
+      {
+        throw new ArgumentException("Invalid file name.", nameof(fileName));
+      }
+
+      XElement self = ExportAsXElement();
+      XDocument document = new XDocument
+      {
+        Declaration = new XDeclaration("1.0", StratonXmlEncoding, "yes")
+      };
+
+      document.Add(self);
+
+      using (XmlTextWriter writer = new XmlTextWriter(fileName, Encoding.GetEncoding(StratonXmlEncoding)))
+      {
+        writer.Indentation = StratonXmlIndentation;
+        writer.Formatting = Formatting.Indented;
+        document.Save(writer);
+      }
+    }
 
     private static void exportAttribute(XElement target, IZenonSerializable source, PropertyInfo property, zenonSerializableBaseAttribute attributeAttribute)
     {
@@ -212,7 +287,7 @@ namespace zenonApi.Serialization
 
         if (typeof(IZenonSerializable).IsAssignableFrom(property.PropertyType))
         {
-          MethodInfo exportMethod = property.PropertyType.GetMethod(nameof(Export), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+          MethodInfo exportMethod = property.PropertyType.GetMethod(nameof(ExportAsXElement), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
           XElement child = (XElement)exportMethod.Invoke(sourceValue, null);
 
           target.Add(child);
@@ -225,8 +300,17 @@ namespace zenonApi.Serialization
             return;
           }
 
-          // Currently we only support a list of IZenonSerializable
-          var genericParameterType = property.PropertyType.GenericTypeArguments.First();
+          // Currently we only support a list of IZenonSerializable and collections deriving from it
+          Type genericParameterType = property.PropertyType.GetGenericArguments().FirstOrDefault();
+          if (genericParameterType == null && typeof(IList).IsAssignableFrom(property.PropertyType))
+          {
+            Type baseType = property.PropertyType.BaseType;
+            while (baseType != null && genericParameterType == null)
+            {
+              genericParameterType = baseType.GetGenericArguments().FirstOrDefault();
+              baseType = baseType.BaseType;
+            }
+          }
           if (!typeof(IZenonSerializable).IsAssignableFrom(genericParameterType))
           {
             throw new NotImplementedException(
@@ -239,7 +323,7 @@ namespace zenonApi.Serialization
 
             foreach (IZenonSerializable listItem in list)
             {
-              MethodInfo exportMethod = genericParameterType.GetMethod(nameof(Export), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+              MethodInfo exportMethod = genericParameterType.GetMethod(nameof(ExportAsXElement), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
               XElement child = (XElement)exportMethod.Invoke(listItem, null);
 
               listWithChilds.Add(child);
@@ -251,7 +335,7 @@ namespace zenonApi.Serialization
           {
             foreach (IZenonSerializable listItem in list)
             {
-              MethodInfo exportMethod = genericParameterType.GetMethod(nameof(Export), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+              MethodInfo exportMethod = genericParameterType.GetMethod(nameof(ExportAsXElement), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
               XElement child = (XElement)exportMethod.Invoke(listItem, null);
 
               target.Add(child);
@@ -458,7 +542,16 @@ namespace zenonApi.Serialization
       IList list = (IList)Activator.CreateInstance(targetListProperty.PropertyType, true);
 
       // Get the generic type, so that we can instantiate entries for the list (this should be a zenonSerializable)
-      Type genericParameter = targetListProperty.PropertyType.GetGenericArguments().First();
+      Type genericParameter = targetListProperty.PropertyType.GetGenericArguments().FirstOrDefault();
+      if (genericParameter == null && typeof(IList).IsAssignableFrom(targetListProperty.PropertyType))
+      {
+        Type baseType = targetListProperty.PropertyType.BaseType;
+        while (baseType != null && genericParameter == null)
+        {
+          genericParameter = baseType.GetGenericArguments().FirstOrDefault();
+          baseType = baseType.BaseType;
+        }
+      }
       if (typeof(IZenonSerializable).IsAssignableFrom(genericParameter))
       {
         MethodInfo importMethod = genericParameter.GetMethod(nameof(Import), BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);

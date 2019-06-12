@@ -63,27 +63,36 @@ namespace zenonApi.Logic.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Maximum supported dimension are 3..
         /// </summary>
-        internal static string CoordConverterArgumOutOfRangeExcp {
+        internal static string DimensionConverterArgumOutOfRangeExcp {
             get {
-                return ResourceManager.GetString("CoordConverterArgumOutOfRangeExcp", resourceCulture);
+                return ResourceManager.GetString("DimensionConverterArgumOutOfRangeExcp", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Invalid data type for converter of type {0}. Datatype ValueTuple&lt;int, int, int&gt; expected..
         /// </summary>
-        internal static string CoordConverterFormatExcp {
+        internal static string DimensionConverterFormatExcp {
             get {
-                return ResourceManager.GetString("CoordConverterFormatExcp", resourceCulture);
+                return ResourceManager.GetString("DimensionConverterFormatExcp", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Error while parsing int Datatype values..
         /// </summary>
-        internal static string CoordConverterParseException {
+        internal static string DimensionConverterParseException {
             get {
-                return ResourceManager.GetString("CoordConverterParseException", resourceCulture);
+                return ResourceManager.GetString("DimensionConverterParseException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid format for {0} type. Format {1} not valid..
+        /// </summary>
+        internal static string DimensionTypeInvalidFormat {
+            get {
+                return ResourceManager.GetString("DimensionTypeInvalidFormat", resourceCulture);
             }
         }
         
@@ -147,6 +156,24 @@ namespace zenonApi.Logic.Resources {
         internal static string LogicOptionTupleConstructorArgumentException {
             get {
                 return ResourceManager.GetString("LogicOptionTupleConstructorArgumentException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to STRING.
+        /// </summary>
+        internal static string StringVariableDataType {
+            get {
+                return ResourceManager.GetString("StringVariableDataType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 255.
+        /// </summary>
+        internal static string StringVariableDefaultMaxLength {
+            get {
+                return ResourceManager.GetString("StringVariableDefaultMaxLength", resourceCulture);
             }
         }
     }

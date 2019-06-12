@@ -1,4 +1,6 @@
-﻿using zenonApi.Serialization;
+﻿using System;
+using zenonApi.Logic.Resources;
+using zenonApi.Serialization;
 
 namespace zenonApi.Logic.Internal
 {
@@ -10,6 +12,23 @@ namespace zenonApi.Logic.Internal
     #region Interface implementation
     public override string NodeName => "defines";
     #endregion
+
+    public static _LogicDefine Create(string logicDefineName, string sourceCode = "")
+    {
+      if (string.IsNullOrWhiteSpace(logicDefineName))
+      {
+        throw new ArgumentNullException(
+          string.Format(Strings.GeneralMethodArgumentNullException, nameof(Create), nameof(logicDefineName)));
+      }
+
+      _LogicDefine newLogicDefine = new _LogicDefine
+      {
+        Name = logicDefineName,
+        SourceCode = sourceCode
+      };
+
+      return newLogicDefine;
+    }
 
     /// <summary>
     /// The mandatory name of the group. Values can be "(COMMON)", "(GLOBAL)" or

@@ -7,6 +7,6 @@ namespace zenonApi.Logic
   {
     ContainerAwareObservableCollection<LogicFolder> Folders { get; }
 
-    ContainerAwareObservableCollection<LogicProgram> Programs { get; }
+    LogicProgramCollection Programs { get; }
   }
 }
