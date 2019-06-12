@@ -38,7 +38,7 @@ namespace zenonApi.Zenon.K5Prp
     {
       get
       {
-        if (_k5BexeFilePath != null)
+        if (!string.IsNullOrEmpty(_k5BexeFilePath))
         {
           return _k5BexeFilePath;
         }

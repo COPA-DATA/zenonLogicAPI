@@ -60,7 +60,7 @@ namespace zenonApi.Logic.Helper
     {
       get
       {
-        if (_mainPort != null)
+        if (!string.IsNullOrEmpty(_mainPort))
         {
           return _mainPort;
         }
