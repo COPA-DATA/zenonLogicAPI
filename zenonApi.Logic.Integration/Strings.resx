@@ -140,6 +140,9 @@
     <value>Error while calling external K5Prp.dll. Initial exception message: {0}</value>
     <comment>0 = initial exception message</comment>
   </data>
+  <data name="GlobalDefineName" xml:space="preserve">
+    <value>(GLOBAL)</value>
+  </data>
   <data name="K5BexeFileName" xml:space="preserve">
     <value>K5B.exe</value>
   </data>

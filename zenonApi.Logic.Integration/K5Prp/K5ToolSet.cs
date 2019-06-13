@@ -88,11 +88,20 @@ namespace zenonApi.Zenon.K5Prp
     {
       string xmlFilePathToImport = SerializeZenonLogicProjectToXmlFile(zenonLogicProject);
 
+      // import via K5Prp.dll call
+      //bool commandSuccessful = ExecuteK5PrpCommand($"XmlImport {xmlFilePathToImport}", out string returnMessage, out _);
+      //if (!commandSuccessful)
+      //{
+      //  throw new Exception(returnMessage);
+      //}
+      //return true;
+
+      // import via K5B.exe
       ProcessStartInfo startInfo = new ProcessStartInfo(K5BexeFilePath,
         $"XMLMERGE {this.ZenonLogicProjectDirectory} {xmlFilePathToImport}")
       { CreateNoWindow = false, WindowStyle = ProcessWindowStyle.Hidden };
 
-      Process stratonXmlImportProcess = new Process{StartInfo = startInfo};
+      Process stratonXmlImportProcess = new Process { StartInfo = startInfo };
       if (!stratonXmlImportProcess.Start())
       {
         return false;
@@ -100,6 +109,21 @@ namespace zenonApi.Zenon.K5Prp
 
       stratonXmlImportProcess.WaitForExit();
 
+      WriteAppliXmlFile(zenonLogicProject);
+      WriteGlobalDefinesFile(zenonLogicProject);
+
+      return true;
+    }
+
+    /// <summary>
+    /// Writes the appli.xml content directly into the file.
+    /// </summary>
+    /// <remarks>
+    /// This is done because import via k5b.exe omitts the folder structures in the application tree.
+    /// </remarks>
+    /// <param name="zenonLogicProject"></param>
+    private void WriteAppliXmlFile(LogicProject zenonLogicProject)
+    {
       string appliXmlFilePathToImport = TemporaryFileCreator.GetRandomTemporaryFilePathWithExtension("xml");
       zenonLogicProject.ApplicationTree.ExportAsFile(appliXmlFilePathToImport);
 
@@ -110,7 +134,35 @@ namespace zenonApi.Zenon.K5Prp
       }
 
       File.Copy(appliXmlFilePathToImport, appliFilePath);
-      return true;
+    }
+
+    /// <summary>
+    /// Writes the appli.EQV content directly into the file.
+    /// </summary>
+    /// <remarks>
+    /// This is done because the import via k5b.exe omitts global definitions.
+    /// </remarks>
+    /// <param name="zenonLogicProject"></param>
+    private void WriteGlobalDefinesFile(LogicProject zenonLogicProject)
+    {
+      string globalDefinesFilePath = TemporaryFileCreator.GetRandomTemporaryFilePathWithExtension("EQV");
+      LogicDefine globalDefine = zenonLogicProject.LogicDefinitions.Defines
+        .FirstOrDefault(define => define.Name.Equals(Strings.GlobalDefineName));
+
+      if (globalDefine == null || string.IsNullOrWhiteSpace(globalDefine.DefineContent))
+      {
+        return;
+      }
+
+      File.WriteAllText(globalDefinesFilePath, globalDefine.DefineContent);
+
+      var appliEqvFilePath = Path.Combine(this.ZenonLogicProjectDirectory, "appli.EQV");
+      if (File.Exists(appliEqvFilePath))
+      {
+        File.Delete(appliEqvFilePath);
+      }
+
+      File.Copy(globalDefinesFilePath, appliEqvFilePath);
     }
 
     private string SerializeZenonLogicProjectToXmlFile(LogicProject zenonLogicProject)

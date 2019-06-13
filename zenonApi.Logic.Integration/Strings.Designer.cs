@@ -115,6 +115,15 @@ namespace zenonApi.Zenon {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to (GLOBAL).
+        /// </summary>
+        internal static string GlobalDefineName {
+            get {
+                return ResourceManager.GetString("GlobalDefineName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to K5B.exe.
         /// </summary>
         internal static string K5BexeFileName {
