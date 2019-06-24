@@ -187,6 +187,24 @@ namespace zenonApi.Zenon {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ProgramDir32_.
+        /// </summary>
+        internal static string ZenonRegistryCurrentProgramDir32Prefix {
+            get {
+                return ResourceManager.GetString("ZenonRegistryCurrentProgramDir32Prefix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ProgramDir64_.
+        /// </summary>
+        internal static string ZenonRegistryCurrentProgramDir64Prefix {
+            get {
+                return ResourceManager.GetString("ZenonRegistryCurrentProgramDir64Prefix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ProgramDir_Current.
         /// </summary>
         internal static string ZenonRegistryCurrentRegisteredVersionKey {
@@ -201,6 +219,24 @@ namespace zenonApi.Zenon {
         internal static string ZenonRegistryCurrentRegistredVersionEntryNotFound {
             get {
                 return ResourceManager.GetString("ZenonRegistryCurrentRegistredVersionEntryNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registry value for current registered zenon version not found. Ensure that a zenon version is registered on the current machine..
+        /// </summary>
+        internal static string ZenonRegistryCurrentVersionEntryNotFound {
+            get {
+                return ResourceManager.GetString("ZenonRegistryCurrentVersionEntryNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CurrentVersion.
+        /// </summary>
+        internal static string ZenonRegistryCurrentVersionKey {
+            get {
+                return ResourceManager.GetString("ZenonRegistryCurrentVersionKey", resourceCulture);
             }
         }
         

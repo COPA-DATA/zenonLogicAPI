@@ -43,20 +43,7 @@ namespace zenonApi.Zenon.K5Prp
           return _k5BexeFilePath;
         }
 
-        RegistryKey localMachine = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
-        RegistryKey zenonRegistryDataDirKey = localMachine.OpenSubKey(Strings.ZenonRegistrySoftwareDataDirPath, false);
-        if (zenonRegistryDataDirKey == null)
-        {
-          throw new NullReferenceException(Strings.ZenonRegistryPathNotFound);
-        }
-
-        string currentRegisteredZenonVersionDirectory = (string)zenonRegistryDataDirKey.GetValue(Strings.ZenonRegistryCurrentRegisteredVersionKey);
-        if (string.IsNullOrWhiteSpace(currentRegisteredZenonVersionDirectory))
-        {
-          throw new NullReferenceException(Strings.ZenonRegistryCurrentRegistredVersionEntryNotFound);
-        }
-
-        _k5BexeFilePath = Path.Combine(currentRegisteredZenonVersionDirectory, Strings.K5BexeFileName);
+        _k5BexeFilePath = Path.Combine(GetZenonX86InstallationDirectory, Strings.K5BexeFileName);
         return _k5BexeFilePath;
       }
     }
@@ -77,6 +64,70 @@ namespace zenonApi.Zenon.K5Prp
 
       ZenonLogicProjectDirectory = zenonLogicProjectDirectory;
       InitializeEnvironmentPathVariable();
+    }
+
+    /// <summary>
+    /// Gets the x86 components installation directory of zenon
+    /// </summary>
+    private string GetZenonX86InstallationDirectory
+    {
+      get
+      {
+        RegistryKey zenonRegistryDataDirKey = GetZenonRegistryDataDirKey;
+        return (string)zenonRegistryDataDirKey
+          .GetValue($"{Strings.ZenonRegistryCurrentProgramDir32Prefix}{GetRegisteredZenonVersion}");
+      }
+    }
+
+    /// <summary>
+    /// Gets the x64 components installation directory of zenon
+    /// </summary>
+    private string GetZenonX64InstallationDirectory
+    {
+      get
+      {
+        RegistryKey zenonRegistryDataDirKey = GetZenonRegistryDataDirKey;
+        return (string)zenonRegistryDataDirKey
+          .GetValue($"{Strings.ZenonRegistryCurrentProgramDir64Prefix}{GetRegisteredZenonVersion}");
+      }
+    }
+
+    /// <summary>
+    /// Gets the current registered zenon version
+    /// </summary>
+    /// <example>returns 8000 for zenon version 8.00</example>
+    private string GetRegisteredZenonVersion
+    {
+      get
+      {
+        RegistryKey zenonRegistryDataDirKey = GetZenonRegistryDataDirKey;
+        string currentRegisteredZenonVersionDirectory = (string)zenonRegistryDataDirKey
+          .GetValue(Strings.ZenonRegistryCurrentVersionKey);
+        if (string.IsNullOrWhiteSpace(currentRegisteredZenonVersionDirectory))
+        {
+          throw new NullReferenceException(Strings.ZenonRegistryCurrentRegistredVersionEntryNotFound);
+        }
+
+        return currentRegisteredZenonVersionDirectory;
+      }
+    }
+
+    /// <summary>
+    /// Gets the Copa-Data DataDir registry node
+    /// </summary>
+    private RegistryKey GetZenonRegistryDataDirKey
+    {
+      get
+      {
+        RegistryKey localMachine = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+        RegistryKey zenonRegistryDataDirKey = localMachine.OpenSubKey(Strings.ZenonRegistrySoftwareDataDirPath, false);
+        if (zenonRegistryDataDirKey == null)
+        {
+          throw new NullReferenceException(Strings.ZenonRegistryPathNotFound);
+        }
+
+        return zenonRegistryDataDirKey;
+      }
     }
 
     /// <summary>
@@ -195,9 +246,9 @@ namespace zenonApi.Zenon.K5Prp
     {
       ProcessStartInfo startInfo = new ProcessStartInfo(K5BexeFilePath,
           $"X {this.ZenonLogicProjectDirectory} {Strings.K5BxmlExportFormatString} {xmlExportFilePath}")
-        { CreateNoWindow = false, WindowStyle = ProcessWindowStyle.Hidden };
+      { CreateNoWindow = false, WindowStyle = ProcessWindowStyle.Hidden };
 
-      Process stratonXmlExportProcess = new Process{StartInfo = startInfo};
+      Process stratonXmlExportProcess = new Process { StartInfo = startInfo };
 
       if (!stratonXmlExportProcess.Start())
       {

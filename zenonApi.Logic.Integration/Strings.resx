@@ -167,11 +167,23 @@
     <value>Error while initializing zenon Logic integration object. Parameter {0} must not be null. </value>
     <comment>0 = name of parameter that is null</comment>
   </data>
+  <data name="ZenonRegistryCurrentProgramDir32Prefix" xml:space="preserve">
+    <value>ProgramDir32_</value>
+  </data>
+  <data name="ZenonRegistryCurrentProgramDir64Prefix" xml:space="preserve">
+    <value>ProgramDir64_</value>
+  </data>
   <data name="ZenonRegistryCurrentRegisteredVersionKey" xml:space="preserve">
     <value>ProgramDir_Current</value>
   </data>
   <data name="ZenonRegistryCurrentRegistredVersionEntryNotFound" xml:space="preserve">
     <value>Registry value for current registered version not found. Ensure that a zenon version is registered on the current machine.</value>
+  </data>
+  <data name="ZenonRegistryCurrentVersionEntryNotFound" xml:space="preserve">
+    <value>Registry value for current registered zenon version not found. Ensure that a zenon version is registered on the current machine.</value>
+  </data>
+  <data name="ZenonRegistryCurrentVersionKey" xml:space="preserve">
+    <value>CurrentVersion</value>
   </data>
   <data name="ZenonRegistryPathNotFound" xml:space="preserve">
     <value>Registry path for zenon not found at HKEY_LOCAL_MACHINE\SOFTWARE\COPA-DATA\DataDir.</value>
