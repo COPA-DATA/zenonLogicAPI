@@ -130,7 +130,7 @@ namespace zenonApi.Logic
     /// The Mainport configuration has to be unique for each zenon Logic project within a
     /// zenon project.
     /// </summary>
-    public string MainPort
+    public uint MainPort
     {
       get => K5DbxsIniFile.MainPort;
       set => K5DbxsIniFile.MainPort = value;

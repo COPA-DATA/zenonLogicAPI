@@ -51,28 +51,44 @@ namespace zenonApi.Logic.Helper
     private const string CmdSection = "CMD";
     private const string MainPortPropertyKey = "MAINPORT";
 
-    private string _mainPort;
+    private uint _mainPort = UInt32.MinValue;
     /// <summary>
     /// Mainport which is used by the zenon Logic project to communicate with zenon.
     /// Mainport configuration has to be distinct for each zenon Logic project within a zenon project.
     /// </summary>
-    internal string MainPort
+    internal uint MainPort
     {
       get
       {
-        if (!string.IsNullOrEmpty(_mainPort))
+        if (_mainPort != UInt32.MinValue)
         {
           return _mainPort;
         }
 
-        _mainPort = this.ReadValueFromFile(CmdSection, MainPortPropertyKey);
+        _mainPort = ReadMainPortValueFromIniFile();
         return _mainPort;
       }
       set
       {
         _mainPort = value;
-        this.WriteValueToFile(CmdSection, MainPortPropertyKey, _mainPort);
+        this.WriteValueToFile(CmdSection, MainPortPropertyKey, _mainPort.ToString());
       }
+    }
+
+    /// <summary>
+    /// Reads the main port number of the K5DBXS.INI file and converts it from string to uint.
+    /// </summary>
+    /// <returns></returns>
+    private uint ReadMainPortValueFromIniFile()
+    {
+      string mainPortNumber = this.ReadValueFromFile(CmdSection, MainPortPropertyKey);
+      bool conversionSuccess = UInt32.TryParse(mainPortNumber, out uint convertedMainPortNumber);
+      if (!conversionSuccess)
+      {
+        return UInt32.MinValue;
+      }
+
+      return convertedMainPortNumber;
     }
 
     /// <summary>

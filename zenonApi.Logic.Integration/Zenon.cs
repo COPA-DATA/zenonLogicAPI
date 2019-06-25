@@ -186,12 +186,12 @@ namespace zenonApi.Zenon
     private string GetNextFreeZenonLogicMainPort()
     {
       // main port numbers which are already configured for any zenon Logic project of this zenon project
-      IEnumerable<string> takenMainPorts = this.LogicProjects
+      IEnumerable<uint> takenMainPorts = this.LogicProjects
         // only projects with existing k5dbxs file can have a configured main port
         .Where(project => File.Exists(project.K5DbxsIniFilePath))
         .Select(project => project.MainPort)
         // ini file reader returns "" when no main port entry is found, we can exclude those values here
-        .Where(takenPortNumber => !string.IsNullOrWhiteSpace(takenPortNumber));
+        .Where(takenPortNumber => takenPortNumber != UInt32.MinValue);
 
       // if none of the stated logic projects really exist in zenon we asume that all of them were configured within
       // this application session and have to be created. In the case that there is no zenon logic project we can
@@ -202,8 +202,8 @@ namespace zenonApi.Zenon
         return 1200.ToString();
       }
 
-      int highestTakenPortNumber = takenMainPorts.Select(int.Parse).Max();
-      int nextFreePortNumber = highestTakenPortNumber + 1;
+      uint highestTakenPortNumber = takenMainPorts.Max();
+      uint nextFreePortNumber = highestTakenPortNumber + 1;
       return nextFreePortNumber.ToString();
     }
 
