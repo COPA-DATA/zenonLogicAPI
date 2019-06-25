@@ -146,8 +146,14 @@
   <data name="K5BexeFileName" xml:space="preserve">
     <value>K5B.exe</value>
   </data>
+  <data name="K5BexeFileNoutFoundException" xml:space="preserve">
+    <value>K5B.exe file not found at {0}.</value>
+  </data>
   <data name="K5BxmlExportFormatString" xml:space="preserve">
     <value>K5XML</value>
+  </data>
+  <data name="K5BXmlImportFailedException" xml:space="preserve">
+    <value>Unable to start xml import process using K5B.exe - see inner exception for further details.</value>
   </data>
   <data name="K5XmlExportRootNodeName" xml:space="preserve">
     <value>K5project</value>
@@ -190,5 +196,15 @@
   </data>
   <data name="ZenonRegistrySoftwareDataDirPath" xml:space="preserve">
     <value>SOFTWARE\COPA-DATA\DataDir</value>
+  </data>
+  <data name="AppliFileWriteException" xml:space="preserve">
+    <value>Unable to write appli.xml file at {0} - see innter exception for further details.</value>
+  </data>
+  <data name="AppliFileWriteIOException" xml:space="preserve">
+    <value>Unable to write appli.xml file at {0}. File is currently in use by another process.</value>
+    <comment>0 = path of the appli.xml file</comment>
+  </data>
+  <data name="K5BXmlExportFailedException" xml:space="preserve">
+    <value>Unable to start xml export process using K5B.exe - see inner exception for further details</value>
   </data>
 </root>

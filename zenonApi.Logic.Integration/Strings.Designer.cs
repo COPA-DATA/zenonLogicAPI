@@ -61,6 +61,24 @@ namespace zenonApi.Zenon {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to write appli.xml file at {0} - see innter exception for further details..
+        /// </summary>
+        internal static string AppliFileWriteException {
+            get {
+                return ResourceManager.GetString("AppliFileWriteException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to write appli.xml file at {0}. File is currently in use by another process..
+        /// </summary>
+        internal static string AppliFileWriteIOException {
+            get {
+                return ResourceManager.GetString("AppliFileWriteIOException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error while getting filename of current process. Unable to initialize environment variables..
         /// </summary>
         internal static string CurrentProcessMainModuleFileNameNull {
@@ -133,11 +151,38 @@ namespace zenonApi.Zenon {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to K5B.exe file not found at {0}..
+        /// </summary>
+        internal static string K5BexeFileNoutFoundException {
+            get {
+                return ResourceManager.GetString("K5BexeFileNoutFoundException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to start xml export process using K5B.exe - see inner exception for further details.
+        /// </summary>
+        internal static string K5BXmlExportFailedException {
+            get {
+                return ResourceManager.GetString("K5BXmlExportFailedException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to K5XML.
         /// </summary>
         internal static string K5BxmlExportFormatString {
             get {
                 return ResourceManager.GetString("K5BxmlExportFormatString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to start xml import process using K5B.exe - see inner exception for further details..
+        /// </summary>
+        internal static string K5BXmlImportFailedException {
+            get {
+                return ResourceManager.GetString("K5BXmlImportFailedException", resourceCulture);
             }
         }
         

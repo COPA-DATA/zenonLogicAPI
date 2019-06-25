@@ -45,16 +45,10 @@ namespace zenonApi.Serialization
   public abstract class zenonSerializable<TSelf> : IZenonSerializable<TSelf>
     where TSelf : class, IZenonSerializable<TSelf>
   {
-
     /// <summary>
-    /// Encoding which is used for straton XML import/export files
+    /// Standard indentation value for xml format
     /// </summary>
-    private const string StratonXmlEncoding = "iso-8859-1";
-
-    /// <summary>
-    /// Standard indentation value which is used in straton XML import/export files
-    /// </summary>
-    private const int StratonXmlIndentation = 3;
+    private const int DefaultXmlIndentation = 3;
 
     #region Interface implementation
     /// <summary>
@@ -102,7 +96,6 @@ namespace zenonApi.Serialization
       return converterInstance;
     }
     #endregion
-
 
     #region Export to XElement
 
@@ -160,22 +153,27 @@ namespace zenonApi.Serialization
     /// <summary>
     /// Exports current object as xml formatted string
     /// </summary>
-    /// <returns></returns>
-    public virtual string ExportAsString()
+    /// <param name="xmlEncoding">Xml encoding type as <see cref="String"/></param>
+    public virtual string ExportAsString(string xmlEncoding)
     {
+      if (string.IsNullOrWhiteSpace(xmlEncoding))
+      {
+        throw new ArgumentException(string.Format(Strings.EncodingArgumentNullOrWhitespaceException, nameof(xmlEncoding)));
+      }
+
       XElement self = this.ExportAsXElement();
       XDocument document = new XDocument
 
       {
-        Declaration = new XDeclaration("1.0", StratonXmlEncoding, "yes")
+        Declaration = new XDeclaration("1.0", xmlEncoding, "yes")
       };
 
       document.Add(self);
 
       using (MemoryStream memoryStream = new MemoryStream())
-      using (XmlTextWriter writer = new XmlTextWriter(memoryStream, Encoding.GetEncoding(StratonXmlEncoding)))
+      using (XmlTextWriter writer = new XmlTextWriter(memoryStream, Encoding.GetEncoding(xmlEncoding)))
       {
-        writer.Indentation = StratonXmlIndentation;
+        writer.Indentation = DefaultXmlIndentation;
         writer.Formatting = Formatting.Indented;
         document.Save(writer);
         writer.Flush();
@@ -189,30 +187,66 @@ namespace zenonApi.Serialization
     }
 
     /// <summary>
+    /// Exports current object as xml formatted string
+    /// </summary>
+    /// <param name="xmlEncoding">Xml encoding type as <see cref="Encoding"/></param>
+    /// <returns></returns>
+    public virtual string ExportAsString(Encoding xmlEncoding)
+    {
+      if (xmlEncoding == null)
+      {
+        throw new ArgumentException(string.Format(Strings.EncodingArgumentNullException, nameof(xmlEncoding)));
+      }
+
+      return ExportAsString(xmlEncoding.BodyName);
+    }
+
+    /// <summary>
     /// Exports current object in xml format into stated file
     /// </summary>
     /// <param name="fileName"></param>
-    public virtual void ExportAsFile(string fileName)
+    /// <param name="xmlEncoding">Xml encoding type as <see cref="String"/></param>
+    public virtual void ExportAsFile(string fileName, string xmlEncoding)
     {
       if (string.IsNullOrEmpty(fileName))
       {
         throw new ArgumentException("Invalid file name.", nameof(fileName));
       }
 
+      if (string.IsNullOrWhiteSpace(xmlEncoding))
+      {
+        throw new ArgumentException(string.Format(Strings.EncodingArgumentNullOrWhitespaceException, nameof(xmlEncoding)));
+      }
+
       XElement self = ExportAsXElement();
       XDocument document = new XDocument
       {
-        Declaration = new XDeclaration("1.0", StratonXmlEncoding, "yes")
+        Declaration = new XDeclaration("1.0", xmlEncoding, "yes")
       };
 
       document.Add(self);
 
-      using (XmlTextWriter writer = new XmlTextWriter(fileName, Encoding.GetEncoding(StratonXmlEncoding)))
+      using (XmlTextWriter writer = new XmlTextWriter(fileName, Encoding.GetEncoding(xmlEncoding)))
       {
-        writer.Indentation = StratonXmlIndentation;
+        writer.Indentation = DefaultXmlIndentation;
         writer.Formatting = Formatting.Indented;
         document.Save(writer);
       }
+    }
+
+    /// <summary>
+    /// Exports current object in xml format into stated file
+    /// </summary>
+    /// <param name="fileName"></param>
+    /// <param name="xmlEncoding">Xml encoding type as <see cref="Encoding"/></param>
+    public virtual void ExportAsFile(string fileName, Encoding xmlEncoding)
+    {
+      if (xmlEncoding == null)
+      {
+        throw new ArgumentException(string.Format(Strings.EncodingArgumentNullException, nameof(xmlEncoding)));
+      }
+
+      ExportAsFile(fileName, xmlEncoding.BodyName);
     }
 
     private static void exportAttribute(XElement target, IZenonSerializable source, PropertyInfo property, zenonSerializableBaseAttribute attributeAttribute)
@@ -408,7 +442,6 @@ namespace zenonApi.Serialization
       }
     }
 
-
     private static void exportRaw(XElement target, IZenonSerializable source, PropertyInfo property, zenonSerializableBaseAttribute rawAttribute)
     {
       if (property.GetGetMethod(true) == null)
@@ -491,7 +524,6 @@ namespace zenonApi.Serialization
     }
     #endregion
 
-
     #region Import from XElement
     public static TSelf Import(XElement source, object parent = null, object root = null)
     {
@@ -535,7 +567,6 @@ namespace zenonApi.Serialization
 
       return result;
     }
-
 
     private static void importChilds(PropertyInfo targetListProperty, TSelf parentContainer, List<XElement> xmlNodes, zenonSerializableNodeAttribute attribute)
     {

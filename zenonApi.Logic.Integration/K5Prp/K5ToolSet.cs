@@ -15,6 +15,11 @@ namespace zenonApi.Zenon.K5Prp
   internal class K5ToolSet
   {
     /// <summary>
+    /// Encoding which is used for zenon Logic XML import/export files
+    /// </summary>
+    private const string LogicXmlEncoding = "iso-8859-1";
+
+    /// <summary>
     /// Import of extern dll method contained in K5Prp.dll.
     /// Methode represents CLI to set of commands for interaction with straton.
     /// </summary>
@@ -44,6 +49,12 @@ namespace zenonApi.Zenon.K5Prp
         }
 
         _k5BexeFilePath = Path.Combine(GetZenonX86InstallationDirectory, Strings.K5BexeFileName);
+
+        if (!File.Exists(_k5BexeFilePath))
+        {
+          throw new FileNotFoundException(string.Format(Strings.K5BexeFileNoutFoundException, _k5BexeFilePath));
+        }
+
         return _k5BexeFilePath;
       }
     }
@@ -152,13 +163,18 @@ namespace zenonApi.Zenon.K5Prp
         $"XMLMERGE {this.ZenonLogicProjectDirectory} {xmlFilePathToImport}")
       { CreateNoWindow = false, WindowStyle = ProcessWindowStyle.Hidden };
 
-      Process stratonXmlImportProcess = new Process { StartInfo = startInfo };
-      if (!stratonXmlImportProcess.Start())
+      using (Process stratonXmlImportProcess = new Process { StartInfo = startInfo })
       {
-        return false;
+        try
+        {
+          stratonXmlImportProcess.Start();
+          stratonXmlImportProcess.WaitForExit();
+        }
+        catch (Exception e)
+        {
+          throw new InvalidOperationException(Strings.K5BXmlImportFailedException, e);
+        }
       }
-
-      stratonXmlImportProcess.WaitForExit();
 
       WriteAppliXmlFile(zenonLogicProject);
       WriteGlobalDefinesFile(zenonLogicProject);
@@ -176,15 +192,27 @@ namespace zenonApi.Zenon.K5Prp
     private void WriteAppliXmlFile(LogicProject zenonLogicProject)
     {
       string appliXmlFilePathToImport = TemporaryFileCreator.GetRandomTemporaryFilePathWithExtension("xml");
-      zenonLogicProject.ApplicationTree.ExportAsFile(appliXmlFilePathToImport);
+      zenonLogicProject.ApplicationTree.ExportAsFile(appliXmlFilePathToImport, LogicXmlEncoding);
 
       var appliFilePath = Path.Combine(this.ZenonLogicProjectDirectory, "appli.xml");
-      if (File.Exists(appliFilePath))
-      {
-        File.Delete(appliFilePath);
-      }
 
-      File.Copy(appliXmlFilePathToImport, appliFilePath);
+      try
+      {
+        if (File.Exists(appliFilePath))
+        {
+          File.Delete(appliFilePath);
+        }
+
+        File.Copy(appliXmlFilePathToImport, appliFilePath);
+      }
+      catch (IOException e)
+      {
+        throw new InvalidOperationException(string.Format(Strings.AppliFileWriteIOException, appliFilePath), e);
+      }
+      catch (Exception e)
+      {
+        throw new InvalidOperationException(String.Format(Strings.AppliFileWriteException, appliFilePath), e);
+      }
     }
 
     /// <summary>
@@ -219,7 +247,7 @@ namespace zenonApi.Zenon.K5Prp
     private string SerializeZenonLogicProjectToXmlFile(LogicProject zenonLogicProject)
     {
       string xmlFilePathToImport = TemporaryFileCreator.GetRandomTemporaryFilePathWithExtension("xml");
-      zenonLogicProject.ExportAsFile(xmlFilePathToImport);
+      zenonLogicProject.ExportAsFile(xmlFilePathToImport, LogicXmlEncoding);
       return xmlFilePathToImport;
     }
 
@@ -248,14 +276,19 @@ namespace zenonApi.Zenon.K5Prp
           $"X {this.ZenonLogicProjectDirectory} {Strings.K5BxmlExportFormatString} {xmlExportFilePath}")
       { CreateNoWindow = false, WindowStyle = ProcessWindowStyle.Hidden };
 
-      Process stratonXmlExportProcess = new Process { StartInfo = startInfo };
-
-      if (!stratonXmlExportProcess.Start())
+      using (Process stratonXmlExportProcess = new Process { StartInfo = startInfo })
       {
-        return false;
-      }
+        try
+        {
+          stratonXmlExportProcess.Start();
 
-      stratonXmlExportProcess.WaitForExit();
+          stratonXmlExportProcess.WaitForExit();
+        }
+        catch (Exception e)
+        {
+          throw new InvalidOperationException(Strings.K5BXmlExportFailedException, e);
+        }
+      }
 
       return true;
     }
