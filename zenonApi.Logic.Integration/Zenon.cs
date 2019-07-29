@@ -38,6 +38,7 @@ namespace zenonApi.Zenon
     /// Sequence of loaded zenon Logic projects.
     /// </summary>
     public ObservableCollection<LogicProject> LogicProjects { get; private set; } = new ObservableCollection<LogicProject>();
+    public static HashSet<uint> AllUsedPorts{get;private set;} = new HashSet<uint>();
 
     public Zenon(IProject zenonProject)
     {
@@ -50,6 +51,10 @@ namespace zenonApi.Zenon
       if (Directory.Exists(ZenonLogicDirectory))
       {
         LogicProjects = new ObservableCollection<LogicProject>(LoadZenonLogicProjects());
+        foreach (LogicProject logicProject in LogicProjects.Where(project => File.Exists(project.K5DbxsIniFilePath)))
+        {
+          AllUsedPorts.Add(logicProject.MainPort);
+        }
       }
       else
       {
@@ -186,24 +191,25 @@ namespace zenonApi.Zenon
     private string GetNextFreeZenonLogicMainPort()
     {
       // main port numbers which are already configured for any zenon Logic project of this zenon project
-      IEnumerable<uint> takenMainPorts = this.LogicProjects
-        // only projects with existing k5dbxs file can have a configured main port
-        .Where(project => File.Exists(project.K5DbxsIniFilePath))
-        .Select(project => project.MainPort)
-        // ini file reader returns "" when no main port entry is found, we can exclude those values here
-        .Where(takenPortNumber => takenPortNumber != UInt32.MinValue);
+      //IEnumerable<uint> takenMainPorts = AllUsedPorts
+      //  // only projects with existing k5dbxs file can have a configured main port
+      //  .Where(project => File.Exists(project.K5DbxsIniFilePath))
+      //  .Select(project => project.MainPort)
+      //  // ini file reader returns "" when no main port entry is found, we can exclude those values here
+      //  .Where(takenPortNumber => takenPortNumber != UInt32.MinValue);
 
       // if none of the stated logic projects really exist in zenon we asume that all of them were configured within
       // this application session and have to be created. In the case that there is no zenon logic project we can
       // return with 1200 because this is the default main port which gets used for the first created zenon logic
       // project in a zenon project
-      if (!takenMainPorts.Any())
+      if (!AllUsedPorts.Any())
       {
+        AllUsedPorts.Add(1200);
         return 1200.ToString();
       }
-
-      uint highestTakenPortNumber = takenMainPorts.Max();
+      uint highestTakenPortNumber = AllUsedPorts.Max();
       uint nextFreePortNumber = highestTakenPortNumber + 1;
+      AllUsedPorts.Add(nextFreePortNumber);
       return nextFreePortNumber.ToString();
     }
 
@@ -248,6 +254,10 @@ namespace zenonApi.Zenon
         if (newItem is LogicProject newZenonLogicProject)
         {
           newZenonLogicProject.ModifyStratonDirectoryPartOfPath(ZenonLogicDirectory);
+          if (File.Exists(newZenonLogicProject.K5DbxsIniFilePath))
+          {
+            AllUsedPorts.Add(newZenonLogicProject.MainPort);
+          }
         }
       }
     }

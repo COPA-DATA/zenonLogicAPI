@@ -15,13 +15,14 @@ namespace zenonApi.Logic.Helper
     internal string Path { get; private set; }
 
     [DllImport("kernel32")]
-    private static extern long WritePrivateProfileString(string section,
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool WritePrivateProfileString(string section,
       string key, string val, string filePath);
 
     [DllImport("kernel32")]
-    private static extern int GetPrivateProfileString(string section,
+    private static extern uint GetPrivateProfileString(string section,
       string key, string def, StringBuilder retVal,
-      int size, string filePath);
+      uint size, string filePath);
 
     /// <summary>
     /// Constructor.

@@ -110,15 +110,15 @@ namespace zenonApi.Serialization
       XElement current = new XElement(this.NodeName);
 
       // Get all the properties together with their attributes in tuples
-      var properties = this.GetType().GetRuntimeProperties().Select(x => (property: x, attributes: x.GetCustomAttributes()));
+      IEnumerable<(PropertyInfo property, IEnumerable<Attribute> attributes)> properties = this.GetType().GetRuntimeProperties().Select(x => (property: x, attributes: x.GetCustomAttributes()));
 
       // Group the tuples by the required attribute types and order them if required by their specified serialization order
-      var attributeMappings = properties
+      IOrderedEnumerable<(PropertyInfo property, zenonSerializableBaseAttribute attribute)> attributeMappings = properties
         .Select(x => (property: x.property, attribute: x.attributes.OfType<zenonSerializableBaseAttribute>().FirstOrDefault()))
         .Where(x => x.attribute != null)
         .OrderBy(x => x.attribute.InternalOrder);
 
-      foreach (var attributeMapping in attributeMappings)
+      foreach ((PropertyInfo property, zenonSerializableBaseAttribute attribute) attributeMapping in attributeMappings)
       {
         switch (attributeMapping.attribute.AttributeType)
         {
@@ -218,7 +218,7 @@ namespace zenonApi.Serialization
         throw new ArgumentException(string.Format(Strings.EncodingArgumentNullOrWhitespaceException, nameof(xmlEncoding)));
       }
 
-      XElement self = ExportAsXElement();
+      XElement self = this.ExportAsXElement();
       XDocument document = new XDocument
       {
         Declaration = new XDeclaration("1.0", xmlEncoding, "yes")

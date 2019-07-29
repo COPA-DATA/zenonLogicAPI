@@ -176,6 +176,7 @@ namespace zenonApi.Zenon.K5Prp
         }
       }
 
+      // needed for import using K5B.exe as these parts get not imported
       WriteAppliXmlFile(zenonLogicProject);
       WriteGlobalDefinesFile(zenonLogicProject);
 
@@ -272,6 +273,17 @@ namespace zenonApi.Zenon.K5Prp
     /// <returns>Exception if error occurs during export.</returns>
     internal bool ExportZenonLogicProjectAsXml(string xmlExportFilePath)
     {
+      // export via K5Prp.dll call
+      //bool commandSuccessful = ExecuteK5PrpCommand($"XmlExport {xmlExportFilePath}", out string returnMessage, out _);
+
+      //if (!commandSuccessful)
+      //{
+      //  throw new Exception(returnMessage);
+      //}
+
+      //return true;
+
+      // export via K5B.exe
       ProcessStartInfo startInfo = new ProcessStartInfo(K5BexeFilePath,
           $"X {this.ZenonLogicProjectDirectory} {Strings.K5BxmlExportFormatString} {xmlExportFilePath}")
       { CreateNoWindow = false, WindowStyle = ProcessWindowStyle.Hidden };
@@ -281,7 +293,6 @@ namespace zenonApi.Zenon.K5Prp
         try
         {
           stratonXmlExportProcess.Start();
-
           stratonXmlExportProcess.WaitForExit();
         }
         catch (Exception e)
@@ -311,6 +322,7 @@ namespace zenonApi.Zenon.K5Prp
         IntPtr commandResult = K5PRPCall(ZenonLogicProjectDirectory, k5Command, ref dwOk, ref dwDataIn, ref dwDataOut);
 
         returnMessage = Marshal.PtrToStringAnsi(commandResult);
+        Marshal.FreeBSTR(commandResult);
         bool executedSuccessfully = Convert.ToBoolean(dwOk);
         outHandle = dwDataOut;
 
