@@ -190,14 +190,6 @@ namespace zenonApi.Zenon
     /// <returns></returns>
     private string GetNextFreeZenonLogicMainPort()
     {
-      // main port numbers which are already configured for any zenon Logic project of this zenon project
-      //IEnumerable<uint> takenMainPorts = AllUsedPorts
-      //  // only projects with existing k5dbxs file can have a configured main port
-      //  .Where(project => File.Exists(project.K5DbxsIniFilePath))
-      //  .Select(project => project.MainPort)
-      //  // ini file reader returns "" when no main port entry is found, we can exclude those values here
-      //  .Where(takenPortNumber => takenPortNumber != UInt32.MinValue);
-
       // if none of the stated logic projects really exist in zenon we asume that all of them were configured within
       // this application session and have to be created. In the case that there is no zenon logic project we can
       // return with 1200 because this is the default main port which gets used for the first created zenon logic
