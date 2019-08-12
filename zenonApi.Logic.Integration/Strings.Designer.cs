@@ -142,6 +142,15 @@ namespace zenonApi.Zenon {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to compile zenon Logic project {0} using K5B.exe - see inner exception for further details..
+        /// </summary>
+        internal static string K5BCompileFailedException {
+            get {
+                return ResourceManager.GetString("K5BCompileFailedException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to K5B.exe.
         /// </summary>
         internal static string K5BexeFileName {
@@ -219,6 +228,33 @@ namespace zenonApi.Zenon {
         internal static string StratonNgDriverDescription {
             get {
                 return ResourceManager.GetString("StratonNgDriverDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error while reading compilation log file for zenon Logic project {0}. Please open the zenon Logic workbench and compile again manually for further details..
+        /// </summary>
+        internal static string ZenonLogicCompileLogFileReadException {
+            get {
+                return ResourceManager.GetString("ZenonLogicCompileLogFileReadException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Make sure to import the zenon Logic project into zenon before compiling it..
+        /// </summary>
+        internal static string ZenonLogicHintForMissingDirectory {
+            get {
+                return ResourceManager.GetString("ZenonLogicHintForMissingDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error while retrieving directory information of the zenon Logic project..
+        /// </summary>
+        internal static string ZenonLogicProjectDirectoryNotFound {
+            get {
+                return ResourceManager.GetString("ZenonLogicProjectDirectoryNotFound", resourceCulture);
             }
         }
         

@@ -110,15 +110,15 @@ namespace zenonApi.Serialization
       XElement current = new XElement(this.NodeName);
 
       // Get all the properties together with their attributes in tuples
-      IEnumerable<(PropertyInfo property, IEnumerable<Attribute> attributes)> properties = this.GetType().GetRuntimeProperties().Select(x => (property: x, attributes: x.GetCustomAttributes()));
+      var properties = this.GetType().GetRuntimeProperties().Select(x => (property: x, attributes: x.GetCustomAttributes()));
 
       // Group the tuples by the required attribute types and order them if required by their specified serialization order
-      IOrderedEnumerable<(PropertyInfo property, zenonSerializableBaseAttribute attribute)> attributeMappings = properties
+      var attributeMappings = properties
         .Select(x => (property: x.property, attribute: x.attributes.OfType<zenonSerializableBaseAttribute>().FirstOrDefault()))
         .Where(x => x.attribute != null)
         .OrderBy(x => x.attribute.InternalOrder);
 
-      foreach ((PropertyInfo property, zenonSerializableBaseAttribute attribute) attributeMapping in attributeMappings)
+      foreach (var attributeMapping in attributeMappings)
       {
         switch (attributeMapping.attribute.AttributeType)
         {

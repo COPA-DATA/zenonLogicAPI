@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -20,6 +21,12 @@ namespace zenonApi.Zenon.K5Prp
     private const string LogicXmlEncoding = "iso-8859-1";
 
     /// <summary>
+    /// File name which contains all output of the compilation steps.
+    /// Located within zenon Logic project folder after first ever compilation.
+    /// </summary>
+    private const string ZenonLogicCompileLogFileName = "__build.log";
+
+    /// <summary>
     /// Import of extern dll method contained in K5Prp.dll.
     /// Methode represents CLI to set of commands for interaction with straton.
     /// </summary>
@@ -29,7 +36,7 @@ namespace zenonApi.Zenon.K5Prp
     /// <param name="dwDataIn"></param>
     /// <param name="dwDataOut"></param>
     /// <returns></returns>
-    [DllImport("K5Prp.dll", CallingConvention = CallingConvention.StdCall)]
+    [DllImport("C:\\Program Files (x86)\\COPA-DATA\\zenon 8.00 SP0\\K5Prp.dll", CallingConvention = CallingConvention.StdCall)]
     private static extern IntPtr K5PRPCall(string szProject, string szCommand, ref uint dwOk, ref uint dwDataIn, ref uint dwDataOut);
 
     private string _k5BexeFilePath;
@@ -319,6 +326,7 @@ namespace zenonApi.Zenon.K5Prp
         uint dwDataIn = 0;
         uint dwDataOut = 0;
 
+
         IntPtr commandResult = K5PRPCall(ZenonLogicProjectDirectory, k5Command, ref dwOk, ref dwDataIn, ref dwDataOut);
 
         returnMessage = Marshal.PtrToStringAnsi(commandResult);
@@ -364,6 +372,59 @@ namespace zenonApi.Zenon.K5Prp
 
       pathEnvironmentVariableContent += $";{currentProcessFilePath}";
       Environment.SetEnvironmentVariable("PATH", pathEnvironmentVariableContent);
+    }
+
+    /// <summary>
+    /// Compiles the stated zenon Logic project.
+    /// </summary>
+    /// <param name="zenonLogicProject"></param>
+    /// <param name="compilerOutputText">
+    /// Contains the output messages of the compilation process. Null if the if retrieving the compiler output failed.
+    /// </param>
+    internal void CompileZenonLogicProject(LogicProject zenonLogicProject, out IEnumerable<string> compilerOutputText)
+    {
+      ProcessStartInfo startInfo = new ProcessStartInfo(K5BexeFilePath,
+          $"BUILD {this.ZenonLogicProjectDirectory}")
+        { CreateNoWindow = false, WindowStyle = ProcessWindowStyle.Hidden, UseShellExecute = false};
+
+      using (Process stratonCompileProcess = new Process { StartInfo = startInfo })
+      {
+        try
+        {
+          stratonCompileProcess.Start();
+          stratonCompileProcess.WaitForExit();
+
+          compilerOutputText = ReadCompileLogFileOfZenonLogicProject(zenonLogicProject);
+        }
+        catch (Exception e)
+        {
+          throw new InvalidOperationException(string.Format(Strings.K5BCompileFailedException, zenonLogicProject.Path), e);
+        }
+      } 
+    }
+
+    /// <summary>
+    /// Reads the __build.log file of the stated zenon Logic project.
+    /// The file contains the output messages of the last compilation process.
+    /// </summary>
+    /// <param name="zenonLogicProject"></param>
+    /// <returns>Returns null if __build.log does not exist. Happens if the projects was never compiled.</returns>
+    private IEnumerable<string> ReadCompileLogFileOfZenonLogicProject(LogicProject zenonLogicProject)
+    {
+      string compilerOutputFilePath = Path.Combine(ZenonLogicProjectDirectory, ZenonLogicCompileLogFileName);
+      if (!File.Exists(compilerOutputFilePath))
+      {
+        return null;
+      }
+
+      try
+      {
+        return File.ReadAllLines(compilerOutputFilePath);
+      }
+      catch (Exception e)
+      {
+        throw new FileLoadException(string.Format(Strings.ZenonLogicCompileLogFileReadException, zenonLogicProject.Path), e);
+      }
     }
   }
 }

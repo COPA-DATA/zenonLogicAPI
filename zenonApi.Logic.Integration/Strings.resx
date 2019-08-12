@@ -207,4 +207,16 @@
   <data name="K5BXmlExportFailedException" xml:space="preserve">
     <value>Unable to start xml export process using K5B.exe - see inner exception for further details</value>
   </data>
+  <data name="K5BCompileFailedException" xml:space="preserve">
+    <value>Unable to compile zenon Logic project {0} using K5B.exe - see inner exception for further details.</value>
+  </data>
+  <data name="ZenonLogicCompileLogFileReadException" xml:space="preserve">
+    <value>Error while reading compilation log file for zenon Logic project {0}. Please open the zenon Logic workbench and compile again manually for further details.</value>
+  </data>
+  <data name="ZenonLogicHintForMissingDirectory" xml:space="preserve">
+    <value>Make sure to import the zenon Logic project into zenon before compiling it.</value>
+  </data>
+  <data name="ZenonLogicProjectDirectoryNotFound" xml:space="preserve">
+    <value>Error while retrieving directory information of the zenon Logic project.</value>
+  </data>
 </root>

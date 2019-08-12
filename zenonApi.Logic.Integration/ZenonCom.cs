@@ -1,6 +1,4 @@
-﻿using Scada.AddIn.Contracts;
-using Scada.AddIn.Contracts.Variable;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -9,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Management.Instrumentation;
 using System.Xml.Linq;
+using zenOn;
 using zenonApi.Logic;
 using zenonApi.Logic.Helper;
 using zenonApi.Zenon.Helper;
@@ -18,7 +17,7 @@ using zenonApi.Zenon.StratonUtilities;
 namespace zenonApi.Zenon
 {
   [DebuggerDisplay("{" + nameof(ZenonProjectName) + "}")]
-  public class Zenon : IDisposable
+  public class ZenonCom : IDisposable
   {
     public IProject ZenonProject { get; private set; }
     public string ZenonProjectName { get; private set; }
@@ -40,7 +39,7 @@ namespace zenonApi.Zenon
     public ObservableCollection<LogicProject> LogicProjects { get; private set; } = new ObservableCollection<LogicProject>();
     public static HashSet<uint> AllUsedPorts{get;private set;} = new HashSet<uint>();
 
-    public Zenon(IProject zenonProject)
+    public ZenonCom(IProject zenonProject)
     {
       ZenonProject = zenonProject ?? throw new ArgumentNullException(string.Format(Strings.ZenonProjectReferenceNull,
                        nameof(zenonProject)));
@@ -186,20 +185,18 @@ namespace zenonApi.Zenon
     /// <returns>Returns the driver ID of the created StratonNG driver.</returns>
     private string CreateStratonNgDriverForZenonLogicProject(string zenonLogicProjectName, string nextFreeZenonLogicMainPort)
     {
-      IDriver newStratonNgDriver = this.ZenonProject.DriverCollection
-        .Create($"zenon Logic: {zenonLogicProjectName}", "STRATONNG", false);
+      IDriver newStratonNgDriver = ZenonProject.Drivers().CreateDriverEx($"zenon Logic: {zenonLogicProjectName}", "STRATONNG", false);
 
-      newStratonNgDriver.InitializeConfiguration();
-      newStratonNgDriver.CreateDynamicProperty("DrvConfig.Connections");
+      newStratonNgDriver.OpenConfig();
+      newStratonNgDriver.CreateDynProperty("DrvConfig.Connections");
 
-      newStratonNgDriver.SetDynamicProperty("DrvConfig.Connections.ConnectionName", zenonLogicProjectName);
-      newStratonNgDriver.SetDynamicProperty("DrvConfig.Connections.PrimaryTCPPort", nextFreeZenonLogicMainPort);
+      newStratonNgDriver.DynProperties["DrvConfig.Connections.ConnectionName"] = zenonLogicProjectName;
+      newStratonNgDriver.DynProperties["DrvConfig.Connections.PrimaryTCPPort"] = nextFreeZenonLogicMainPort;
 
-      newStratonNgDriver.SetDynamicProperty("Description", Strings.StratonNgDriverDescription);
-
-      newStratonNgDriver.EndConfiguration(true);
-
-      return newStratonNgDriver.GetDynamicProperty("DriverId").ToString();
+      newStratonNgDriver.DynProperties["Description"] = Strings.StratonNgDriverDescription;
+      string ret = newStratonNgDriver.DynProperties["DriverId"].ToString();
+      newStratonNgDriver.CloseConfig(true);
+      return ret;
     }
 
     /// <summary>
@@ -243,7 +240,7 @@ namespace zenonApi.Zenon
     private void GetZenonProjectInformation(IProject zenonProject)
     {
       ZenonProjectName = zenonProject.Name;
-      ZenonProjectGuid = zenonProject.ProjectId;
+      ZenonProjectGuid = zenonProject.Guid;
       ZenonProjectDirectory = zenonProject.Path;
     }
 
