@@ -41,7 +41,7 @@ namespace zenonApi.Logic.Network
     /// Negative hysteresis
     /// This attribute is optional and appears only for public variables.
     /// </summary>
-    [zenonSerializableAttribute("", AttributeOrder = 4)]
+    [zenonSerializableAttribute("hystn", AttributeOrder = 4)]
     public string NegativeHysteresis { get; set; }
   }
 }
