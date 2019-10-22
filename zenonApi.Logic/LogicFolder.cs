@@ -74,28 +74,27 @@ namespace zenonApi.Logic
     }
   }
 
-  #region extension methods for folder management
+#region extension methods for folder management
 
-  [Browsable(false)]
-  public static class LogicFolderExtensions
+[Browsable(false)]
+public static class LogicFolderExtensions
+{
+  public static LogicFolder GetByName(this IEnumerable<LogicFolder> self, string folderName,
+    StringComparison comparison = StringComparison.Ordinal)
   {
-    public static LogicFolder GetByName(this IEnumerable<LogicFolder> self, string folderName,
-      StringComparison comparison = StringComparison.Ordinal)
+    if (string.IsNullOrEmpty(folderName))
     {
-      if (string.IsNullOrEmpty(folderName))
-      {
-        return null;
-      }
-
-      return self.FirstOrDefault(logicFolder => logicFolder?.Name.Equals(folderName, comparison) ?? false);
+      return null;
     }
 
-    public static bool Contains(this IEnumerable<LogicFolder> self, string folderName,
-      StringComparison comparison = StringComparison.Ordinal)
-    {
-      return self.GetByName(folderName, comparison) != null;
-    }
+    return self.FirstOrDefault(logicFolder => logicFolder?.Name.Equals(folderName, comparison) ?? false);
   }
 
+  public static bool Contains(this IEnumerable<LogicFolder> self, string folderName,
+    StringComparison comparison = StringComparison.Ordinal)
+  {
+    return self.GetByName(folderName, comparison) != null;
+  }
+}
   #endregion
 }

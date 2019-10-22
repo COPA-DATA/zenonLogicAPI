@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Xml.Linq;
 
 namespace zenonApi.Serialization
@@ -15,7 +16,7 @@ namespace zenonApi.Serialization
     where TSelf : class
   { }
 
-  public interface IZenonSerializable
+  public interface IZenonSerializable : INotifyPropertyChanged
   {
     /// <summary>
     /// The name of the item in its XML representation.
@@ -33,5 +34,10 @@ namespace zenonApi.Serialization
     /// The key specifies the original tag name from XML, the value contains the attribute's value.
     /// </summary>
     Dictionary<string, string> UnknownAttributes { get; }
+
+    /// <summary>
+    /// Status about the origin and the current state of the object.
+    /// </summary>
+    ZenonSerializableStatusEnum ObjectStatus { get; set; }
   }
 }

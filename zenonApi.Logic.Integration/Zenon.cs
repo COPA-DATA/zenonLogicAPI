@@ -186,6 +186,11 @@ namespace zenonApi.Zenon
     /// <returns>Returns the driver ID of the created StratonNG driver.</returns>
     private string CreateStratonNgDriverForZenonLogicProject(string zenonLogicProjectName, string nextFreeZenonLogicMainPort)
     {
+      // If a driver configuration file with the same name as it would get created here already exists it has to be
+      // deleted manually beforehand. This scenario occurs when a zenon Logic project gets deleted via the GUI as zenon
+      // does not remove the driver configuration file which belongs to a driver that belongs to a zenon Logic project.
+      DeleteExistingStratonNgDriverConfigFile(zenonLogicProjectName);
+
       IDriver newStratonNgDriver = this.ZenonProject.DriverCollection
         .Create($"zenon Logic: {zenonLogicProjectName}", "STRATONNG", false);
 
@@ -270,6 +275,22 @@ namespace zenonApi.Zenon
             AllUsedPorts.Add(newZenonLogicProject.MainPort);
           }
         }
+      }
+    }
+
+    /// <summary>
+    /// Deletes the configuration file of a straton NG driver which belongs to the stated zenon Logic project.
+    /// </summary>
+    /// <param name="zenonLogicProjectName"></param>
+    private void DeleteExistingStratonNgDriverConfigFile(string zenonLogicProjectName)
+    {
+      // the whitespace character between the ZenonStratonNgDriverConfigFilePrefix and the zenonLogicProjectName
+      // is required
+      string driverConfigFilePath = Path.Combine(ZenonProject.GetFolderPath(FolderPath.Drivers),
+        $"{Strings.ZenonStratonNgDriverConfigFilePrefix} {zenonLogicProjectName}{Strings.TextFileExtension}");
+      if (File.Exists(driverConfigFilePath))
+      {
+        File.Delete(driverConfigFilePath);
       }
     }
 

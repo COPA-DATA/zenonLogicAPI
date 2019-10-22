@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PropertyChanged;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -49,6 +50,7 @@ namespace zenonApi.Collections
     /// <summary>
     /// Gets or sets the parent of all children.
     /// </summary>
+    [DoNotNotify]
     public object Parent
     {
       get => parent;
@@ -68,6 +70,7 @@ namespace zenonApi.Collections
     /// <summary>
     /// Gets or sets the root of all children.
     /// </summary>
+    [DoNotNotify]
     public object Root
     {
       get => root;

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using PropertyChanged;
+using System.Collections;
 using zenonApi.Serialization;
 
 namespace zenonApi.Collections
@@ -7,8 +8,11 @@ namespace zenonApi.Collections
     where TSelf : class, IZenonSerializable<TSelf>
   {
     // The following interface properties are hidden by intent
+    [DoNotNotify]
     IList IContainerAwareCollectionItem.ItemContainer { get; set; }
+    [DoNotNotify]
     object IContainerAwareCollectionItem.ItemContainerParent { get; set; }
+    [DoNotNotify]
     object IContainerAwareCollectionItem.ItemContainerRoot { get; set; }
 
     /// <summary>

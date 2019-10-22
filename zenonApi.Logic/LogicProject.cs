@@ -38,7 +38,8 @@ namespace zenonApi.Logic
     /// <param name="stratonDirectoryOfZenonProject">Directory path of the straton folder of a zenon project.
     /// Example path: "C:\ProgramData\COPA-DATA\SQL2012\"zenon project GUID"\FILES\straton"</param>
     /// <returns></returns>
-    public static LogicProject Import(XDocument k5XmlExport, string stratonDirectoryOfZenonProject = null, string zenonLogicProjectName = null)
+    public static LogicProject Import(XDocument k5XmlExport, string stratonDirectoryOfZenonProject = null,
+      string zenonLogicProjectName = null)
     {
       var zenonLogicProject = LogicProject.Import(k5XmlExport.Element(Strings.K5XmlExportRootNodeName));
       if (zenonLogicProjectName != null)
@@ -55,7 +56,9 @@ namespace zenonApi.Logic
     }
 
     #region zenonSerializable Implementation
+
     public override string NodeName => "K5project";
+
     #endregion
 
     #region zenon Logic specific properties
@@ -68,7 +71,8 @@ namespace zenonApi.Logic
     public string ProjectName
     {
       // gets the name of the zenon Logic project from the last part of the k5Project path xml attribute
-      get => string.IsNullOrEmpty(this.Path) ? "Unknown"
+      get => string.IsNullOrEmpty(this.Path)
+        ? "Unknown"
         : System.IO.Path.GetFileName(this.Path.TrimEnd(System.IO.Path.DirectorySeparatorChar));
       // writes the new name on the according position of the k5project path xml attribute
       set
@@ -108,6 +112,7 @@ namespace zenonApi.Logic
     public string K5DbxsIniFilePath => System.IO.Path.Combine(Path, Strings.K5DbxsIniFileName);
 
     private K5DbxsIniFile _k5DbxsIniFile;
+
     /// <summary>
     /// Object for read and write access to the K5dbxs.ini file of the current zenon Logic project.
     /// </summary>
@@ -225,6 +230,7 @@ namespace zenonApi.Logic
     /// </summary>
     [zenonSerializableNode("Appli", NodeOrder = 17)]
     public ApplicationTree ApplicationTree { get; protected set; }
+
     #endregion
   }
 }

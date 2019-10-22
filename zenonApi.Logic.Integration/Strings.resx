@@ -219,4 +219,10 @@
   <data name="ZenonLogicProjectDirectoryNotFound" xml:space="preserve">
     <value>Error while retrieving directory information of the zenon Logic project.</value>
   </data>
+  <data name="TextFileExtension" xml:space="preserve">
+    <value>.txt</value>
+  </data>
+  <data name="ZenonStratonNgDriverConfigFilePrefix" xml:space="preserve">
+    <value>stratonNG_zenon Logic_</value>
+  </data>
 </root>

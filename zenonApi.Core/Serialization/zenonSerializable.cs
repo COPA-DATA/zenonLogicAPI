@@ -1,10 +1,13 @@
-﻿using System;
+﻿using PropertyChanged;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -21,6 +24,7 @@ namespace zenonApi.Serialization
     where TParent : class, IZenonSerializable
     where TRoot : class, IZenonSerializable
   {
+    [DoNotNotify]
     public virtual TParent Parent
     {
       // Casts are required here, since we hide the interface properties in the base class
@@ -31,6 +35,7 @@ namespace zenonApi.Serialization
       }
     }
 
+    [DoNotNotify]
     public virtual TRoot Root
     {
       // Casts are required here, since we hide the interface properties in the base class
@@ -44,7 +49,7 @@ namespace zenonApi.Serialization
 
   public abstract class zenonSerializable<TSelf> : IZenonSerializable<TSelf>
     where TSelf : class, IZenonSerializable<TSelf>
-  {
+  { 
     /// <summary>
     /// Standard indentation value for xml format
     /// </summary>
@@ -54,19 +59,36 @@ namespace zenonApi.Serialization
     /// <summary>
     /// The name of the item in its XML representation.
     /// </summary>
+    [DoNotNotify]
     public abstract string NodeName { get; }
 
     /// <summary>
     /// Contains all unknown nodes, which are not covered by this API and were found for the current item.
     /// The key specifies the original tag name from XML, the value contains all the entire XElements representing it.
     /// </summary>
+    [DoNotNotify]
     public Dictionary<string, List<XElement>> UnknownNodes { get; } = new Dictionary<string, List<XElement>>();
 
     /// <summary>
     /// Contains all unknown attributes, which are not covered by this API and were found for the current item.
     /// The key specifies the original tag name from XML, the value contains the attribute's value.
     /// </summary>
+    [DoNotNotify]
     public Dictionary<string, string> UnknownAttributes { get; } = new Dictionary<string, string>();
+
+    /// <summary>
+    /// Status about the origin and the current state of the object.
+    /// </summary>
+    [DoNotNotify]
+    public ZenonSerializableStatusEnum ObjectStatus { get; set; } = ZenonSerializableStatusEnum.New;
+
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+      // update ObjectStatus to signal that the object was modified during its live time
+      this.ObjectStatus = ZenonSerializableStatusEnum.Modified;
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
     #endregion
 
     #region Private/Protected methods
@@ -146,6 +168,8 @@ namespace zenonApi.Serialization
 
       exportUnknownAttributes(current, this);
       exportUnknownNodes(current, this);
+
+      this.ObjectStatus = ZenonSerializableStatusEnum.Deserialized;
 
       return current;
     }
@@ -564,6 +588,8 @@ namespace zenonApi.Serialization
       // Since everything was removed what was found, all of the remaining are unknown elements, which we can handle explicitly
       importUnknownAttributes(result, source);
       importUnknownNodes(result, source);
+
+      result.ObjectStatus = ZenonSerializableStatusEnum.Loaded;
 
       return result;
     }

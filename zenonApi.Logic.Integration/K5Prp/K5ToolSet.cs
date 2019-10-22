@@ -385,7 +385,7 @@ namespace zenonApi.Zenon.K5Prp
     {
       ProcessStartInfo startInfo = new ProcessStartInfo(K5BexeFilePath,
           $"BUILD {this.ZenonLogicProjectDirectory}")
-        { CreateNoWindow = false, WindowStyle = ProcessWindowStyle.Hidden, UseShellExecute = false};
+        { CreateNoWindow = false, WindowStyle = ProcessWindowStyle.Hidden};
 
       using (Process stratonCompileProcess = new Process { StartInfo = startInfo })
       {
