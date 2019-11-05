@@ -38,10 +38,17 @@ namespace zenonApi.Logic
     InstructionList,
 
     /// <summary>
-    /// Use this value to indicate, that the language of the <see cref="_Pou"/> is a
-    /// sequential function chart (SFC).
+    /// Use this value to indicate, that the language of the <see cref="_Pou"/> is
+    /// a sequential function chart (SFC).
     /// </summary>
     [zenonSerializableEnum("SFC")]
-    SequentialFunctionChart
+    SequentialFunctionChart,
+
+    /// <summary>
+    /// Use this value to indicate, that the language of the <see cref="_Pou"/> is
+    /// a free form sequential function chart (FFSFC).
+    /// </summary>
+    [zenonSerializableEnum("FFSFC")]
+    FreeFormSequentialFunctionChart
   }
 }

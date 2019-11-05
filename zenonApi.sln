@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		Readme-zenonApi.Logic.md = Readme-zenonApi.Logic.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zenonApi.Logic.Integration", "zenonApi.Logic.Integration\zenonApi.Logic.Integration.csproj", "{8F1B19E1-56BF-436F-9D99-1A360538B241}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zenonApi.Zenon", "zenonApi.Logic.Integration\zenonApi.Zenon.csproj", "{8F1B19E1-56BF-436F-9D99-1A360538B241}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,20 +44,5 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {40BBB9EC-09E6-44A3-A3FB-272E1257D97B}
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 2
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://devops.copadata.com/zenon
-		SccProjectUniqueName0 = zenonApi.Logic\\zenonApi.Logic.csproj
-		SccProjectName0 = zenonApi.Logic
-		SccAuxPath0 = https://devops.copadata.com/zenon
-		SccLocalPath0 = zenonApi.Logic
-		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName1 = zenonApi.Core\\zenonApi.Core.csproj
-		SccProjectName1 = zenonApi.Core
-		SccAuxPath1 = https://devops.copadata.com/zenon
-		SccLocalPath1 = zenonApi.Core
-		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 	EndGlobalSection
 EndGlobal

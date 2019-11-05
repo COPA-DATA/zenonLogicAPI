@@ -46,6 +46,7 @@ namespace zenonApi.Logic.Internal
     private FunctionBlockDiagramDefinition functionBlockDiagramDefinition;
     private SequentialFunctionChartDefinition sequentialFunctionChartDefinition;
     private XElement ladderDiagramDefinition;
+    private XElement freeFormSequentialFunctionChartDefinition;
     private string name = "unknown";
 
     #region Specific properties
@@ -84,7 +85,7 @@ namespace zenonApi.Logic.Internal
     /// <see cref="LogicProgramType.Child"/> SFC programs.
     /// </summary>
     [zenonSerializableAttribute("parent", AttributeOrder = 2)]
-    public string ParentPou { get; set; } // TOOD; Shouldn't we use a reference to another pou? Validation of naming otherwise?
+    public string ParentPou { get; set; } // TODO: Shouldn't we use a reference to another pou? Validation of naming otherwise?
 
     /// <summary>
     /// The execution period (number of cycles) at runtime.
@@ -150,7 +151,8 @@ namespace zenonApi.Logic.Internal
     /// <summary>
     /// Contains a piece of ST/IL source code.
     /// If this value is set to a value other than null, <see cref="FunctionBlockDiagramDefinition"/>,
-    /// <see cref="SequentialFunctionChartDefinition"/> and <see cref="LadderDiagramDefinition"/> are automatically set to null.
+    /// <see cref="SequentialFunctionChartDefinition"/>, <see cref="FreeFormSequentialFunctionChartDefinition"/>
+    /// and <see cref="LadderDiagramDefinition"/> are automatically set to null.
     /// </summary>
     [zenonSerializableNode("sourceSTIL", NodeOrder = 5)]
     public string SourceCode
@@ -163,6 +165,7 @@ namespace zenonApi.Logic.Internal
           functionBlockDiagramDefinition = null;
           sequentialFunctionChartDefinition = null;
           ladderDiagramDefinition = null;
+          freeFormSequentialFunctionChartDefinition = null;
         }
 
         sourceCode = value;
@@ -172,7 +175,8 @@ namespace zenonApi.Logic.Internal
     /// <summary>
     /// Describes a function block diagram.
     /// If this value is set to a value other than null, <see cref="SourceCode"/>,
-    /// <see cref="SequentialFunctionChartDefinition"/> and <see cref="LadderDiagramDefinition"/> are automatically set to null.
+    /// <see cref="SequentialFunctionChartDefinition"/>, <see cref="FreeFormSequentialFunctionChartDefinition"/>
+    /// and <see cref="LadderDiagramDefinition"/> are automatically set to null.
     /// </summary>
     [zenonSerializableNode("sourceFBD", NodeOrder = 6)]
     public FunctionBlockDiagramDefinition FunctionBlockDiagramDefinition
@@ -185,6 +189,7 @@ namespace zenonApi.Logic.Internal
           sourceCode = null;
           sequentialFunctionChartDefinition = null;
           ladderDiagramDefinition = null;
+          freeFormSequentialFunctionChartDefinition = null;
         }
 
         functionBlockDiagramDefinition = value;
@@ -194,7 +199,7 @@ namespace zenonApi.Logic.Internal
     /// <summary>
     /// Describes a LD diagram.
     /// If this value is set to a value other than null, <see cref="SourceCode"/>,
-    /// <see cref="SequentialFunctionChartDefinition"/>
+    /// <see cref="SequentialFunctionChartDefinition"/>, <see cref="FreeFormSequentialFunctionChartDefinition"/>
     /// and <see cref="FunctionBlockDiagramDefinition"/> are automatically set to null.
     /// </summary>
     [zenonSerializableRawFormat("sourceLD", NodeOrder = 7)]
@@ -208,6 +213,7 @@ namespace zenonApi.Logic.Internal
           sourceCode = null;
           functionBlockDiagramDefinition = null;
           sequentialFunctionChartDefinition = null;
+          freeFormSequentialFunctionChartDefinition = null;
         }
 
         ladderDiagramDefinition = value;
@@ -217,8 +223,8 @@ namespace zenonApi.Logic.Internal
     /// <summary>
     /// Describes a SFC program.
     /// If this value is set to a value other than null, <see cref="SourceCode"/>,
-    /// <see cref="LadderDiagramDefinition"/> and <see cref="FunctionBlockDiagramDefinition"/>
-    /// are automatically set to null.
+    /// <see cref="LadderDiagramDefinition"/>, <see cref="FunctionBlockDiagramDefinition"/>
+    /// and <see cref="FreeFormSequentialFunctionChartDefinition"/> are automatically set to null.
     /// </summary>
     [zenonSerializableNode("sourceSFC", NodeOrder = 8)]
     public SequentialFunctionChartDefinition SequentialFunctionChartDefinition
@@ -231,6 +237,7 @@ namespace zenonApi.Logic.Internal
           sourceCode = null;
           functionBlockDiagramDefinition = null;
           ladderDiagramDefinition = null;
+          freeFormSequentialFunctionChartDefinition = null;
         }
 
         sequentialFunctionChartDefinition = value;
@@ -238,9 +245,33 @@ namespace zenonApi.Logic.Internal
     }
 
     /// <summary>
+    /// Describes a FFSFC program.
+    /// If this value is set to a value other than null, <see cref="SourceCode"/>,
+    /// <see cref="FunctionBlockDiagramDefinition"/>, <see cref="LadderDiagramDefinition"/>
+    /// and <see cref="SequentialFunctionChartDefinition"/> are automatically set to null.
+    /// </summary>
+    [zenonSerializableRawFormat("sourceFFSFC", NodeOrder = 9)]
+    public XElement FreeFormSequentialFunctionChartDefinition
+    {
+      get => freeFormSequentialFunctionChartDefinition;
+      set
+      {
+        if (value != null)
+        {
+          sourceCode = null;
+          functionBlockDiagramDefinition = null;
+          ladderDiagramDefinition = null;
+          sequentialFunctionChartDefinition = null;
+        }
+
+        freeFormSequentialFunctionChartDefinition = value;
+      }
+    }
+
+    /// <summary>
     /// Undocumented zenon Logic node.
     /// </summary>
-    [zenonSerializableNode("cryptcode", NodeOrder = 9)]
+    [zenonSerializableNode("cryptcode", NodeOrder = 10)]
     public string CryptCode { get; set; }
     #endregion
   }

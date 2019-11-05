@@ -69,14 +69,15 @@ namespace Tester
       project.ApplicationTree.Folders.Where(x => x.Name == "Signals").FirstOrDefault()?.Remove();
 
       // Export and save the project again
-      XElement modifiedProject = project.Export ();
-      XDocument document = new XDocument()
+      XElement modifiedProject = project.ExportAsXElement();
+      XDocument document = new XDocument
       {
         Declaration = new XDeclaration("1.0", "iso-8859-1", "yes")
       };
 
       document.Add(modifiedProject);
-      using (XmlTextWriter writer = new XmlTextWriter($@"C:\Users\{Environment.UserName}\Desktop\DemoProjectModified.xml", Encoding.GetEncoding("iso-8859-1")))
+      using (XmlTextWriter writer = new XmlTextWriter($@"C:\Users\{Environment.UserName}\Desktop\DemoProjectModified.xml",
+        Encoding.GetEncoding("iso-8859-1")))
       {
         writer.Indentation = 3;
         writer.Formatting = Formatting.Indented;
