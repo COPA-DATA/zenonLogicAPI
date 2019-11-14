@@ -167,10 +167,10 @@ namespace zenonApi.Extensions
         {
           for (int i = 0; i < value.Length; i++)
           {
-            if (self[i] != '_' 
-                && (self[i] >= 'a' && self[i] <= 'z'
-                    || self[i] >= 'A' && self[i] <= 'Z'
-                    || self[i] >= '0' && self[i] <= '9')
+            if (self[i] != '_'
+                && !(self[i] >= 'a' && self[i] <= 'z')
+                && !(self[i] >= 'A' && self[i] <= 'Z')
+                && !(self[i] >= '0' && self[i] <= '9')
                 )
             {
               return false;
