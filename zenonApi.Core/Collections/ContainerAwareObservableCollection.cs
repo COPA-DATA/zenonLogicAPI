@@ -1,4 +1,5 @@
-﻿using PropertyChanged;
+﻿// ReSharper disable UnusedMember.Global : This is an API, unused members and methods can occur.
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,22 +7,21 @@ using System.Linq;
 namespace zenonApi.Collections
 {
   public class ContainerAwareObservableCollection<TChildren>
-    : ExtendedObservableCollection<TChildren>
-    where TChildren : IContainerAwareCollectionItem
+    : ExtendedObservableCollection<TChildren> where TChildren : class, IContainerAwareCollectionItem
   {
     #region Ctor
-    public ContainerAwareObservableCollection() : base() { }
+    public ContainerAwareObservableCollection() { }
 
-    public ContainerAwareObservableCollection(object parent = null, object root = null) : base()
+    public ContainerAwareObservableCollection(object parent = null, object root = null)
     {
-      this.parent = parent;
-      this.root = root;
+      this._parent = parent;
+      this._root = root;
     }
 
     public ContainerAwareObservableCollection(IEnumerable<TChildren> collection, object parent = null, object root = null) : base(collection)
     {
-      this.parent = parent;
-      this.root = root;
+      this._parent = parent;
+      this._root = root;
 
       foreach (var item in collection)
       {
@@ -31,8 +31,8 @@ namespace zenonApi.Collections
 
     public ContainerAwareObservableCollection(IList<TChildren> collection, object parent = null, object root = null) : base(collection)
     {
-      this.parent = parent;
-      this.root = root;
+      this._parent = parent;
+      this._root = root;
 
       foreach (var item in collection)
       {
@@ -43,9 +43,9 @@ namespace zenonApi.Collections
 
 
     #region Parent / Root
-    private object parent = null;
-    private object root = null;
-    private bool parentAndRootDerivedFromFirstEverAddedChild = false;
+    private object _parent;
+    private object _root;
+    private bool _parentAndRootDerivedFromFirstEverAddedChild;
 
     /// <summary>
     /// Gets or sets the parent of all children.
@@ -53,10 +53,10 @@ namespace zenonApi.Collections
     [DoNotNotify]
     public object Parent
     {
-      get => parent;
+      get => _parent;
       set
       {
-        parent = value;
+        _parent = value;
         foreach (var item in this.Items)
         {
           if (item != null)
@@ -73,17 +73,16 @@ namespace zenonApi.Collections
     [DoNotNotify]
     public object Root
     {
-      get => root;
+      get => _root;
       set
       {
-        root = value;
+        _root = value;
         foreach (var item in this.Items)
         {
           if (item != null)
           {
-
+            item.ItemContainerRoot = value;
           }
-          item.ItemContainerRoot = value;
         }
       }
     }
@@ -127,22 +126,22 @@ namespace zenonApi.Collections
         return;
       }
 
-      if (this.parent == null && this.root == null && !this.parentAndRootDerivedFromFirstEverAddedChild)
+      if (this._parent == null && this._root == null && !this._parentAndRootDerivedFromFirstEverAddedChild)
       {
-        this.parent = item.ItemContainerParent;
-        this.root = item.ItemContainerRoot;
-        this.parentAndRootDerivedFromFirstEverAddedChild = true;
+        this._parent = item.ItemContainerParent;
+        this._root = item.ItemContainerRoot;
+        this._parentAndRootDerivedFromFirstEverAddedChild = true;
       }
 
       // Check if the item has already a parent, if so, adding it is invalid
-      if ((item.ItemContainerParent != parent || item.ItemContainerRoot != root) && (item.ItemContainerParent != null || item.ItemContainerRoot != null))
+      if ((item.ItemContainerParent != _parent || item.ItemContainerRoot != _root) && (item.ItemContainerParent != null || item.ItemContainerRoot != null))
       {
         throw new InvalidOperationException("Cannot add a child if it is possessed by another parent or root.");
       }
 
       item.ItemContainer = this;
-      item.ItemContainerParent = parent;
-      item.ItemContainerRoot = root;
+      item.ItemContainerParent = _parent;
+      item.ItemContainerRoot = _root;
     }
 
     /// <summary>

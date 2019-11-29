@@ -15,6 +15,7 @@ namespace zenonApi.Logic
     /// </summary>
     internal LogicProgramCollection(ILogicFileContainer parent, LogicProject root) : base(parent, root) { }
 
+    // ReSharper disable once UnusedMember.Local : Required default constructor for serialization.
     private LogicProgramCollection() { }
 
     protected override void ClearItems()

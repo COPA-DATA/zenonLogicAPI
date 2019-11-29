@@ -8,6 +8,7 @@ namespace zenonApi.Serialization
   /// resulting XML.
   /// </summary>
   [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+  // ReSharper disable once InconsistentNaming : "zenon" is always written lowercase.
   public class zenonSerializableNodeAttribute : zenonSerializableBaseAttribute
   {
     /// <summary>

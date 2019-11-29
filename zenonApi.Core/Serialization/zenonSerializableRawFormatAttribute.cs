@@ -4,6 +4,7 @@ using System.Xml;
 namespace zenonApi.Serialization
 {
   [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+  // ReSharper disable once InconsistentNaming : "zenon" is always written lowercase.
   public class zenonSerializableRawFormatAttribute : zenonSerializableBaseAttribute
   {
     /// <summary>

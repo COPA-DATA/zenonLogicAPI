@@ -20,7 +20,7 @@ namespace zenonApi.Logic.SerializationConverters
       }
 
       string dimensionString = null;
-      if (source is LogicDimension dimension)
+      if (source is LogicDimension dimension) // TODO: Why is the logic here outside the dimension? does not make any sense.
       {
         // [0,0,0] -> null so tag can be omitted in xml
         if (dimension.X == 0 && dimension.Y == 0 && dimension.Z == 0)
@@ -48,7 +48,7 @@ namespace zenonApi.Logic.SerializationConverters
         // [0,0,x], [x,0,x], [0,x,x] -> invalid configuration
         if ((dimension.X == 0 || dimension.Y == 0) && dimension.Z != 0)
         {
-          throw new FormatException(string.Format(Strings.DimensionTypeInvalidFormat, 
+          throw new FormatException(string.Format(Strings.DimensionTypeInvalidFormat,
             nameof(LogicDimension), $"[{dimension.X},{dimension.Y},{dimension.Z}]"));
         }
 
@@ -60,7 +60,7 @@ namespace zenonApi.Logic.SerializationConverters
         return dimensionString;
       }
 
-      throw new FormatException(string.Format(Strings.DimensionConverterFormatExcp, nameof(DimensionConverter)));
+      throw new FormatException(string.Format(Strings.ErrorMessageDimensionsInvalidDatatype, nameof(DimensionConverter)));
     }
 
     public object Convert(string source)
@@ -70,32 +70,32 @@ namespace zenonApi.Logic.SerializationConverters
         return null;
       }
 
-      var str = source;
-      var splitString = str.Split(',');
+      var parts = source.Split(',');
 
-      if (splitString.Length > MaximumSupportedDimensions)
+      if (parts.Length > MaximumSupportedDimensions)
       {
-        throw new ArgumentOutOfRangeException(Strings.DimensionConverterArgumOutOfRangeExcp);
+        throw new ArgumentOutOfRangeException(Strings.ErrorMessageDimensionsOutOfRange);
       }
 
-      uint xCoord = 0, yCoord = 0, zCoord = 0;
+      uint y = 0;
+      uint z = 0;
 
-      var success = uint.TryParse(splitString[0], out xCoord);
-      if (splitString.Length > 1)
+      var success = uint.TryParse(parts[0], out uint x);
+      if (parts.Length > 1)
       {
-        success &= uint.TryParse(splitString[1], out yCoord);
+        success &= uint.TryParse(parts[1], out y);
       }
-      if (splitString.Length > 2)
+      if (parts.Length > 2)
       {
-        success &= uint.TryParse(splitString[2], out zCoord);
+        success &= uint.TryParse(parts[2], out z);
       }
 
       if (!success)
       {
-        throw new FormatException(Strings.DimensionConverterParseException);
+        throw new FormatException(string.Format(Strings.ErrorMessageParsingDimensionsFailed, source));
       }
 
-      return LogicDimension.Create(xCoord, yCoord, zCoord);
+      return LogicDimension.Create(x, y, z);
     }
   }
 }

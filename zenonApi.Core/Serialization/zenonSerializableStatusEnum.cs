@@ -1,9 +1,11 @@
 ﻿namespace zenonApi.Serialization
 {
   /// <summary>
-  /// Object status information state.
+  /// Specifies, if a <see cref="zenonSerializable{TSelf,TParent,TRoot}"/> was loaded from a deserialized file,
+  /// was newly created via code, was modified and if it was already deserialized to a file.
   /// </summary>
-  public enum ZenonSerializableStatusEnum
+  // ReSharper disable once InconsistentNaming : "zenon" is always written lowercase.
+  public enum zenonSerializableStatusEnum
   {
     /// <summary>
     /// Default object state after constructor call.

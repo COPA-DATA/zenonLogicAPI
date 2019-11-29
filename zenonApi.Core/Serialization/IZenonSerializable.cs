@@ -12,6 +12,7 @@ namespace zenonApi.Serialization
     TRoot Root { get; }
   }
 
+  // ReSharper disable once UnusedTypeParameter : "Unused" type parameter is required for serialization.
   public interface IZenonSerializable<out TSelf> : IZenonSerializable
     where TSelf : class
   { }
@@ -38,6 +39,6 @@ namespace zenonApi.Serialization
     /// <summary>
     /// Status about the origin and the current state of the object.
     /// </summary>
-    ZenonSerializableStatusEnum ObjectStatus { get; set; }
+    zenonSerializableStatusEnum ObjectStatus { get; set; }
   }
 }

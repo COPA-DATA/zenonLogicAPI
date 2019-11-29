@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using zenonApi.Collections;
+﻿using zenonApi.Collections;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic.SequentialFunctionChart

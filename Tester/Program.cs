@@ -42,8 +42,7 @@ namespace Tester
       }
 
       LogicFolder folder = project.ApplicationTree
-        .Folders.FirstOrDefault(x => x.Name == "Programs")
-        .Folders.FirstOrDefault(x => x.Name == "testFolder");
+        .Folders.FirstOrDefault();
 
       folder.Name = "RenamedTestFolder";
 
@@ -72,12 +71,12 @@ namespace Tester
       XElement modifiedProject = project.ExportAsXElement();
       XDocument document = new XDocument
       {
-        Declaration = new XDeclaration("1.0", "iso-8859-1", "yes")
+        Declaration = new XDeclaration("1.0", "utf-8", "yes")
       };
 
       document.Add(modifiedProject);
       using (XmlTextWriter writer = new XmlTextWriter($@"C:\Users\{Environment.UserName}\Desktop\DemoProjectModified.xml",
-        Encoding.GetEncoding("iso-8859-1")))
+        Encoding.GetEncoding("utf-8")))
       {
         writer.Indentation = 3;
         writer.Formatting = Formatting.Indented;

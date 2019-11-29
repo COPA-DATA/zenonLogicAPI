@@ -14,8 +14,19 @@ namespace zenonApi.Logic
   [DebuggerDisplay("{" + nameof(Name) + "}")]
   public class LogicFolder : zenonSerializable<LogicFolder, ILogicFileContainer, LogicProject>, ILogicFileContainer
   {
-    public LogicFolder()
+    /// <summary>Private default constructor for serialization.</summary>
+    // ReSharper disable once UnusedMember.Local : Required default constructor for serialization.
+    private LogicFolder() { }
+
+    public LogicFolder(string folderName)
     {
+      if (string.IsNullOrEmpty(folderName))
+      {
+        throw new ArgumentNullException(
+          string.Format(Strings.ErrorMessageParameterIsNullOrWhitespace, nameof(LogicFolder), nameof(folderName)));
+      }
+
+      Name = folderName;
       Programs = new LogicProgramCollection(this, null);
       Folders = new ContainerAwareObservableCollection<LogicFolder>(this);
     }
@@ -23,23 +34,6 @@ namespace zenonApi.Logic
     #region zenonSerializable implementation
     public override string NodeName => "Folder";
     #endregion
-
-    public static LogicFolder Create(string folderName, bool isFolderExpanded = false)
-    {
-      if (string.IsNullOrEmpty(folderName))
-      {
-        throw new ArgumentNullException(
-          string.Format(Strings.GeneralMethodArgumentNullException, nameof(Create), nameof(folderName)));
-      }
-
-      LogicFolder logicFolder = new LogicFolder
-      {
-        Name = folderName,
-        Expand = isFolderExpanded
-      };
-
-      return logicFolder;
-    }
 
     #region Specific properties
     [zenonSerializableNode("Folder")]
@@ -49,7 +43,7 @@ namespace zenonApi.Logic
     public LogicProgramCollection Programs { get; protected set; }
 
     [zenonSerializableAttribute("Expand", Converter = typeof(YesNoConverter))]
-    protected bool Expand { get; set; } = false;
+    protected bool Expand { get; set; }
 
     [zenonSerializableAttribute("Name")]
     public string Name { get; set; } // TODO: What is allowed here as a name?
@@ -74,27 +68,27 @@ namespace zenonApi.Logic
     }
   }
 
-#region extension methods for folder management
+  #region extension methods for folder management
 
-[Browsable(false)]
-public static class LogicFolderExtensions
-{
-  public static LogicFolder GetByName(this IEnumerable<LogicFolder> self, string folderName,
-    StringComparison comparison = StringComparison.Ordinal)
+  [Browsable(false)]
+  public static class LogicFolderExtensions
   {
-    if (string.IsNullOrEmpty(folderName))
+    public static LogicFolder GetByName(this IEnumerable<LogicFolder> self, string folderName,
+      StringComparison comparison = StringComparison.Ordinal)
     {
-      return null;
+      if (string.IsNullOrEmpty(folderName))
+      {
+        return null;
+      }
+
+      return self.FirstOrDefault(logicFolder => logicFolder?.Name.Equals(folderName, comparison) ?? false);
     }
 
-    return self.FirstOrDefault(logicFolder => logicFolder?.Name.Equals(folderName, comparison) ?? false);
+    public static bool Contains(this IEnumerable<LogicFolder> self, string folderName,
+      StringComparison comparison = StringComparison.Ordinal)
+    {
+      return self.GetByName(folderName, comparison) != null;
+    }
   }
-
-  public static bool Contains(this IEnumerable<LogicFolder> self, string folderName,
-    StringComparison comparison = StringComparison.Ordinal)
-  {
-    return self.GetByName(folderName, comparison) != null;
-  }
-}
   #endregion
 }

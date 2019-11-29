@@ -19,6 +19,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
     /// The ID of the FBD object, which is mandatory.
     /// </summary>
     [zenonSerializableAttribute("id", AttributeOrder = 10)]
+    // ReSharper disable once InconsistentNaming : Using .NET Framework Design Guidelines for the naming here.
     public string ID { get; set; } // TODO: Can this be an int? / uint?
 
     /// <summary>

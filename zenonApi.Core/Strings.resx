@@ -117,16 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="EncodingArgumentNullException" xml:space="preserve">
-    <value>Parameter {0} cannot be null.</value>
-  </data>
-  <data name="EncodingArgumentNullOrWhitespaceException" xml:space="preserve">
-    <value>Parameter {0} cannot be null or consist of only white space characters.</value>
-  </data>
-  <data name="MsgErrorAttributeNotSupported" xml:space="preserve">
+  <data name="ErrorMessageAttributeNotSupported" xml:space="preserve">
     <value>Attribute {0} is not supported for usage on {1}.</value>
   </data>
-  <data name="MsgErrorInvalidSerializationListType" xml:space="preserve">
+  <data name="ErrorMessageInvalidSerializationListType" xml:space="preserve">
     <value>Currently, only lists of types derived by {0} are supported.</value>
+  </data>
+  <data name="ErrorMessageParameterIsNull" xml:space="preserve">
+    <value>Argment {0} must not be null.</value>
+  </data>
+  <data name="ErrorMessageParameterIsNullOrWhitespace" xml:space="preserve">
+    <value>Argument {0} must not be null or consist solely of white space characters.</value>
   </data>
 </root>

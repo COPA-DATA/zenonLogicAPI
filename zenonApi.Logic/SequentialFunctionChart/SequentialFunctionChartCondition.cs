@@ -10,8 +10,8 @@ namespace zenonApi.Logic.SequentialFunctionChart
   {
     public override string NodeName => "SFCcondition";
 
-    private string sourceCode = "";
-    private XElement ladderDiagramDefinition;
+    private string _sourceCode = "";
+    private XElement _ladderDiagramDefinition;
 
     /// <summary>
     /// Contains a piece of ST/IL source code.
@@ -21,15 +21,15 @@ namespace zenonApi.Logic.SequentialFunctionChart
     [zenonSerializableNode("sourceSTIL")]
     public string SourceCode
     {
-      get => sourceCode;
+      get => _sourceCode;
       set
       {
         if (value != null)
         {
-          ladderDiagramDefinition = null;
+          _ladderDiagramDefinition = null;
         }
 
-        sourceCode = value;
+        _sourceCode = value;
       }
     }
 
@@ -41,15 +41,15 @@ namespace zenonApi.Logic.SequentialFunctionChart
     [zenonSerializableRawFormat("sourceLD")]
     public XElement LadderDiagramDefinition
     {
-      get => ladderDiagramDefinition;
+      get => _ladderDiagramDefinition;
       set
       {
         if (value != null)
         {
-          sourceCode = null;
+          _sourceCode = null;
         }
 
-        ladderDiagramDefinition = value;
+        _ladderDiagramDefinition = value;
       }
     } // TODO: if LD is implemented, change this to the actual type and tag
   }

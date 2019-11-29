@@ -2,6 +2,7 @@
 
 namespace zenonApi.Serialization
 {
+  // ReSharper disable once InconsistentNaming : "zenon" is always written lowercase.
   public abstract class zenonSerializableBaseAttribute : Attribute
   {
     internal abstract zenonSerializableAttributeType AttributeType { get; }

@@ -9,12 +9,12 @@ namespace zenonApi.Extensions
     /// <summary>
     /// A list of invalid characters for names in zenon.
     /// </summary>
-    private static readonly char[] illegalCharacters = { '/', '\\', ':', '*', '?', /*'<', '>', */ '|', '\"', '#', '%', '@', '{', '}' };
+    private static readonly char[] IllegalCharacters = { '/', '\\', ':', '*', '?', /*'<', '>', */ '|', '\"', '#', '%', '@', '{', '}' };
 
     /// <summary>
     /// An array of possible C language keywords, which we forbid for logic names.
     /// </summary>
-    private static readonly string[] cKeywords =
+    private static readonly string[] CKeywords =
     {
       "auto",
       "break",
@@ -79,7 +79,7 @@ namespace zenonApi.Extensions
       {
         return false;
       }
-      if (illegalCharacters.Any((c) => self.Contains(c)))
+      if (IllegalCharacters.Any((c) => self.Contains(c)))
       {
         return false;
       }
@@ -98,7 +98,7 @@ namespace zenonApi.Extensions
       if (!self.IsValidZenonName(allowSpaces)
         || (!allowSpaces && self.Contains(" "))
         || self.Contains("__")
-        || !self.IsValidCVarName(allowSpaces))
+        || !self.IsValidCVariableName(allowSpaces))
       {
         // * Two followed underlines are not allowed in zenon Logic
         // * Taken standard C keywords are not allowed in zenon Logic
@@ -132,7 +132,7 @@ namespace zenonApi.Extensions
     /// If this is set to true, the variables may contain other chars than letters (a-z, A-Z), numbers and underscores
     /// (default = false).
     /// </param>
-    public static bool IsValidCVarName(this string self, bool allowSpaces = false, bool mustStartCLike = true, bool canContainSpecialChars = false)
+    public static bool IsValidCVariableName(this string self, bool allowSpaces = false, bool mustStartCLike = true, bool canContainSpecialChars = false)
     {
       if (string.IsNullOrWhiteSpace(self))
       {
@@ -158,7 +158,7 @@ namespace zenonApi.Extensions
           return false;
         }
 
-        if (cKeywords.Any((keyword) => value == keyword))
+        if (CKeywords.Any((keyword) => value == keyword))
         {
           return false;
         }

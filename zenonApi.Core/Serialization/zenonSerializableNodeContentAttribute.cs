@@ -8,13 +8,9 @@ namespace zenonApi.Serialization
   /// Its usage is permitted only within an <see cref="IZenonSerializable"/> object.
   /// </summary>
   [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+  // ReSharper disable once InconsistentNaming : "zenon" is always written lowercase.
   public class zenonSerializableNodeContentAttribute : zenonSerializableBaseAttribute
   {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="zenonSerializableNodeContentAttribute"/>.
-    /// </summary>
-    public zenonSerializableNodeContentAttribute() { }
-
     /// <summary>
     /// The type of an <see cref="IZenonSerializationConverter"/> to use for serialization and deserialization.
     /// </summary>

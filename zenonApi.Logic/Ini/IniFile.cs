@@ -4,7 +4,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using zenonApi.Logic.Resources;
 
-namespace zenonApi.Logic.Helper
+// TODO: @Mike Thomas: Remove this whole class, it destroys the platform independence! Also "Helper" is not a good name.
+
+namespace zenonApi.Logic.Ini
 {
   /// <summary>
   /// Class for handling a .ini file.

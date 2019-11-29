@@ -7,6 +7,8 @@ namespace zenonApi.Logic.Internal
   /// <summary>
   /// Describes a group of definitions.
   /// </summary>
+  // ReSharper disable once InconsistentNaming : Named the class with an underscore by intend to express
+  // that it is not reachable via the public API.
   internal class _LogicDefine : zenonSerializable<_LogicDefine>
   {
     #region Interface implementation
@@ -18,7 +20,7 @@ namespace zenonApi.Logic.Internal
       if (string.IsNullOrWhiteSpace(logicDefineName))
       {
         throw new ArgumentNullException(
-          string.Format(Strings.GeneralMethodArgumentNullException, nameof(Create), nameof(logicDefineName)));
+          string.Format(Strings.ErrorMessageParameterIsNullOrWhitespace, nameof(Create), nameof(logicDefineName)));
       }
 
       _LogicDefine newLogicDefine = new _LogicDefine

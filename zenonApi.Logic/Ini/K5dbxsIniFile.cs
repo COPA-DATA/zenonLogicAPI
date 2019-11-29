@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using zenonApi.Logic.Resources;
 
-namespace zenonApi.Logic.Helper
+namespace zenonApi.Logic.Ini
 {
   /// <summary>
   /// Class for handling of the K5dbxs.ini file of a zenon Logic project.
@@ -12,6 +12,8 @@ namespace zenonApi.Logic.Helper
   [DebuggerDisplay("{" + nameof(Path) + "}")]
   public class K5DbxsIniFile : IniFile
   {
+    private const string K5DbxsIniFileName = "K5DBXS.INI";
+
     /// <summary>
     /// Factory method to create a K5dbxs.ini file with default settings and the settings specified as parameters.
     /// Note that an empty file has to exists.
@@ -41,7 +43,7 @@ namespace zenonApi.Logic.Helper
     {
       // ReSharper disable once PossibleNullReferenceException : check is done in base constrcutor
       if (!System.IO.Path.GetFileName(k5DbxsIniFilePath)
-        .Equals(Strings.K5DbxsIniFileName, StringComparison.CurrentCultureIgnoreCase))
+        .Equals(K5DbxsIniFileName, StringComparison.CurrentCultureIgnoreCase))
       {
         throw new InvalidDataException(String.Format(Strings.K5DbxsIniFileConstructorInvalidDataException,
           nameof(K5DbxsIniFile)));
@@ -78,7 +80,6 @@ namespace zenonApi.Logic.Helper
     /// <summary>
     /// Reads the main port number of the K5DBXS.INI file and converts it from string to uint.
     /// </summary>
-    /// <returns></returns>
     private uint ReadMainPortValueFromIniFile()
     {
       string mainPortNumber = this.ReadValueFromFile(CmdSection, MainPortPropertyKey);

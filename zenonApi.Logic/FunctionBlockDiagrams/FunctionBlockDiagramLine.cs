@@ -21,12 +21,14 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
     /// The ID of the source FBD object (according to the FBD flow).
     /// </summary>
     [zenonSerializableAttribute("idfrom", AttributeOrder = 1)]
+    // ReSharper disable once InconsistentNaming : Using .NET Framework Design Guidelines for the naming here.
     public string FromID { get; set; } // TODO: int or uint possible here? Same for other ids in this class
 
     /// <summary>
     /// The ID of the source FBD object (according to the FBD flow).
     /// </summary>
     [zenonSerializableAttribute("idto", AttributeOrder = 2)]
+    // ReSharper disable once InconsistentNaming : Using .NET Framework Design Guidelines for the naming here.
     public string ToID { get; set; }
 
     /// <summary>

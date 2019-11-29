@@ -35,16 +35,16 @@ namespace zenonApi.Logic
     /// <summary>
     /// First dimension which specifies a one dimensional array variable
     /// </summary>
-    public uint X { get; set; } = 0;
+    public uint X { get; private set; }
 
     /// <summary>
     /// Second dimension which specifies a two dimensional array variable
     /// </summary>
-    public uint Y { get; set; } = 0;
+    public uint Y { get; private set; }
 
     /// <summary>
     /// Third dimension which specifies a three dimension array variable
     /// </summary>
-    public uint Z { get; set; } = 0;
+    public uint Z { get; private set; }
   }
 }

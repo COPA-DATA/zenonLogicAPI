@@ -3,8 +3,9 @@ using zenonApi.Serialization;
 
 namespace zenonApi.Logic
 {
-  public class LogicProjectSettings : zenonSerializable<LogicProjectSettings, LogicProject, LogicProject>
+  public sealed class LogicProjectSettings : zenonSerializable<LogicProjectSettings, LogicProject, LogicProject>
   {
+    // ReSharper disable once UnusedMember.Local : Required default constructor for serialization.
     private LogicProjectSettings() { }
 
     public LogicProjectSettings(LogicProject parent) => this.Parent = this.Root = parent;
@@ -17,19 +18,19 @@ namespace zenonApi.Logic
     /// This tag describes the triggering of runtime cycles in the project settings.
     /// </summary>
     [zenonSerializableNode("triggering", NodeOrder = 0)]
-    public LogicTriggeringSettings TriggerTime { get; protected set; } = new LogicTriggeringSettings();
+    public LogicTriggeringSettings TriggerTime { get; private set; } = new LogicTriggeringSettings();
 
     /// <summary>
     /// This tag groups all the options for the compiler.
     /// </summary>
     [zenonSerializableNode("compiler", NodeOrder = 1)]
-    public LogicCompilerSettings CompilerSettings { get; protected set; } = new LogicCompilerSettings();
+    public LogicCompilerSettings CompilerSettings { get; private set; } = new LogicCompilerSettings();
 
     /// <summary>
     /// This tag groups all the options for the compiler regarding the On Line Change capability.
     /// </summary>
     [zenonSerializableNode("onlinechange", NodeOrder = 2)]
-    public LogicOnlineChangeSettings OnlineChangeSettings { get; protected set; } = new LogicOnlineChangeSettings();
+    public LogicOnlineChangeSettings OnlineChangeSettings { get; private set; } = new LogicOnlineChangeSettings();
 
     //TODO: Ask StefanH about this property (not in docu)
     [zenonSerializableRawFormat("fbundef", NodeOrder = 3)]

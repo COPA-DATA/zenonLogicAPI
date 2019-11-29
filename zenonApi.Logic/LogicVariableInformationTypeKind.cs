@@ -38,7 +38,7 @@ namespace zenonApi.Logic
     [zenonSerializableEnum("3")]
     VariableDimension,
     /// <summary>
-    /// Hide variable: [ "<EDIT>" ] [ "<SEL>" ]
+    /// Hide variable: [ "&lt;EDIT&gt;" ] [ "&lt;SEL&gt;" ]
     /// </summary>
     [zenonSerializableEnum("4")]
     VariableHide,

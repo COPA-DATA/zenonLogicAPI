@@ -15,7 +15,8 @@ namespace zenonApi.Logic.Network
     /// Numerical ID for the bound item.
     /// This attribute is mandatory.
     /// </summary>
-    [zenonSerializableAttribute("id", AttributeOrder = 0)]
+    [zenonSerializableAttribute("id", AttributeOrder = 0)] 
+    // ReSharper disable once InconsistentNaming : Using .NET Framework Design Guidelines for the naming here.
     public string ID { get; set; }
 
     /// <summary>

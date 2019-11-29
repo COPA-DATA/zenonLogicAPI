@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
+
 
 namespace zenonApi.Collections
 {
   public class ExtendedObservableCollection<T> : ObservableCollection<T>
   {
     #region Ctor
-    public ExtendedObservableCollection() : base() { }
+    public ExtendedObservableCollection() { }
     public ExtendedObservableCollection(IEnumerable<T> collection) : base(collection) { }
     public ExtendedObservableCollection(IList<T> collection) : base(collection) { }
     #endregion
@@ -91,8 +91,6 @@ namespace zenonApi.Collections
       }
 
       CheckReentrancy();
-
-      IList list = collection.ToList();
 
       int curIndex = index;
       foreach (var item in collection)

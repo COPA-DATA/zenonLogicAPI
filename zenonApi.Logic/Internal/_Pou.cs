@@ -12,11 +12,12 @@ namespace zenonApi.Logic.Internal
   /// Represents a program, sub-program or UDFB. This class is internal and not
   /// meant to be used directly.
   /// </summary>
+  // ReSharper disable once InconsistentNaming : Named the class with an underscore by intend to express
+  // that it is not reachable via the public API.
   internal class _Pou : zenonSerializable<_Pou, _LogicProgramsCollection, LogicProject>, ILogicProgram
   {
-    /// <summary>
-    /// Internal default constructor for serialization.
-    /// </summary>
+    /// <summary>Internal default constructor for serialization.</summary>
+    // ReSharper disable once EmptyConstructor : Required default constructor for serialization.
     internal _Pou() { }
 
 
@@ -31,9 +32,10 @@ namespace zenonApi.Logic.Internal
       this.Remove();
 
       // Attach it to the new one
-      if (connectedProgram.Root?.Programs?.ProgramOrganizationUnits != null)
+      var pouList = connectedProgram.Root?.Programs?.ProgramOrganizationUnits;
+      if (pouList != null && !pouList.Contains(this))
       {
-        connectedProgram.Root.Programs.ProgramOrganizationUnits.Add(this);
+        pouList.Add(this);
       }
     }
 
@@ -42,12 +44,12 @@ namespace zenonApi.Logic.Internal
     public override string NodeName => "pou";
     #endregion
 
-    private string sourceCode = "";
-    private FunctionBlockDiagramDefinition functionBlockDiagramDefinition;
-    private SequentialFunctionChartDefinition sequentialFunctionChartDefinition;
-    private XElement ladderDiagramDefinition;
-    private XElement freeFormSequentialFunctionChartDefinition;
-    private string name = "unknown";
+    private string _sourceCode = "";
+    private FunctionBlockDiagramDefinition _functionBlockDiagramDefinition;
+    private SequentialFunctionChartDefinition _sequentialFunctionChartDefinition;
+    private XElement _ladderDiagramDefinition;
+    private XElement _freeFormSequentialFunctionChartDefinition;
+    private string _name = "unknown";
 
     #region Specific properties
     /// <summary>
@@ -56,7 +58,7 @@ namespace zenonApi.Logic.Internal
     [zenonSerializableAttribute("name", AttributeOrder = 0)]
     public string Name
     {
-      get => name;
+      get => _name;
       set
       {
         if (!value.IsValidZenonLogicName())
@@ -64,7 +66,7 @@ namespace zenonApi.Logic.Internal
           throw new Exception($"Invalid zenon logic program name: {value}");
         }
 
-        name = value;
+        _name = value;
       }
     }
 
@@ -157,18 +159,18 @@ namespace zenonApi.Logic.Internal
     [zenonSerializableNode("sourceSTIL", NodeOrder = 5)]
     public string SourceCode
     {
-      get => sourceCode;
+      get => _sourceCode;
       set
       {
         if (value != null)
         {
-          functionBlockDiagramDefinition = null;
-          sequentialFunctionChartDefinition = null;
-          ladderDiagramDefinition = null;
-          freeFormSequentialFunctionChartDefinition = null;
+          _functionBlockDiagramDefinition = null;
+          _sequentialFunctionChartDefinition = null;
+          _ladderDiagramDefinition = null;
+          _freeFormSequentialFunctionChartDefinition = null;
         }
 
-        sourceCode = value;
+        _sourceCode = value;
       }
     }
 
@@ -181,18 +183,18 @@ namespace zenonApi.Logic.Internal
     [zenonSerializableNode("sourceFBD", NodeOrder = 6)]
     public FunctionBlockDiagramDefinition FunctionBlockDiagramDefinition
     {
-      get => functionBlockDiagramDefinition;
+      get => _functionBlockDiagramDefinition;
       set
       {
         if (value != null)
         {
-          sourceCode = null;
-          sequentialFunctionChartDefinition = null;
-          ladderDiagramDefinition = null;
-          freeFormSequentialFunctionChartDefinition = null;
+          _sourceCode = null;
+          _sequentialFunctionChartDefinition = null;
+          _ladderDiagramDefinition = null;
+          _freeFormSequentialFunctionChartDefinition = null;
         }
 
-        functionBlockDiagramDefinition = value;
+        _functionBlockDiagramDefinition = value;
       }
     }
 
@@ -205,18 +207,18 @@ namespace zenonApi.Logic.Internal
     [zenonSerializableRawFormat("sourceLD", NodeOrder = 7)]
     public XElement LadderDiagramDefinition
     {
-      get => ladderDiagramDefinition;
+      get => _ladderDiagramDefinition;
       set
       {
         if (value != null)
         {
-          sourceCode = null;
-          functionBlockDiagramDefinition = null;
-          sequentialFunctionChartDefinition = null;
-          freeFormSequentialFunctionChartDefinition = null;
+          _sourceCode = null;
+          _functionBlockDiagramDefinition = null;
+          _sequentialFunctionChartDefinition = null;
+          _freeFormSequentialFunctionChartDefinition = null;
         }
 
-        ladderDiagramDefinition = value;
+        _ladderDiagramDefinition = value;
       }
     }
 
@@ -229,18 +231,18 @@ namespace zenonApi.Logic.Internal
     [zenonSerializableNode("sourceSFC", NodeOrder = 8)]
     public SequentialFunctionChartDefinition SequentialFunctionChartDefinition
     {
-      get => sequentialFunctionChartDefinition;
+      get => _sequentialFunctionChartDefinition;
       set
       {
         if (value != null)
         {
-          sourceCode = null;
-          functionBlockDiagramDefinition = null;
-          ladderDiagramDefinition = null;
-          freeFormSequentialFunctionChartDefinition = null;
+          _sourceCode = null;
+          _functionBlockDiagramDefinition = null;
+          _ladderDiagramDefinition = null;
+          _freeFormSequentialFunctionChartDefinition = null;
         }
 
-        sequentialFunctionChartDefinition = value;
+        _sequentialFunctionChartDefinition = value;
       }
     }
 
@@ -253,18 +255,18 @@ namespace zenonApi.Logic.Internal
     [zenonSerializableRawFormat("sourceFFSFC", NodeOrder = 9)]
     public XElement FreeFormSequentialFunctionChartDefinition
     {
-      get => freeFormSequentialFunctionChartDefinition;
+      get => _freeFormSequentialFunctionChartDefinition;
       set
       {
         if (value != null)
         {
-          sourceCode = null;
-          functionBlockDiagramDefinition = null;
-          ladderDiagramDefinition = null;
-          sequentialFunctionChartDefinition = null;
+          _sourceCode = null;
+          _functionBlockDiagramDefinition = null;
+          _ladderDiagramDefinition = null;
+          _sequentialFunctionChartDefinition = null;
         }
 
-        freeFormSequentialFunctionChartDefinition = value;
+        _freeFormSequentialFunctionChartDefinition = value;
       }
     }
 

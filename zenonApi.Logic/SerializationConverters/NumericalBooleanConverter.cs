@@ -3,7 +3,7 @@ using zenonApi.Serialization;
 
 namespace zenonApi.Logic.SerializationConverters
 {
-  class NumericalBooleanConverter : IZenonSerializationConverter
+  internal class NumericalBooleanConverter : IZenonSerializationConverter
   {
     public string Convert(object source)
     {

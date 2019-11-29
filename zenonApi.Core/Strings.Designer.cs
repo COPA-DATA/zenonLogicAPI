@@ -61,38 +61,38 @@ namespace zenonApi {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Parameter {0} cannot be null..
-        /// </summary>
-        internal static string EncodingArgumentNullException {
-            get {
-                return ResourceManager.GetString("EncodingArgumentNullException", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Parameter {0} cannot be null or consist of only white space characters..
-        /// </summary>
-        internal static string EncodingArgumentNullOrWhitespaceException {
-            get {
-                return ResourceManager.GetString("EncodingArgumentNullOrWhitespaceException", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Attribute {0} is not supported for usage on {1}..
         /// </summary>
-        internal static string MsgErrorAttributeNotSupported {
+        internal static string ErrorMessageAttributeNotSupported {
             get {
-                return ResourceManager.GetString("MsgErrorAttributeNotSupported", resourceCulture);
+                return ResourceManager.GetString("ErrorMessageAttributeNotSupported", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Currently, only lists of types derived by {0} are supported..
         /// </summary>
-        internal static string MsgErrorInvalidSerializationListType {
+        internal static string ErrorMessageInvalidSerializationListType {
             get {
-                return ResourceManager.GetString("MsgErrorInvalidSerializationListType", resourceCulture);
+                return ResourceManager.GetString("ErrorMessageInvalidSerializationListType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Argment {0} must not be null..
+        /// </summary>
+        internal static string ErrorMessageParameterIsNull {
+            get {
+                return ResourceManager.GetString("ErrorMessageParameterIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Argument {0} must not be null or consist solely of white space characters..
+        /// </summary>
+        internal static string ErrorMessageParameterIsNullOrWhitespace {
+            get {
+                return ResourceManager.GetString("ErrorMessageParameterIsNullOrWhitespace", resourceCulture);
             }
         }
     }

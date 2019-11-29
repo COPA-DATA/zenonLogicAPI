@@ -4,8 +4,9 @@ using zenonApi.Serialization;
 
 namespace zenonApi.Logic
 {
-  public class LogicGlobalVariables : zenonSerializable<LogicGlobalVariables, LogicProject, LogicProject>
+  public sealed class LogicGlobalVariables : zenonSerializable<LogicGlobalVariables, LogicProject, LogicProject>
   {
+    // ReSharper disable once UnusedMember.Local : Required default constructor for serialization.
     private LogicGlobalVariables() { }
 
     public LogicGlobalVariables(LogicProject parent) => this.Parent = this.Root = parent;

@@ -20,7 +20,7 @@ namespace zenonApi.Logic
       if (string.IsNullOrWhiteSpace(variableGroupName))
       {
         throw new ArgumentNullException(
-          string.Format(Strings.GeneralMethodArgumentNullException, nameof(Create),
+          string.Format(Strings.ErrorMessageParameterIsNullOrWhitespace, nameof(Create),
             nameof(variableGroupName)));
       }
 

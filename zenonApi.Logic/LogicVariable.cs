@@ -17,24 +17,26 @@ namespace zenonApi.Logic
 
     #endregion
 
+    private const string DataTypeStringVariable = "STRING";
+
     /// <summary>
-    /// Creates new instance of zenon Logic variable with the stated name and data type
+    /// Creates a new instance of a zenon Logic variable with the stated variable name and data type.
     /// </summary>
-    /// <param name="variableName"></param>
-    /// <param name="dataType"></param>
+    /// <param name="variableName">The name of the variable to create.</param>
+    /// <param name="dataType">The type of the variable to create.</param>
     /// <returns></returns>
     public static LogicVariable Create(string variableName, string dataType)
     {
       if (string.IsNullOrWhiteSpace(variableName))
       {
         throw new ArgumentNullException(
-          string.Format(Strings.GeneralMethodArgumentNullException, nameof(Create), nameof(variableName)));
+          string.Format(Strings.ErrorMessageParameterIsNullOrWhitespace, nameof(variableName)), nameof(dataType));
       }
 
       if (string.IsNullOrWhiteSpace(dataType))
       {
         throw new ArgumentNullException(
-          string.Format(Strings.GeneralMethodArgumentNullException, nameof(Create), nameof(dataType)));
+          string.Format(Strings.ErrorMessageParameterIsNullOrWhitespace, nameof(dataType)), nameof(dataType));
       }
 
       return new LogicVariable
@@ -45,13 +47,13 @@ namespace zenonApi.Logic
     }
 
     /// <summary>
-    /// Creates new instance of zenon Logic variable with string data type and max. string length 255 character
+    /// Creates new instance of zenon Logic variable with string data type and a maximum string length of 255 characters.
     /// </summary>
     /// <param name="variableName"></param>
     /// <returns></returns>
     public static LogicVariable CreateStringVariable(string variableName)
     {
-      LogicVariable newVariable = Create(variableName, Strings.StringVariableDataType);
+      LogicVariable newVariable = Create(variableName, DataTypeStringVariable);
       newVariable.MaxStringLength = Strings.StringVariableDefaultMaxLength;
       return newVariable;
     }
@@ -75,7 +77,7 @@ namespace zenonApi.Logic
     /// This attribute is mandatory for STRING variables, and should not appear for other data types.
     /// </summary>
     [zenonSerializableAttribute("len", AttributeOrder = 2)]
-    public string MaxStringLength { get; set; } = null; // TODO: Should only be used when datatype is string //TODO: should be nullable int
+    public string MaxStringLength { get; set; } // TODO: Should only be used when datatype is string //TODO: should be nullable int (Nullable not yet supported by Core)
 
     /// <summary>
     /// Dimension(s) if the variable is an array.

@@ -3,8 +3,9 @@ using zenonApi.Serialization;
 
 namespace zenonApi.Logic.Network
 {
-  public class LogicNetwork : zenonSerializable<LogicNetwork, LogicProject, LogicProject>
+  public sealed class LogicNetwork : zenonSerializable<LogicNetwork, LogicProject, LogicProject>
   {
+    // ReSharper disable once UnusedMember.Local : Required default constructor for serialization.
     private LogicNetwork() { }
 
     public LogicNetwork(LogicProject parent) => this.Parent = this.Root = parent;
@@ -13,12 +14,12 @@ namespace zenonApi.Logic.Network
     public override string NodeName => "networks";
     #endregion
 
-    //TODO: check definition string from docu - was already used once for definitions tag of proejct
+    //TODO: check definition string from docu - was already used once for definitions tag of project
     /// <summary>
     /// This property groups the COMMON and GOLBAL definitions.
     /// </summary>
     [zenonSerializableNode("binding", NodeOrder = 0)]
-    public LogicNetworkBinding Binding { get; protected set; } = new LogicNetworkBinding();
+    public LogicNetworkBinding Binding { get; private set; } = new LogicNetworkBinding();
 
     /// <summary>
     /// This property groups the whole MODBUS slave or master configuration.

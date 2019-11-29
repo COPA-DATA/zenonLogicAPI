@@ -18,6 +18,7 @@ using zenonApi.Collections;
 
 namespace zenonApi.Serialization
 {
+  // ReSharper disable once InconsistentNaming : "zenon" is always written lowercase.
   public abstract class zenonSerializable<TSelf, TParent, TRoot>
     : ContainerAwareCollectionItem<TSelf>, IZenonSerializable<TSelf, TParent, TRoot>
     where TSelf : class, IZenonSerializable<TSelf>
@@ -47,6 +48,7 @@ namespace zenonApi.Serialization
     }
   }
 
+  // ReSharper disable once InconsistentNaming : "zenon" is always written lowercase.
   public abstract class zenonSerializable<TSelf> : IZenonSerializable<TSelf>
     where TSelf : class, IZenonSerializable<TSelf>
   { 
@@ -80,13 +82,13 @@ namespace zenonApi.Serialization
     /// Status about the origin and the current state of the object.
     /// </summary>
     [DoNotNotify]
-    public ZenonSerializableStatusEnum ObjectStatus { get; set; } = ZenonSerializableStatusEnum.New;
+    public zenonSerializableStatusEnum ObjectStatus { get; set; } = zenonSerializableStatusEnum.New;
 
     public event PropertyChangedEventHandler PropertyChanged;
     protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
     {
       // update ObjectStatus to signal that the object was modified during its live time
-      this.ObjectStatus = ZenonSerializableStatusEnum.Modified;
+      this.ObjectStatus = zenonSerializableStatusEnum.Modified;
       PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
     #endregion
@@ -95,36 +97,36 @@ namespace zenonApi.Serialization
     /// <summary>
     /// Protected member, containing all converters which were previously initialized during Serialization/Deserialization.
     /// </summary>
-    protected static Dictionary<Type, IZenonSerializationConverter> converterCache = new Dictionary<Type, IZenonSerializationConverter>();
+    // ReSharper disable once StaticMemberInGenericType : This is intended.
+    protected static Dictionary<Type, IZenonSerializationConverter> ConverterCache = new Dictionary<Type, IZenonSerializationConverter>();
 
-    protected static IZenonSerializationConverter getConverter(Type converterType)
+    protected static IZenonSerializationConverter GetConverter(Type converterType)
     {
       if (converterType == null)
       {
         throw new ArgumentNullException(nameof(converterType));
       }
 
-      IZenonSerializationConverter converterInstance = null;
-      if (converterCache.ContainsKey(converterType))
+      IZenonSerializationConverter converterInstance;
+      if (ConverterCache.ContainsKey(converterType))
       {
-        converterInstance = converterCache[converterType];
+        converterInstance = ConverterCache[converterType];
       }
       else
       {
         converterInstance = (IZenonSerializationConverter)Activator.CreateInstance(converterType, true);
-        converterCache[converterType] = converterInstance;
+        ConverterCache[converterType] = converterInstance;
       }
 
       return converterInstance;
     }
     #endregion
 
-    #region Export to XElement
+    #region Export methods
 
     /// <summary>
-    /// Exports current object as XElement
+    /// Exports the current object as an XElement.
     /// </summary>
-    /// <returns></returns>
     public virtual XElement ExportAsXElement()
     {
       // Create a node for the current element, check for all properties with a zenonSerializableAttribute-
@@ -136,7 +138,7 @@ namespace zenonApi.Serialization
 
       // Group the tuples by the required attribute types and order them if required by their specified serialization order
       var attributeMappings = properties
-        .Select(x => (property: x.property, attribute: x.attributes.OfType<zenonSerializableBaseAttribute>().FirstOrDefault()))
+        .Select(x => (x.property, attribute: x.attributes.OfType<zenonSerializableBaseAttribute>().FirstOrDefault()))
         .Where(x => x.attribute != null)
         .OrderBy(x => x.attribute.InternalOrder);
 
@@ -145,49 +147,49 @@ namespace zenonApi.Serialization
         switch (attributeMapping.attribute.AttributeType)
         {
           case zenonSerializableAttributeType.Attribute:
-            exportAttribute(current, this, attributeMapping.property, attributeMapping.attribute);
+            ExportAttribute(current, this, attributeMapping.property, attributeMapping.attribute);
             break;
           case zenonSerializableAttributeType.Node:
-            exportNode(current, this, attributeMapping.property, attributeMapping.attribute);
+            ExportNode(current, this, attributeMapping.property, attributeMapping.attribute);
             break;
           case zenonSerializableAttributeType.NodeContent:
-            exportNodeContent(current, this, attributeMapping.property, attributeMapping.attribute);
+            ExportNodeContent(current, this, attributeMapping.property, attributeMapping.attribute);
             break;
           case zenonSerializableAttributeType.RawNode:
-            exportRaw(current, this, attributeMapping.property, attributeMapping.attribute);
+            ExportRaw(current, this, attributeMapping.property, attributeMapping.attribute);
             break;
           default:
             // e.g. enum attribute
             throw new NotSupportedException(
               String.Format(
-                Strings.MsgErrorAttributeNotSupported,
+                Strings.ErrorMessageAttributeNotSupported,
                 attributeMapping.attribute.AttributeType,
                 attributeMapping.property.Name));
         }
       }
 
-      exportUnknownAttributes(current, this);
-      exportUnknownNodes(current, this);
+      ExportUnknownAttributes(current, this);
+      ExportUnknownNodes(current, this);
 
-      this.ObjectStatus = ZenonSerializableStatusEnum.Deserialized;
+      this.ObjectStatus = zenonSerializableStatusEnum.Deserialized;
 
       return current;
     }
 
     /// <summary>
-    /// Exports current object as xml formatted string
+    /// Exports the current object as an XML formatted string. If the given <paramref name="xmlEncoding"/>
+    /// is null, then UTF-8 is used.
     /// </summary>
-    /// <param name="xmlEncoding">Xml encoding type as <see cref="String"/></param>
-    public virtual string ExportAsString(string xmlEncoding)
+    /// <param name="xmlEncoding">The XML encoding to use.</param>
+    public virtual string ExportAsString(string xmlEncoding = "utf-8")
     {
       if (string.IsNullOrWhiteSpace(xmlEncoding))
       {
-        throw new ArgumentException(string.Format(Strings.EncodingArgumentNullOrWhitespaceException, nameof(xmlEncoding)));
+        xmlEncoding = "utf-8";
       }
-
+      
       XElement self = this.ExportAsXElement();
       XDocument document = new XDocument
-
       {
         Declaration = new XDeclaration("1.0", xmlEncoding, "yes")
       };
@@ -211,35 +213,37 @@ namespace zenonApi.Serialization
     }
 
     /// <summary>
-    /// Exports current object as xml formatted string
+    /// Exports the current object as an XML formatted string. If the given <paramref name="xmlEncoding"/>
+    /// is null, then UTF-8 is used.
     /// </summary>
-    /// <param name="xmlEncoding">Xml encoding type as <see cref="Encoding"/></param>
-    /// <returns></returns>
+    /// <param name="xmlEncoding">The XML encoding to use.</param>
     public virtual string ExportAsString(Encoding xmlEncoding)
     {
       if (xmlEncoding == null)
       {
-        throw new ArgumentException(string.Format(Strings.EncodingArgumentNullException, nameof(xmlEncoding)));
+        xmlEncoding = Encoding.UTF8;
       }
 
       return ExportAsString(xmlEncoding.BodyName);
     }
 
     /// <summary>
-    /// Exports current object in xml format into stated file
+    /// Exports the current object as XML into the given file.
+    /// If the file does already exist, it will be overwritten.
+    /// If the given <paramref name="xmlEncoding"/> is null, then UTF-8 is used.
     /// </summary>
-    /// <param name="fileName"></param>
-    /// <param name="xmlEncoding">Xml encoding type as <see cref="String"/></param>
-    public virtual void ExportAsFile(string fileName, string xmlEncoding)
+    /// <param name="fileName">The path to the target file.</param>
+    /// <param name="xmlEncoding">The XML encoding to use.</param>
+    public virtual void ExportAsFile(string fileName, string xmlEncoding = "utf-8")
     {
       if (string.IsNullOrEmpty(fileName))
       {
-        throw new ArgumentException("Invalid file name.", nameof(fileName));
+        throw new ArgumentException(string.Format(Strings.ErrorMessageParameterIsNullOrWhitespace, nameof(fileName)), nameof(fileName));
       }
 
       if (string.IsNullOrWhiteSpace(xmlEncoding))
       {
-        throw new ArgumentException(string.Format(Strings.EncodingArgumentNullOrWhitespaceException, nameof(xmlEncoding)));
+        xmlEncoding = "utf-8";
       }
 
       XElement self = this.ExportAsXElement();
@@ -259,21 +263,23 @@ namespace zenonApi.Serialization
     }
 
     /// <summary>
-    /// Exports current object in xml format into stated file
+    /// Exports the current object as XML into the given file.
+    /// If the file does already exist, it will be overwritten.
+    /// If the given <paramref name="xmlEncoding"/> is null, then UTF-8 is used.
     /// </summary>
-    /// <param name="fileName"></param>
-    /// <param name="xmlEncoding">Xml encoding type as <see cref="Encoding"/></param>
+    /// <param name="fileName">The path to the target file.</param>
+    /// <param name="xmlEncoding">The XML encoding to use.</param>
     public virtual void ExportAsFile(string fileName, Encoding xmlEncoding)
     {
       if (xmlEncoding == null)
       {
-        throw new ArgumentException(string.Format(Strings.EncodingArgumentNullException, nameof(xmlEncoding)));
+        xmlEncoding = Encoding.UTF8;
       }
 
       ExportAsFile(fileName, xmlEncoding.BodyName);
     }
 
-    private static void exportAttribute(XElement target, IZenonSerializable source, PropertyInfo property, zenonSerializableBaseAttribute attributeAttribute)
+    private static void ExportAttribute(XElement target, IZenonSerializable source, PropertyInfo property, zenonSerializableBaseAttribute attributeAttribute)
     {
       if (property.GetGetMethod(true) == null)
       {
@@ -293,9 +299,8 @@ namespace zenonApi.Serialization
         // Check if there is an converter for this property
         if (attributeAttribute.InternalConverter != null)
         {
-          IZenonSerializationConverter converterInstance = getConverter(attributeAttribute.InternalConverter);
-          // Ensure to call the correct method overload of the converter by using the (object)-cast
-          target.SetAttributeValue(attributeAttribute.InternalName, converterInstance.Convert((object)property.GetValue(source)));
+          IZenonSerializationConverter converterInstance = GetConverter(attributeAttribute.InternalConverter);
+          target.SetAttributeValue(attributeAttribute.InternalName, converterInstance.Convert(property.GetValue(source)));
         }
         else
         {
@@ -326,7 +331,7 @@ namespace zenonApi.Serialization
     }
 
 
-    private static void exportNode(XElement target, IZenonSerializable source, PropertyInfo property, zenonSerializableBaseAttribute nodeAttribute)
+    private static void ExportNode(XElement target, IZenonSerializable source, PropertyInfo property, zenonSerializableBaseAttribute nodeAttribute)
     {
       if (property.GetGetMethod(true) == null)
       {
@@ -346,6 +351,7 @@ namespace zenonApi.Serialization
         if (typeof(IZenonSerializable).IsAssignableFrom(property.PropertyType))
         {
           MethodInfo exportMethod = property.PropertyType.GetMethod(nameof(ExportAsXElement), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+          // ReSharper disable once PossibleNullReferenceException : Cannot be null, since provided by the interface.
           XElement child = (XElement)exportMethod.Invoke(sourceValue, null);
 
           target.Add(child);
@@ -372,7 +378,7 @@ namespace zenonApi.Serialization
           if (!typeof(IZenonSerializable).IsAssignableFrom(genericParameterType))
           {
             throw new NotImplementedException(
-              String.Format(Strings.MsgErrorInvalidSerializationListType, nameof(IZenonSerializable)));
+              String.Format(Strings.ErrorMessageInvalidSerializationListType, nameof(IZenonSerializable)));
           }
 
           if (nodeAttribute.InternalEncapsulateChildsIfList)
@@ -381,7 +387,9 @@ namespace zenonApi.Serialization
 
             foreach (IZenonSerializable listItem in list)
             {
+              // ReSharper disable once PossibleNullReferenceException : "genericParameterType" cannot be null at this point.
               MethodInfo exportMethod = genericParameterType.GetMethod(nameof(ExportAsXElement), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+              // ReSharper disable once PossibleNullReferenceException : "exportMethod" cannot be null at this point.
               XElement child = (XElement)exportMethod.Invoke(listItem, null);
 
               listWithChilds.Add(child);
@@ -393,7 +401,9 @@ namespace zenonApi.Serialization
           {
             foreach (IZenonSerializable listItem in list)
             {
+              // ReSharper disable once PossibleNullReferenceException : "genericParameterType" cannot be null at this point.
               MethodInfo exportMethod = genericParameterType.GetMethod(nameof(ExportAsXElement), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+              // ReSharper disable once PossibleNullReferenceException : "exportMethod" cannot be null at this point.
               XElement child = (XElement)exportMethod.Invoke(listItem, null);
 
               target.Add(child);
@@ -416,7 +426,7 @@ namespace zenonApi.Serialization
     }
 
 
-    private static void exportNodeContent(XElement target, IZenonSerializable source, PropertyInfo property, zenonSerializableBaseAttribute contentAttribute)
+    private static void ExportNodeContent(XElement target, IZenonSerializable source, PropertyInfo property, zenonSerializableBaseAttribute contentAttribute)
     {
       if (property.GetGetMethod(true) == null)
       {
@@ -435,18 +445,11 @@ namespace zenonApi.Serialization
         // Check if there is an converter for this property
         if (contentAttribute.InternalConverter != null)
         {
-          IZenonSerializationConverter converterInstance = getConverter(contentAttribute.InternalConverter);
+          IZenonSerializationConverter converterInstance = GetConverter(contentAttribute.InternalConverter);
           target.Value = converterInstance.Convert(sourceValue);
         }
         else
         {
-          if (sourceValue == null)
-          {
-            // If the value is null, we set the content to null too.
-            target.Value = null;
-            return;
-          }
-
           var valueType = sourceValue.GetType();
           if (valueType.IsEnum)
           {
@@ -460,13 +463,13 @@ namespace zenonApi.Serialization
             }
           }
 
-          string stringValue = sourceValue?.ToString();
+          string stringValue = sourceValue.ToString();
           target.SetValue(stringValue);
         }
       }
     }
 
-    private static void exportRaw(XElement target, IZenonSerializable source, PropertyInfo property, zenonSerializableBaseAttribute rawAttribute)
+    private static void ExportRaw(XElement target, IZenonSerializable source, PropertyInfo property, zenonSerializableBaseAttribute rawAttribute)
     {
       if (property.GetGetMethod(true) == null)
       {
@@ -505,7 +508,7 @@ namespace zenonApi.Serialization
     }
 
 
-    private static void exportUnknownAttributes(XElement target, IZenonSerializable source)
+    private static void ExportUnknownAttributes(XElement target, IZenonSerializable source)
     {
       if (source?.UnknownAttributes == null || source.UnknownAttributes.Count == 0)
       {
@@ -519,7 +522,7 @@ namespace zenonApi.Serialization
       }
     }
 
-    private static void exportUnknownNodes(XElement target, IZenonSerializable source)
+    private static void ExportUnknownNodes(XElement target, IZenonSerializable source)
     {
       if (source?.UnknownNodes == null || source.UnknownNodes.Count == 0)
       {
@@ -548,7 +551,7 @@ namespace zenonApi.Serialization
     }
     #endregion
 
-    #region Import from XElement
+    #region Import methods
     public static TSelf Import(XElement source, object parent = null, object root = null)
     {
       // TODO: After importing, the original XDocument is changed, therefore we MUST copy the XElement first in our final "Import" method
@@ -579,22 +582,22 @@ namespace zenonApi.Serialization
         }
 
         // Each of the following methods alters the source XML, by removing everything which was found from it
-        importAttribute(result, source, property);
-        importNode(result, source, property);
-        importNodeContent(result, source, property);
-        importRaw(result, source, property);
+        ImportAttribute(result, source, property);
+        ImportNode(result, source, property);
+        ImportNodeContent(result, source, property);
+        ImportRaw(result, source, property);
       }
 
       // Since everything was removed what was found, all of the remaining are unknown elements, which we can handle explicitly
-      importUnknownAttributes(result, source);
-      importUnknownNodes(result, source);
+      ImportUnknownAttributes(result, source);
+      ImportUnknownNodes(result, source);
 
-      result.ObjectStatus = ZenonSerializableStatusEnum.Loaded;
+      result.ObjectStatus = zenonSerializableStatusEnum.Loaded;
 
       return result;
     }
 
-    private static void importChilds(PropertyInfo targetListProperty, TSelf parentContainer, List<XElement> xmlNodes, zenonSerializableNodeAttribute attribute)
+    private static void ImportChilds(PropertyInfo targetListProperty, TSelf parentContainer, List<XElement> xmlNodes, zenonSerializableNodeAttribute attribute)
     {
       IList list = (IList)Activator.CreateInstance(targetListProperty.PropertyType, true);
 
@@ -611,6 +614,7 @@ namespace zenonApi.Serialization
       }
       if (typeof(IZenonSerializable).IsAssignableFrom(genericParameter))
       {
+        // ReSharper disable once PossibleNullReferenceException : "genericParameter" will never be null at this position.
         MethodInfo importMethod = genericParameter.GetMethod(nameof(Import), BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
         IContainerAwareCollectionItem caItem = parentContainer as IContainerAwareCollectionItem;
         object root = null;
@@ -627,20 +631,24 @@ namespace zenonApi.Serialization
 
         foreach (var xmlNode in xmlNodes)
         {
-          object child = null;
+          object child;
 
           if (attribute.EncapsulateChildsIfList)
           {
             foreach (var subNode in xmlNode.Elements())
             {
-              child = importMethod.Invoke(null, new object[] { subNode, parentContainer, root });
+              // ReSharper disable once PossibleNullReferenceException : "importMethod" comes from the interface,
+              // will never be null at this point.
+              child = importMethod.Invoke(null, new[] { subNode, parentContainer, root });
               list.Add(child);
             }
           }
           else
           {
             // The child is not capable of handling parents and roots, therefore pass null
-            child = importMethod.Invoke(null, new object[] { xmlNode, parentContainer, root });
+            // ReSharper disable once PossibleNullReferenceException : "importMethod" comes from the interface,
+            // will never be null at this point.
+            child = importMethod.Invoke(null, new[] { xmlNode, parentContainer, root });
             list.Add(child);
           }
         }
@@ -655,7 +663,7 @@ namespace zenonApi.Serialization
     }
 
 
-    private static void importAttribute(TSelf target, XElement sourceXml, PropertyInfo property)
+    private static void ImportAttribute(TSelf target, XElement sourceXml, PropertyInfo property)
     {
       var zenonAttribute = property.GetCustomAttribute<zenonSerializableAttributeAttribute>();
       if (zenonAttribute != null)
@@ -669,7 +677,7 @@ namespace zenonApi.Serialization
         // Check if there is a converter
         if (zenonAttribute.Converter != null)
         {
-          IZenonSerializationConverter converterInstance = getConverter(zenonAttribute.Converter);
+          IZenonSerializationConverter converterInstance = GetConverter(zenonAttribute.Converter);
           property.SetValue(target, converterInstance.Convert(xmlAttribute.Value));
         }
         else if (property.PropertyType.IsEnum)
@@ -713,18 +721,19 @@ namespace zenonApi.Serialization
     }
 
 
-    private static void importNode(TSelf target, XElement sourceXml, PropertyInfo property)
+    private static void ImportNode(TSelf target, XElement sourceXml, PropertyInfo property)
     {
       var attribute = property.GetCustomAttribute<zenonSerializableNodeAttribute>();
       if (attribute != null)
       {
+        // ReSharper disable once RedundantEnumerableCastCall : Not redundant, required to retrieve the correct format for later.
         var xmlNodes = sourceXml.Elements(attribute.NodeName).OfType<XNode>().Cast<XElement>().ToList();
 
         // Currently we only support deserializing to a concrete List types, not IEnumerable or similar, maybe in the future
         if (typeof(IList).IsAssignableFrom(property.PropertyType))
         {
           // Create the list which will hold the instances
-          importChilds(property, target, xmlNodes, attribute);
+          ImportChilds(property, target, xmlNodes, attribute);
         }
         else if (typeof(IZenonSerializable).IsAssignableFrom(property.PropertyType))
         {
@@ -737,7 +746,8 @@ namespace zenonApi.Serialization
           {
             MethodInfo importMethod = property.PropertyType.GetMethod(nameof(Import), BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
             object root = (target as IContainerAwareCollectionItem)?.ItemContainerRoot;
-            var child = importMethod.Invoke(null, new object[] { xmlNodes.First(), target, root ?? target });
+            // ReSharper disable once PossibleNullReferenceException : Method reference can never be null, since coming from the interface.
+            var child = importMethod.Invoke(null, new[] { xmlNodes.First(), target, root ?? target });
 
             property.SetValue(target, child);
           }
@@ -761,20 +771,15 @@ namespace zenonApi.Serialization
     }
 
 
-    private static void importNodeContent(TSelf target, XElement sourceXml, PropertyInfo property)
+    private static void ImportNodeContent(TSelf target, XElement sourceXml, PropertyInfo property)
     {
       var zenonAttribute = property.GetCustomAttribute<zenonSerializableNodeContentAttribute>();
       if (zenonAttribute != null)
       {
-        if (sourceXml.Value == null)
-        {
-          return;
-        }
-
         // Check if there is a converter
         if (zenonAttribute.Converter != null)
         {
-          IZenonSerializationConverter converterInstance = getConverter(zenonAttribute.Converter);
+          IZenonSerializationConverter converterInstance = GetConverter(zenonAttribute.Converter);
           property.SetValue(target, converterInstance.Convert(sourceXml.Value));
         }
         else if (property.PropertyType.IsEnum)
@@ -812,7 +817,7 @@ namespace zenonApi.Serialization
     }
 
 
-    private static void importRaw(TSelf target, XElement sourceXml, PropertyInfo property)
+    private static void ImportRaw(TSelf target, XElement sourceXml, PropertyInfo property)
     {
       var prop = property.GetCustomAttribute<zenonSerializableRawFormatAttribute>();
       if (prop != null)
@@ -823,6 +828,7 @@ namespace zenonApi.Serialization
             + $"type is or is derived from XElement (applied on property: {property.Name}).");
         }
 
+        // ReSharper disable once RedundantEnumerableCastCall : Not redundant.
         var xmlNodes = sourceXml.Elements(prop.NodeName).OfType<XNode>().Cast<XElement>().ToList();
         if (xmlNodes.Count == 0)
         {
@@ -844,7 +850,7 @@ namespace zenonApi.Serialization
     }
 
 
-    private static void importUnknownAttributes(TSelf target, XElement sourceXml)
+    private static void ImportUnknownAttributes(TSelf target, XElement sourceXml)
     {
       // All attributes which were not yet removed are yet unhandled
       foreach (var attribute in sourceXml.Attributes())
@@ -855,7 +861,7 @@ namespace zenonApi.Serialization
       }
     }
 
-    private static void importUnknownNodes(TSelf target, XElement sourceXml)
+    private static void ImportUnknownNodes(TSelf target, XElement sourceXml)
     {
       // All nodes which were not yet removed are yet unhandled
       foreach (var node in sourceXml.Elements())

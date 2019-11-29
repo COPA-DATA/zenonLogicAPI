@@ -6,6 +6,7 @@ namespace zenonApi.Serialization
   /// Set this attribute to properties of an <see cref="IZenonSerializable"/> to create an XML attribute.
   /// </summary>
   [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+  // ReSharper disable once InconsistentNaming : "zenon" is always written lowercase.
   public class zenonSerializableAttributeAttribute : zenonSerializableBaseAttribute
   {
     /// <summary>
@@ -36,19 +37,19 @@ namespace zenonApi.Serialization
     /// <summary>
     /// The type of an <see cref="IZenonSerializationConverter"/> to use for serialization and deserialization.
     /// </summary>
-    private Type converter = null;
+    private Type _converter;
 
     /// <summary>
     /// The type of an <see cref="IZenonSerializationConverter"/> to use for serialization and deserialization.
     /// </summary>
     public Type Converter
     {
-      get => converter;
+      get => _converter;
       set
       {
         if (value != null && typeof(IZenonSerializationConverter).IsAssignableFrom(value))
         {
-          converter = value;
+          _converter = value;
         }
         else
         {

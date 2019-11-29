@@ -5,9 +5,9 @@ namespace zenonApi.Logic.SequentialFunctionChart
 {
   public class SequentialFunctionChartAction : zenonSerializable<SequentialFunctionChartAction>
   {
-    private string sourceCode = "";
-    private FunctionBlockDiagrams.FunctionBlockDiagramDefinition functionBlockDiagramDefinition;
-    private XElement ladderDiagramDefinition;
+    private string _sourceCode = "";
+    private FunctionBlockDiagrams.FunctionBlockDiagramDefinition _functionBlockDiagramDefinition;
+    private XElement _ladderDiagramDefinition;
 
     public override string NodeName => "SFCaction";
 
@@ -25,16 +25,16 @@ namespace zenonApi.Logic.SequentialFunctionChart
     [zenonSerializableNode("sourceSTIL", NodeOrder = 0)]
     public string SourceCode
     {
-      get => sourceCode;
+      get => _sourceCode;
       set
       {
         if (value != null)
         {
-          functionBlockDiagramDefinition = null;
-          ladderDiagramDefinition = null;
+          _functionBlockDiagramDefinition = null;
+          _ladderDiagramDefinition = null;
         }
 
-        sourceCode = value;
+        _sourceCode = value;
       }
     }
 
@@ -46,16 +46,16 @@ namespace zenonApi.Logic.SequentialFunctionChart
     [zenonSerializableNode("sourceFBD", NodeOrder = 1)]
     public FunctionBlockDiagrams.FunctionBlockDiagramDefinition FunctionBlockDiagramDefinition
     {
-      get => functionBlockDiagramDefinition;
+      get => _functionBlockDiagramDefinition;
       set
       {
         if (value != null)
         {
-          sourceCode = null;
-          ladderDiagramDefinition = null;
+          _sourceCode = null;
+          _ladderDiagramDefinition = null;
         }
 
-        functionBlockDiagramDefinition = value;
+        _functionBlockDiagramDefinition = value;
       }
     }
 
@@ -67,16 +67,16 @@ namespace zenonApi.Logic.SequentialFunctionChart
     [zenonSerializableNode("sourceLD", NodeOrder = 2)]
     public XElement LadderDiagramDefinition
     {
-      get => ladderDiagramDefinition;
+      get => _ladderDiagramDefinition;
       set
       {
         if (value != null)
         {
-          sourceCode = null;
-          functionBlockDiagramDefinition = null;
+          _sourceCode = null;
+          _functionBlockDiagramDefinition = null;
         }
 
-        ladderDiagramDefinition = value;
+        _ladderDiagramDefinition = value;
       }
     } // TODO: If Ld diagrams are implemented, correct the type here
   }

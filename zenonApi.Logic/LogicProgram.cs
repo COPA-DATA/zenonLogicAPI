@@ -31,14 +31,32 @@ namespace zenonApi.Logic
     #endregion
 
     #region Ctor and factory methods
+
+    /// <summary>Default constructor for serialization.</summary>
     private LogicProgram() { }
+    
+    
+    public LogicProgram(string programName)
+    {
+      if (string.IsNullOrWhiteSpace(programName))
+      {
+        throw new ArgumentNullException(
+          string.Format(Strings.ErrorMessageParameterIsNullOrWhitespace, nameof(LogicProgram), nameof(programName)));
+      }
+
+      Name = programName;
+      Phase = DefaultPhaseValueForStProgram;
+      Period = DefaultPeriodValueForStProgram;
+      Language = LogicProgramLanguage.StructuredText;
+      Kind = LogicProgramType.Program;
+    }
 
     public static LogicProgram CreateStructuredTextProgram(string programName, LogicProgramType programType = LogicProgramType.Program)
     {
       if (string.IsNullOrWhiteSpace(programName))
       {
         throw new ArgumentNullException(
-          string.Format(Strings.GeneralMethodArgumentNullException, nameof(CreateStructuredTextProgram), nameof(programName)));
+          string.Format(Strings.ErrorMessageParameterIsNullOrWhitespace, nameof(CreateStructuredTextProgram), nameof(programName)));
       } 
 
       LogicProgram logicProgram = new LogicProgram
@@ -65,19 +83,21 @@ namespace zenonApi.Logic
     /// a new POU on accessing the <see cref="Name"/> instead and we would loose the reference.
     /// </summary>
     [zenonSerializableAttribute("Name", AttributeOrder = 0)]
-    private string name { get; set; }
+    // ReSharper disable once InconsistentNaming : Serialization requires a property,
+    // to emphasize to not to use it, the naming was chosen by intend.
+    private string _name { get; set; }
 
     /// <summary>
     /// The name of the program, which is mandatory.
     /// </summary>
     public string Name
     {
-      get => name;
+      get => _name;
       set
       {
-        name = value;
+        _name = value;
         // Validation is done via the setter of _Pou.Name.
-        setPouProperty(value);
+        SetPouProperty(value);
       }
     }
     #endregion
@@ -89,8 +109,8 @@ namespace zenonApi.Logic
     /// </summary>
     public LogicProgramType Kind
     {
-      get => (LogicProgramType)getPouProperty();
-      set => setPouProperty(value);
+      get => (LogicProgramType)GetPouProperty();
+      set => SetPouProperty(value);
     }
 
     /// <summary>
@@ -98,8 +118,8 @@ namespace zenonApi.Logic
     /// </summary>
     public LogicProgramLanguage Language
     {
-      get => (LogicProgramLanguage)getPouProperty();
-      set => setPouProperty(value);
+      get => (LogicProgramLanguage)GetPouProperty();
+      set => SetPouProperty(value);
     }
 
     /// <summary>
@@ -108,8 +128,8 @@ namespace zenonApi.Logic
     /// </summary>
     public string ParentProgram
     {
-      get => (string)getPouProperty(nameof(_Pou.ParentPou));
-      set => setPouProperty(value, nameof(_Pou.ParentPou));
+      get => (string)GetPouProperty(nameof(_Pou.ParentPou));
+      set => SetPouProperty(value, nameof(_Pou.ParentPou));
     }
 
     /// <summary>
@@ -119,8 +139,8 @@ namespace zenonApi.Logic
     /// </summary>
     public uint Period
     {
-      get => (uint)getPouProperty();
-      set => setPouProperty(value);
+      get => (uint) GetPouProperty();
+      set => SetPouProperty(value);
     }
 
     /// <summary>
@@ -129,8 +149,8 @@ namespace zenonApi.Logic
     /// </summary>
     public uint Phase
     {
-      get => (uint)getPouProperty();
-      set => setPouProperty(value);
+      get => (uint)GetPouProperty();
+      set => SetPouProperty(value);
     }
 
     /// <summary>
@@ -139,8 +159,8 @@ namespace zenonApi.Logic
     /// </summary>
     public string TaskName
     {
-      get => (string)getPouProperty();
-      set => setPouProperty(value);
+      get => (string)GetPouProperty();
+      set => SetPouProperty(value);
     }
 
     /// <summary>
@@ -148,8 +168,8 @@ namespace zenonApi.Logic
     /// </summary>
     public string Description
     {
-      get => (string)getPouProperty();
-      set => setPouProperty(value);
+      get => (string)GetPouProperty();
+      set => SetPouProperty(value);
     }
 
     /// <summary>
@@ -157,8 +177,8 @@ namespace zenonApi.Logic
     /// </summary>
     public string MultiLineDescription
     {
-      get => (string)getPouProperty();
-      set => setPouProperty(value);
+      get => (string)GetPouProperty();
+      set => SetPouProperty(value);
     }
 
     /// <summary>
@@ -166,8 +186,8 @@ namespace zenonApi.Logic
     /// </summary>
     public ExtendedObservableCollection<LogicVariableGroup> VariableGroups
     {
-      get => (ExtendedObservableCollection<LogicVariableGroup>)getPouProperty();
-      protected set => setPouProperty(value);
+      get => (ExtendedObservableCollection<LogicVariableGroup>)GetPouProperty();
+      protected set => SetPouProperty(value);
     }
 
     /// <summary>
@@ -175,8 +195,8 @@ namespace zenonApi.Logic
     /// </summary>
     internal _LogicDefine Definitions // TODO: Do we need to make this public?
     {
-      get => (_LogicDefine)getPouProperty();
-      set => setPouProperty(value);
+      get => (_LogicDefine)GetPouProperty();
+      set => SetPouProperty(value);
     }
 
     /// <summary>
@@ -185,8 +205,8 @@ namespace zenonApi.Logic
     /// </summary>
     public string PrecompiledUdfbCode
     {
-      get => (string)getPouProperty();
-      set => setPouProperty(value);
+      get => (string)GetPouProperty();
+      set => SetPouProperty(value);
     }
 
     /// <summary>
@@ -196,8 +216,8 @@ namespace zenonApi.Logic
     /// </summary>
     public string SourceCode
     {
-      get => (string)getPouProperty();
-      set => setPouProperty(value);
+      get => (string)GetPouProperty();
+      set => SetPouProperty(value);
     }
 
     /// <summary>
@@ -207,8 +227,8 @@ namespace zenonApi.Logic
     /// </summary>
     public FunctionBlockDiagramDefinition FunctionBlockDiagramDefinition
     {
-      get => (FunctionBlockDiagramDefinition)getPouProperty();
-      set => setPouProperty(value);
+      get => (FunctionBlockDiagramDefinition)GetPouProperty();
+      set => SetPouProperty(value);
     }
 
     /// <summary>
@@ -220,8 +240,8 @@ namespace zenonApi.Logic
     public XElement LadderDiagramDefinition
     {
       // TODO: If LD is implemented, change this from XElement to the according type
-      get => (XElement)getPouProperty(nameof(_Pou.LadderDiagramDefinition));
-      set => setPouProperty(value, nameof(_Pou.LadderDiagramDefinition));
+      get => (XElement)GetPouProperty(nameof(_Pou.LadderDiagramDefinition));
+      set => SetPouProperty(value, nameof(_Pou.LadderDiagramDefinition));
     }
 
     /// <summary>
@@ -232,8 +252,8 @@ namespace zenonApi.Logic
     /// </summary>
     public SequentialFunctionChartDefinition SequentialFunctionChartDefinition
     {
-      get => (SequentialFunctionChartDefinition)getPouProperty();
-      set => setPouProperty(value);
+      get => (SequentialFunctionChartDefinition)GetPouProperty();
+      set => SetPouProperty(value);
     }
 
     /// <summary>
@@ -242,8 +262,8 @@ namespace zenonApi.Logic
     /// </summary>
     public string SourceDictionary
     {
-      get => (string)getPouProperty();
-      set => setPouProperty(value);
+      get => (string)GetPouProperty();
+      set => SetPouProperty(value);
     }
 
     /// <summary>
@@ -251,50 +271,50 @@ namespace zenonApi.Logic
     /// </summary>
     public string CryptCode
     {
-      get => (string)getPouProperty();
-      set => setPouProperty(value);
+      get => (string)GetPouProperty();
+      set => SetPouProperty(value);
     }
 
     #endregion
 
     #region Private/Internal methods and properties to handle connected _Pou instances
 
-    private _Pou connectedPou;
+    private _Pou _connectedPou;
 
     internal _Pou GetOrCreateConnectedPou(bool getOnly = false)
     {
-      if (connectedPou != null)
+      if (_connectedPou != null)
       {
         // A POU was already set, but we have to ensure that it is also connected to the corresponding
         // LogicProject tree, which might have changed in the meantime.
-        connectedPou.AttachToProjectTreeIfRequired(this);
-        return connectedPou;
+        _connectedPou.AttachToProjectTreeIfRequired(this);
+        return _connectedPou;
       }
 
       // POU is null, this may be the reason if this is the first access of the
       // current instance; try to find a matching poo
       if (this.Root != null)
       {
-        connectedPou = this.Root.Programs?.ProgramOrganizationUnits?.Where(x => x.Name == this.Name).FirstOrDefault();
+        _connectedPou = this.Root.Programs?.ProgramOrganizationUnits?.Where(x => x.Name == this.Name).FirstOrDefault();
       }
 
       // If no POU was found so far, we need to create one. This may be the reason if the current Program instance
       // is not attached to any LogicProject tree yet and is created newly.
-      if (connectedPou == null && !getOnly)
+      if (_connectedPou == null && !getOnly)
       {
-        connectedPou = new _Pou()
+        _connectedPou = new _Pou()
         {
           Name = this.Name
         };
 
-        connectedPou.AttachToProjectTreeIfRequired(this);
+        _connectedPou.AttachToProjectTreeIfRequired(this);
       }
 
-      return connectedPou;
+      return _connectedPou;
     }
 
 
-    private object getPouProperty([CallerMemberName]string propertyName = null)
+    private object GetPouProperty([CallerMemberName]string propertyName = null)
     {
       var pou = GetOrCreateConnectedPou();
       if (pou == null)
@@ -311,7 +331,7 @@ namespace zenonApi.Logic
       return property.GetValue(pou);
     }
 
-    private void setPouProperty(object value, [CallerMemberName]string propertyName = null)
+    private void SetPouProperty(object value, [CallerMemberName]string propertyName = null)
     {
       var pou = GetOrCreateConnectedPou();
       if (pou == null)

@@ -5,7 +5,7 @@ using zenonApi.Serialization;
 
 namespace zenonApi.Logic.SerializationConverters
 {
-  public class LogicVariableAttributeConverter : IZenonSerializationConverter
+  internal class LogicVariableAttributeConverter : IZenonSerializationConverter
   {
     public string Convert(object source)
     {

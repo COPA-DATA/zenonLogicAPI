@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Xml.Linq;
 using zenonApi.Collections;
-using zenonApi.Logic.Helper;
+using zenonApi.Logic.Ini;
 using zenonApi.Logic.Internal;
 using zenonApi.Logic.Network;
 using zenonApi.Logic.Resources;
@@ -17,6 +17,9 @@ namespace zenonApi.Logic
   [DebuggerDisplay("{" + nameof(ProjectName) + "}")]
   public class LogicProject : zenonSerializable<LogicProject, IZenonSerializable, LogicProject>
   {
+    private const string K5DbxsIniFileName = "K5DBXS.INI";
+    private const string K5ProjectRootNodeName = "K5project";
+
     private LogicProject()
     {
       // Initialize members which require the current object in their ctor-parameters:
@@ -41,7 +44,7 @@ namespace zenonApi.Logic
     public static LogicProject Import(XDocument k5XmlExport, string stratonDirectoryOfZenonProject = null,
       string zenonLogicProjectName = null)
     {
-      var zenonLogicProject = LogicProject.Import(k5XmlExport.Element(Strings.K5XmlExportRootNodeName));
+      var zenonLogicProject = LogicProject.Import(k5XmlExport.Element(K5ProjectRootNodeName));
       if (zenonLogicProjectName != null)
       {
         zenonLogicProject.ProjectName = zenonLogicProjectName;
@@ -96,7 +99,7 @@ namespace zenonApi.Logic
     {
       if (string.IsNullOrWhiteSpace(stratonDirectoryOfZenonProject))
       {
-        throw new ArgumentNullException(String.Format(Strings.GeneralMethodArgumentNullException,
+        throw new ArgumentNullException(String.Format(Strings.ErrorMessageParameterIsNullOrWhitespace,
           nameof(ModifyStratonDirectoryPartOfPath), nameof(stratonDirectoryOfZenonProject)));
       }
 
@@ -109,7 +112,7 @@ namespace zenonApi.Logic
     /// <remarks>
     /// This property is not in use for straton only usage.
     /// </remarks>
-    public string K5DbxsIniFilePath => System.IO.Path.Combine(Path, Strings.K5DbxsIniFileName);
+    public string K5DbxsIniFilePath => System.IO.Path.Combine(Path, K5DbxsIniFileName);
 
     private K5DbxsIniFile _k5DbxsIniFile;
 

@@ -6,6 +6,7 @@ namespace zenonApi.Serialization
   /// Use this attribute to specify for each value of an enumeration how it shall be written in XML.
   /// </summary>
   [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+  // ReSharper disable once InconsistentNaming : "zenon" is always written lowercase.
   public class zenonSerializableEnumAttribute : zenonSerializableBaseAttribute
   {
     /// <summary>

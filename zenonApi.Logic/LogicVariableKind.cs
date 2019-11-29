@@ -26,6 +26,7 @@ namespace zenonApi.Logic
     /// Variables of an I/O board.
     /// </summary>
     [zenonSerializableEnum("IO")]
+    // ReSharper disable once InconsistentNaming : Using .NET Framework Guidelines here for naming.
     IO
   }
 }

@@ -61,33 +61,6 @@ namespace zenonApi.Logic.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Maximum supported dimension are 3..
-        /// </summary>
-        internal static string DimensionConverterArgumOutOfRangeExcp {
-            get {
-                return ResourceManager.GetString("DimensionConverterArgumOutOfRangeExcp", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Invalid data type for converter of type {0}. Datatype ValueTuple&lt;int, int, int&gt; expected..
-        /// </summary>
-        internal static string DimensionConverterFormatExcp {
-            get {
-                return ResourceManager.GetString("DimensionConverterFormatExcp", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Error while parsing int Datatype values..
-        /// </summary>
-        internal static string DimensionConverterParseException {
-            get {
-                return ResourceManager.GetString("DimensionConverterParseException", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Invalid format for {0} type. Format {1} not valid..
         /// </summary>
         internal static string DimensionTypeInvalidFormat {
@@ -97,11 +70,38 @@ namespace zenonApi.Logic.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid call of method {0}. Argument {1} cannot be null or whitespace..
+        ///   Looks up a localized string similar to Invalid format for variable dimensions. Zero-sized dimensions are only allowed if all dimension parts are zero, or if they occur after a non-zero-sized entry..
         /// </summary>
-        internal static string GeneralMethodArgumentNullException {
+        internal static string ErrorMessageDimensionsInvalidDatatype {
             get {
-                return ResourceManager.GetString("GeneralMethodArgumentNullException", resourceCulture);
+                return ResourceManager.GetString("ErrorMessageDimensionsInvalidDatatype", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maximum supported dimension are 3..
+        /// </summary>
+        internal static string ErrorMessageDimensionsOutOfRange {
+            get {
+                return ResourceManager.GetString("ErrorMessageDimensionsOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Argument {0} must not be null or consist solely of white space characters..
+        /// </summary>
+        internal static string ErrorMessageParameterIsNullOrWhitespace {
+            get {
+                return ResourceManager.GetString("ErrorMessageParameterIsNullOrWhitespace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not parse a dimension definition from {0}. Expected positive numeric numbers in the format &quot;x,y,z&quot;..
+        /// </summary>
+        internal static string ErrorMessageParsingDimensionsFailed {
+            get {
+                return ResourceManager.GetString("ErrorMessageParsingDimensionsFailed", resourceCulture);
             }
         }
         
@@ -124,24 +124,6 @@ namespace zenonApi.Logic.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to K5DBXS.INI.
-        /// </summary>
-        internal static string K5DbxsIniFileName {
-            get {
-                return ResourceManager.GetString("K5DbxsIniFileName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to K5project.
-        /// </summary>
-        internal static string K5XmlExportRootNodeName {
-            get {
-                return ResourceManager.GetString("K5XmlExportRootNodeName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Invalid constructor call of type {0}. Argument of constructor cannot be null or whitespace..
         /// </summary>
         internal static string LogicDefinesConstructorArgumentException {
@@ -156,15 +138,6 @@ namespace zenonApi.Logic.Resources {
         internal static string LogicOptionTupleConstructorArgumentException {
             get {
                 return ResourceManager.GetString("LogicOptionTupleConstructorArgumentException", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to STRING.
-        /// </summary>
-        internal static string StringVariableDataType {
-            get {
-                return ResourceManager.GetString("StringVariableDataType", resourceCulture);
             }
         }
         

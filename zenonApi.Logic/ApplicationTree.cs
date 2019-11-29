@@ -4,14 +4,16 @@ using zenonApi.Serialization;
 
 namespace zenonApi.Logic
 {
-  public class ApplicationTree : zenonSerializable<ApplicationTree, LogicProject, LogicProject>, ILogicFileContainer
+  public sealed class ApplicationTree : zenonSerializable<ApplicationTree, LogicProject, LogicProject>, ILogicFileContainer
   {
+    // ReSharper disable once UnusedMember.Local : Required default constructor for serialization.
     private ApplicationTree()
     {
       Programs = new LogicProgramCollection(this, null);
       Folders = new ContainerAwareObservableCollection<LogicFolder>(this);
     }
 
+    // ReSharper disable once VirtualMemberCallInConstructor : This is intended.
     public ApplicationTree(LogicProject parent) => Parent = Root = parent;
 
     #region interface implementation
@@ -24,13 +26,13 @@ namespace zenonApi.Logic
 
     #region Specific properties
     [zenonSerializableAttribute("Expand", Converter = typeof(YesNoConverter))]
-    public bool Expand { get; protected set; } = true;
+    public bool Expand { get; private set; } = true;
 
     [zenonSerializableNode("Folder")]
-    public ContainerAwareObservableCollection<LogicFolder> Folders { get; protected set; }
+    public ContainerAwareObservableCollection<LogicFolder> Folders { get; private set; }
 
     [zenonSerializableNode("Program")]
-    public LogicProgramCollection Programs { get; protected set; }
+    public LogicProgramCollection Programs { get; private set; }
 
     //[zenonSerializableNode("FieldBus")]
     //protected object FieldBus { get; set; }
