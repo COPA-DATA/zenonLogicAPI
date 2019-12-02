@@ -11,6 +11,7 @@ namespace Tester
   {
     static void Main(string[] args)
     {
+      // TODO: Write a sample app, which demonstrates the usage of the API and remove this whole test project
       XDocument demoProject = XDocument.Load($@"C:\Users\{Environment.UserName}\Desktop\DemoProject.xml");
     
       // Import the project from the XML
@@ -71,12 +72,12 @@ namespace Tester
       XElement modifiedProject = project.ExportAsXElement();
       XDocument document = new XDocument
       {
-        Declaration = new XDeclaration("1.0", "utf-8", "yes")
+        Declaration = new XDeclaration("1.0", "iso-8859-1", "yes")
       };
 
       document.Add(modifiedProject);
       using (XmlTextWriter writer = new XmlTextWriter($@"C:\Users\{Environment.UserName}\Desktop\DemoProjectModified.xml",
-        Encoding.GetEncoding("utf-8")))
+        Encoding.GetEncoding("iso-8859-1")))
       {
         writer.Indentation = 3;
         writer.Formatting = Formatting.Indented;
