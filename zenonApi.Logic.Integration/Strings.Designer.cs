@@ -232,6 +232,15 @@ namespace zenonApi.Zenon {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .txt.
+        /// </summary>
+        internal static string TextFileExtension {
+            get {
+                return ResourceManager.GetString("TextFileExtension", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error while reading compilation log file for zenon Logic project {0}. Please open the zenon Logic workbench and compile again manually for further details..
         /// </summary>
         internal static string ZenonLogicCompileLogFileReadException {
@@ -336,6 +345,15 @@ namespace zenonApi.Zenon {
         internal static string ZenonRegistrySoftwareDataDirPath {
             get {
                 return ResourceManager.GetString("ZenonRegistrySoftwareDataDirPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to stratonNG_zenon Logic_.
+        /// </summary>
+        internal static string ZenonStratonNgDriverConfigFilePrefix {
+            get {
+                return ResourceManager.GetString("ZenonStratonNgDriverConfigFilePrefix", resourceCulture);
             }
         }
     }

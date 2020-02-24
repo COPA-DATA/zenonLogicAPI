@@ -32,6 +32,11 @@ namespace zenonApi.Logic
       this.ApplicationTree = new ApplicationTree(this);
     }
 
+    public LogicProject(string name) : this()
+    {
+      this.ProjectName = name;
+    }
+
     /// <summary>
     /// Returns instance of <see cref="LogicProject"/> with the loaded information of the k5XmlExport and the
     /// specified zenon Logic project name.
@@ -41,8 +46,7 @@ namespace zenonApi.Logic
     /// <param name="stratonDirectoryOfZenonProject">Directory path of the straton folder of a zenon project.
     /// Example path: "C:\ProgramData\COPA-DATA\SQL2012\"zenon project GUID"\FILES\straton"</param>
     /// <returns></returns>
-    public static LogicProject Import(XDocument k5XmlExport, string stratonDirectoryOfZenonProject = null,
-      string zenonLogicProjectName = null)
+    public static LogicProject Import(XDocument k5XmlExport, string stratonDirectoryOfZenonProject = null, string zenonLogicProjectName = null)
     {
       var zenonLogicProject = LogicProject.Import(k5XmlExport.Element(K5ProjectRootNodeName));
       if (zenonLogicProjectName != null)
@@ -80,7 +84,7 @@ namespace zenonApi.Logic
       // writes the new name on the according position of the k5project path xml attribute
       set
       {
-        string currentProjectPath = this.Path.TrimEnd(System.IO.Path.DirectorySeparatorChar);
+        string currentProjectPath = this.Path?.TrimEnd(System.IO.Path.DirectorySeparatorChar) ?? string.Empty;
         string[] splitResult = currentProjectPath.Split(System.IO.Path.DirectorySeparatorChar);
 
         splitResult[splitResult.Length - 1] = value;

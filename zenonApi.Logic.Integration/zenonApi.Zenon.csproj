@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Interop.zenOn.760">
+      <HintPath>..\Binaries\Interop.zenOn.760.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Scada.AddIn.Contracts">
       <HintPath>C:\Program Files (x86)\COPA-DATA\zenon 8.00 SP0\AddInFramework\Scada.AddIn.Contracts.dll</HintPath>
     </Reference>
@@ -84,15 +88,6 @@
       <VersionMinor>0</VersionMinor>
       <Lcid>0</Lcid>
       <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="zenOn">
-      <Guid>{6F9DE1F1-A404-11CF-95D0-0020D58000EC}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>

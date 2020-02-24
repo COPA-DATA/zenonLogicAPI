@@ -9,7 +9,7 @@ using System.Management.Instrumentation;
 using System.Xml.Linq;
 using zenOn;
 using zenonApi.Logic;
-using zenonApi.Logic.Helper;
+using zenonApi.Logic.Ini;
 using zenonApi.Zenon.Helper;
 using zenonApi.Zenon.K5Prp;
 using zenonApi.Zenon.StratonUtilities;
@@ -155,6 +155,10 @@ namespace zenonApi.Zenon
       {
         K5ToolSet k5ToolSet = new K5ToolSet(logicProject.Path);
 
+        if (!logicProject.Path.Contains(this.ZenonProjectGuid))
+        {
+          logicProject.ModifyStratonDirectoryPartOfPath(Path.Combine(this.ZenonLogicDirectory, logicProject.ProjectName));
+        }
         // as there is no built in solution to check if a project exists this check is used to determine if a 
         // certain project already exists in zenon Logic
         if (!Directory.Exists(logicProject.Path))
@@ -174,6 +178,9 @@ namespace zenonApi.Zenon
 
         k5ToolSet.ImportZenonLogicProject(logicProject);
       }
+
+      // The following line is just necessary to force zenon to reload the logic projects within the displayed list.
+      ZenonProject.Parent.Parent.MyWorkspace.LoadProject(ZenonProjectGuid);
     }
 
     /// <summary>

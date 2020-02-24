@@ -36,7 +36,7 @@ namespace zenonApi.Zenon.K5Prp
     /// <param name="dwDataIn"></param>
     /// <param name="dwDataOut"></param>
     /// <returns></returns>
-    [DllImport("C:\\Program Files (x86)\\COPA-DATA\\zenon 8.00 SP0\\K5Prp.dll", CallingConvention = CallingConvention.StdCall)]
+    [DllImport("C:\\Program Files (x86)\\COPA-DATA\\zenon 8.00 SP0\\K5Prp.dll", CallingConvention = CallingConvention.StdCall)] // TODO: This is version dependent! Remove that call and replace it dynamically
     private static extern IntPtr K5PRPCall(string szProject, string szCommand, ref uint dwOk, ref uint dwDataIn, ref uint dwDataOut);
 
     private string _k5BexeFilePath;
