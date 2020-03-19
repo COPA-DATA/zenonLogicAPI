@@ -196,6 +196,15 @@ namespace zenonApi.Zenon {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to K5Prp.dll.
+        /// </summary>
+        internal static string K5PRPFileName {
+            get {
+                return ResourceManager.GetString("K5PRPFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to K5project.
         /// </summary>
         internal static string K5XmlExportRootNodeName {

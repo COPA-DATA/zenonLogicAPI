@@ -16,7 +16,11 @@ namespace zenonApi.Logic
   {
     /// <summary>Private default constructor for serialization.</summary>
     // ReSharper disable once UnusedMember.Local : Required default constructor for serialization.
-    private LogicFolder() { }
+    public LogicFolder()
+    {
+      Programs = new LogicProgramCollection(this, null);
+      Folders = new ContainerAwareObservableCollection<LogicFolder>(this);
+    }
 
     public LogicFolder(string folderName)
     {
@@ -35,6 +39,22 @@ namespace zenonApi.Logic
     public override string NodeName => "Folder";
     #endregion
 
+    public static LogicFolder Create(string folderName, bool isFolderExpanded = false)
+    {
+      if (string.IsNullOrEmpty(folderName))
+      {
+        throw new ArgumentNullException(
+          string.Format(Strings.GeneralMethodArgumentNullException, nameof(Create), nameof(folderName)));
+      }
+
+      LogicFolder logicFolder = new LogicFolder
+      {
+        Name = folderName,
+        Expand = isFolderExpanded
+      };
+
+      return logicFolder;
+    }
     #region Specific properties
     [zenonSerializableNode("Folder")]
     public ContainerAwareObservableCollection<LogicFolder> Folders { get; protected set; }

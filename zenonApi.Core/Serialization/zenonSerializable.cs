@@ -138,7 +138,7 @@ namespace zenonApi.Serialization
 
       // Group the tuples by the required attribute types and order them if required by their specified serialization order
       var attributeMappings = properties
-        .Select(x => (x.property, attribute: x.attributes.OfType<zenonSerializableBaseAttribute>().FirstOrDefault()))
+        .Select(x => (property: x.property, attribute: x.attributes.OfType<zenonSerializableBaseAttribute>().FirstOrDefault()))
         .Where(x => x.attribute != null)
         .OrderBy(x => x.attribute.InternalOrder);
 
@@ -463,7 +463,7 @@ namespace zenonApi.Serialization
             }
           }
 
-          string stringValue = sourceValue.ToString();
+          string stringValue = sourceValue?.ToString();
           target.SetValue(stringValue);
         }
       }
