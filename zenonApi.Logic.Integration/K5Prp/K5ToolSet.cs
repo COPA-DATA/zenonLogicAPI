@@ -26,7 +26,7 @@ namespace zenonApi.Zenon.K5Prp
     /// </summary>
     private const string ZenonLogicCompileLogFileName = "__build.log";
 
-    public void InitK5ToolSet()
+    static K5ToolSet()
     {
       K5PCall = (K5PRPCall)LoadFunction<K5PRPCall>("K5PRPCall");
     }
@@ -55,8 +55,16 @@ namespace zenonApi.Zenon.K5Prp
     /// </summary>
     private static Delegate LoadFunction<T>(string functionName)
     {
-      RegistryKey registryDir = Registry.LocalMachine.OpenSubKey(Strings.ZenonRegistrySoftwareDataDirPath);
-
+      RegistryKey registryDir;
+      try
+      {
+        registryDir = Registry.LocalMachine.OpenSubKey(Strings.ZenonRegistrySoftwareDataDirPath);
+      }
+      catch (Exception e)
+      {
+        return null;
+      }
+      
       if (registryDir == null) { return null; }
 
       string zenonDir = (string)registryDir.GetValue(Strings.ZenonRegistryCurrentRegisteredVersionKey);
@@ -66,8 +74,15 @@ namespace zenonApi.Zenon.K5Prp
       string k5pPath = Path.Combine(zenonDir, Strings.K5PRPFileName);
 
       //0x00000008 stands for LOAD_WITH_ALTERED_SEARCH_PATH
-      IntPtr hModule = LoadLibraryEx(k5pPath, IntPtr.Zero, 0x00000008);
-      var functionAddress = GetProcAddress(hModule, functionName);
+      //https://docs.microsoft.com/de-de/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryexa
+      IntPtr hModule = LoadLibraryEx(k5pPath, IntPtr.Zero, 0x000000002 | 0x000000008);
+
+      if (hModule == IntPtr.Zero) {return null; }
+
+      IntPtr functionAddress = GetProcAddress(hModule, functionName);
+
+      if (functionAddress == IntPtr.Zero) { return null; }
+
       return Marshal.GetDelegateForFunctionPointer(functionAddress, typeof(T));
     }
 
@@ -358,7 +373,6 @@ namespace zenonApi.Zenon.K5Prp
         uint dwDataIn = 0;
         uint dwDataOut = 0;
 
-        InitK5ToolSet();
         IntPtr commandResult = K5PCall(ZenonLogicProjectDirectory, k5Command, ref dwOk, ref dwDataIn, ref dwDataOut);
 
         returnMessage = Marshal.PtrToStringAnsi(commandResult);
