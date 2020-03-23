@@ -75,7 +75,7 @@ namespace zenonApi.Zenon.K5Prp
 
       //0x00000008 stands for LOAD_WITH_ALTERED_SEARCH_PATH
       //https://docs.microsoft.com/de-de/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryexa
-      IntPtr hModule = LoadLibraryEx(k5pPath, IntPtr.Zero, 0x000000002 | 0x000000008);
+      IntPtr hModule = LoadLibraryEx(k5pPath, IntPtr.Zero, 0x000000002);
 
       if (hModule == IntPtr.Zero) {return null; }
 
