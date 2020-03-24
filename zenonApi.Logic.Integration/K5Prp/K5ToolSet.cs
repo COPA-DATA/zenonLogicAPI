@@ -64,10 +64,20 @@ namespace zenonApi.Zenon.K5Prp
       {
         return null;
       }
-      
+
       if (registryDir == null) { return null; }
 
-      string zenonDir = (string)registryDir.GetValue(Strings.ZenonRegistryCurrentRegisteredVersionKey);
+      string currentVersion = (string)registryDir.GetValue(Strings.ZenonRegistryCurrentVersionKey);
+      string zenonDir = null;
+
+      if (IntPtr.Size == 4)
+      {
+        zenonDir = (string)registryDir.GetValue(Strings.ZenonRegistryCurrentProgramDir32Prefix + currentVersion);
+      }
+      else if (IntPtr.Size == 8)
+      {
+        zenonDir = (string)registryDir.GetValue(Strings.ZenonRegistryCurrentProgramDir64Prefix + currentVersion);
+      }
 
       if (zenonDir == null) { return null; }
 
@@ -76,7 +86,6 @@ namespace zenonApi.Zenon.K5Prp
       //0x00000008 stands for LOAD_WITH_ALTERED_SEARCH_PATH
       //https://docs.microsoft.com/de-de/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryexa
       IntPtr hModule = LoadLibraryEx(k5pPath, IntPtr.Zero, 0x000000008);
-      System.Windows.Forms.MessageBox.Show(Marshal.GetLastWin32Error() + " " + k5pPath);
 
       if (hModule == IntPtr.Zero) {return null; }
 
