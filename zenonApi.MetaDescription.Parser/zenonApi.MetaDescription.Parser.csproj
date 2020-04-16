@@ -37,6 +37,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ps\Global\HQ\Projects\InternalTools\AuthorIt\DocToolXmlGenerator\Ait6Supplemental\bin\Debug\Ait6Supplemental.dll</HintPath>
     </Reference>
+    <Reference Include="CopaData.LooseCoupling.Logging, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CopaData.LooseCoupling.Logging.1.0.0.2831\lib\netstandard1.3\CopaData.LooseCoupling.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="CopaData.Tools.DynPropertyParser, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CopaData.Tools.DynPropertyParser.1.0.0.2851\lib\netstandard2.0\CopaData.Tools.DynPropertyParser.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
     </Reference>
@@ -45,6 +51,9 @@
     </Reference>
     <Reference Include="Microsoft.ApplicationInsights.Log4NetAppender, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Log4NetAppender.2.1.0\lib\net45\Microsoft.ApplicationInsights.Log4NetAppender.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -106,17 +115,17 @@
     <Compile Include="XML\WrappedProperty.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ps\Global\HQ\Projects\InternalTools\AuthorIt\DocToolXmlGenerator\TfsFolderPathResolver\TfsFolderPathResolver.csproj">
       <Project>{6dd93dfd-2cef-49e4-9d6c-5def0ce6e906}</Project>
       <Name>TfsFolderPathResolver</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\ps\Global\HQ\Projects\InternalTools\AuthorIt\DynPropertyParser\Scada.Common.DynPropertyParser\Scada.Common.DynPropertyParser.csproj">
-      <Project>{57fc1408-bcbb-4aac-8cba-e1ddee146e53}</Project>
-      <Name>Scada.Common.DynPropertyParser</Name>
     </ProjectReference>
     <ProjectReference Include="..\zenonApi.Core\zenonApi.Core.csproj">
       <Project>{0AFC2B69-4315-40D2-BC1F-5F87DCBB513D}</Project>
