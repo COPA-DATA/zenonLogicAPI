@@ -11,6 +11,11 @@ namespace zenonApi.MetaDescription
 
     [zenonSerializableNode("SourceCode")]
     public string SourceCode { get; set; }
+
+    public Getter()
+    {
+
+    }
     
   }
 }

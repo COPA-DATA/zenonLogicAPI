@@ -8,10 +8,15 @@ namespace zenonApi.MetaDescription
     public override string NodeName => "Field";
 
     [zenonSerializableAttribute("FieldType")]
-    public Type FieldType { get; set; }
+    public string FieldType { get; set; }
     [zenonSerializableAttribute("FieldName")]
     public string FieldName { get; set; }
     [zenonSerializableAttribute("Modifier")]
     public string Modifier { get; set; }
+
+    public Field()
+    {
+
+    }
   }
 }

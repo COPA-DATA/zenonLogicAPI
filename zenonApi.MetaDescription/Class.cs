@@ -6,11 +6,12 @@ namespace zenonApi.MetaDescription
   public class Class : zenonSerializable<Class>
   {
     #region Class Attributes
-    public string HostName { get; set; }
-    [zenonSerializableAttribute("ViewName")]
     public override string NodeName => "Class";
-    [zenonSerializableAttribute("HostName")]
+
+    [zenonSerializableAttribute("ViewName")]
     public string ViewName { get; set; }
+    [zenonSerializableAttribute("HostName")]
+    public string HostName { get; set; }
     [zenonSerializableAttribute("XmlName")]
     public string XmlName { get; set; }
     [zenonSerializableAttribute("OverrideViewName")]
@@ -38,11 +39,11 @@ namespace zenonApi.MetaDescription
     #region Class nodes
     [zenonSerializableNode("Constructor")]
     public Constructor Constructor { get; set; }
-    [zenonSerializableNode("NO_NAME_FOR_LIST")]
+    [zenonSerializableNode("Property")]
     public List<Property> Properties { get; set; }
-    [zenonSerializableNode("NO_NAME_FOR_LIST")]
+    [zenonSerializableNode("Method")]
     public List<Method> Methods { get; set; }
-    [zenonSerializableNode("NO_NAME_FOR_LIST")]
+    [zenonSerializableNode("Field")]
     public List<Field> Fields { get; set; }
     #endregion
 
@@ -55,6 +56,11 @@ namespace zenonApi.MetaDescription
       Properties = new List<Property>();
       Methods = new List<Method>();
       Fields = new List<Field>();
+    }
+
+    public Class()
+    {
+
     }
   }
 }

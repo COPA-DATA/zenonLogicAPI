@@ -3,7 +3,7 @@ using zenonApi.Serialization;
 
 namespace zenonApi.MetaDescription
 {
-  public class Interface : zenonSerializable<Interface>, IModuleItem
+  public class Interface : zenonSerializable<Interface>
   {
     public override string NodeName => "Interface";
 
@@ -16,5 +16,10 @@ namespace zenonApi.MetaDescription
 
     [zenonSerializableAttribute("Hide")]
     public bool Hide { get; set; }
+
+    public Interface()
+    {
+
+    }
   }
 }

@@ -13,8 +13,22 @@ namespace zenonApi.MetaDescription
     public string HostName { get; set; }
     [zenonSerializableAttribute("Hide")]
     public bool Hide { get; set; }
+    [zenonSerializableAttribute("OverrideViewName")]
+    public string OverrideViewName { get; set; }
+    [zenonSerializableAttribute("ReturnValueType")]
+    public string ReturnValueType { get; set; }
+    [zenonSerializableNode("Argument")]
+    public List<Argument> Parameters { get; set; }
 
-    [zenonSerializableNode("NO_NAME_FOR_LIST")]
-    public List<Argument> Parameters { get; set; } 
+    [zenonSerializableNode("SourceCode")]
+    public string SourceCode { get; set; }
+
+
+
+
+    public Method()
+    {
+
+    }
   }
 }

@@ -4,7 +4,7 @@ namespace zenonApi.MetaDescription
 {
   public class EnumValue : zenonSerializable<EnumValue>
   {
-    public override string NodeName => "Enumvalue";
+    public override string NodeName => "EnumValue";
 
     [zenonSerializableAttribute("ViewName")]
     public string ViewName { get; set; }
@@ -18,7 +18,7 @@ namespace zenonApi.MetaDescription
     public bool Hide { get; set; }
 
     [zenonSerializableNodeContent]
-    public object Value { get; set; }
+    public int Value { get; set; }
 
 
     public EnumValue(string viewName, string hostName)
@@ -26,6 +26,11 @@ namespace zenonApi.MetaDescription
       ViewName = viewName;
       HostName = hostName;
       XmlName = HostName;
+    }
+
+    public EnumValue()
+    {
+
     }
   }
 }

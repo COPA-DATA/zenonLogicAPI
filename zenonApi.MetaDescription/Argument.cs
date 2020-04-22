@@ -16,13 +16,18 @@ namespace zenonApi.MetaDescription
     [zenonSerializableAttribute("Hide")]
     public bool Hide { get; set; }
     [zenonSerializableAttribute("ArgumentType")]
-    public Type ArgumentType { get; set; }
+    public string ArgumentType { get; set; }
 
 
     public Argument(string viewName, string hostName)
     {
       ViewName = viewName;
       HostName = hostName;
+    }
+
+    public Argument()
+    {
+
     }
   }
 }

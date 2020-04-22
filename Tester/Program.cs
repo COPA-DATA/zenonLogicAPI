@@ -15,24 +15,15 @@ namespace Tester
   {
     static void Main(string[] args)
     {
-      VariableModule variableModule = new VariableModule("820");
-      Variable variable = new Variable("NEW_VAR", ChannelType.ControlState,new DataType(DType.String),new Driver("NEW_VAR"));
-      variableModule.Add(variable);
+      XDocument demoProject = XDocument.Load($@"C:\Users\Lukas.Rieser\OneDrive - COPA-DATA\Documents\XML Api\Metafile\metadata_generated.xml");
 
-
-
-      variableModule.ExportAsFile(@"C:\Users\Lukas.Rieser\OneDrive - COPA-DATA\Documents\XML Api\EXPORTED_VAR.xml");
-
-      variable.CAKSVarED.Limits.Active = true;
-
-
+      Definitions definitions = Definitions.Import(demoProject.Root);
 
 
       //  // TODO: Write a sample app, which demonstrates the usage of the API and remove this whole test project
-      //  XDocument demoProject = XDocument.Load($@"C:\Users\{Environment.UserName}\Desktop\DemoProject.xml");
 
       //  // Import the project from the XML
-      //  LogicProject project = LogicProject.Import(demoProject.Element("K5project"));
+      LogicProject project = LogicProject.Import(demoProject.Element("K5project"));
 
       //  var varGrp = project.GlobalVariables.VariableGroups.FirstOrDefault();
       //  for (int i = 0; i < 50; i++)

@@ -24,5 +24,10 @@ namespace zenonApi.MetaDescription
       OverrideViewName = string.Empty;
       ApartmentId = apartmentId;
     }
+
+    public Apartment()
+    {
+
+    }
   }
 }

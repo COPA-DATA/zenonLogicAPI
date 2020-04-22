@@ -10,14 +10,15 @@ namespace zenonApi.MetaDescription
     [zenonSerializableAttribute("Modifier")]
     public string Modifier { get; set; }
 
-    [zenonSerializableNode("NO_NAME_FOR_LIST")]
-    public List<Argument> Arguments { get; set; }
+    [zenonSerializableNode("Argument")]
+    public List<Argument> Argument { get; set; }
+
     [zenonSerializableNode("SourceCode")]
     public string SourceCode { get; set; }
      
     public Constructor()
     {
-      Arguments = new List<Argument>();
+      Argument = new List<Argument>();
     }
   }
 }

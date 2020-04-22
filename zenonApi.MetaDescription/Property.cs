@@ -17,7 +17,7 @@ namespace zenonApi.MetaDescription
     [zenonSerializableAttribute("Hide")]
     public bool Hide { get; set; }
     [zenonSerializableAttribute("PropertyType")]
-    public Type PropertyType { get; set; }
+    public string PropertyType { get; set; }
     [zenonSerializableAttribute("DefinitionType")]
     public string DefinitionType { get; set; } 
     [zenonSerializableAttribute("IsDynProperty")]
@@ -44,6 +44,11 @@ namespace zenonApi.MetaDescription
       ViewName = viewName;
       HostName = hostName;
       XmlName = ViewName;
+    }
+
+    public Property()
+    {
+
     }
   }
 }

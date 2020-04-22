@@ -11,7 +11,7 @@ namespace zenonApi.MetaDescription
     public string ViewName { get; set; }
     [zenonSerializableAttribute("HostName")]
     public string HostName { get; set; }
-    [zenonSerializableAttribute("XmlBane")]
+    [zenonSerializableAttribute("XmlName")]
     public string XmlName { get; set; }
     [zenonSerializableAttribute("MinimumVersion")]
     public string MinimumVersion { get; set; }
@@ -20,7 +20,7 @@ namespace zenonApi.MetaDescription
     [zenonSerializableAttribute("Hide")]
     public bool Hide { get; set; }
 
-    [zenonSerializableNode("NO_NAME_FOR_LIST")]
+    [zenonSerializableNode("EnumValue")]
     public List<EnumValue> EnumValues { get; set; }
 
     public Enum(string  viewName, string hostName)
@@ -29,6 +29,11 @@ namespace zenonApi.MetaDescription
       HostName = hostName;
       XmlName = HostName;
       EnumValues = new List<EnumValue>();
+    }
+
+    public Enum()
+    {
+
     }
   }
 }

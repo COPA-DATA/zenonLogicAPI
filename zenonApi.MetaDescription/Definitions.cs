@@ -10,16 +10,16 @@ namespace zenonApi.MetaDescription
     [zenonSerializableNode("Apartments", EncapsulateChildsIfList = true)]
     public List<Apartment> Apartments { get; set; }
 
-    [zenonSerializableNode("NO_NAME_FOR_LIST")]
+    [zenonSerializableNode("Class")]
     public List<Class> Classes { get; set; }
 
-    [zenonSerializableNode("NO_NAME_FOR_LIST")]
+    [zenonSerializableNode("Enum")]
     public List<Enum> Enums { get; set; }
 
-    [zenonSerializableNode("NO_NAME_FOR_LIST")]
-    public List<Method> Interfaces { get; set; }
+    [zenonSerializableNode("Interface")]
+    public List<Interface> Interfaces { get; set; }
 
-    [zenonSerializableAttribute("Path")]
+    [zenonSerializableAttribute("TargetVersion")]
     public string TargetVersion { get; set; }
 
     public Definitions(string targetVersion)
@@ -28,8 +28,12 @@ namespace zenonApi.MetaDescription
       Apartments = new List<Apartment>();
       Classes = new List<Class>();
       Enums = new List<Enum>();
-      Interfaces = new List<Method>();
+      Interfaces = new List<Interface>();
 
+    }
+
+    public Definitions()
+    {
     }
   }
 }
