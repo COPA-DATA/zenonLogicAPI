@@ -3,26 +3,21 @@ using zenonApi.Serialization;
 
 namespace zenonApi.MetaDescription
 {
-  public class Constructor : zenonSerializable<Constructor>, IModuleItem
+  public class Constructor : zenonSerializable<Constructor>
   {
-    public override string NodeName => "constructor";
+    public override string NodeName => "Constructor";
 
-    [zenonSerializableAttribute("HostName")]
-    public string HostName { get; set; }
-    [zenonSerializableAttribute("ViewName")]
-    public string ViewName { get; set; }
-    [zenonSerializableAttribute("Hide")]
-    public bool Hide { get; set; }
+    [zenonSerializableAttribute("Modifier")]
+    public string Modifier { get; set; }
 
     [zenonSerializableNode("NO_NAME_FOR_LIST")]
-    public List<Parameter> Parameter { get; set; }
-
-    [zenonSerializableNode("Override")]
-    public string ConstructorOverride { get; set; }
-
+    public List<Argument> Arguments { get; set; }
+    [zenonSerializableNode("SourceCode")]
+    public string SourceCode { get; set; }
+     
     public Constructor()
     {
-      Parameter = new List<Parameter>();
+      Arguments = new List<Argument>();
     }
   }
 }
