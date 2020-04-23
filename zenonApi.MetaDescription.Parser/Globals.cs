@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using CopaData.Tools.TfsUtilities;
 
 namespace zenonApi.MetaDescription.Parser
 {
@@ -43,18 +44,18 @@ namespace zenonApi.MetaDescription.Parser
       /// <summary>
       /// Basepath to supervisor folder of currently selected zenon version.
       /// </summary>
-      public static string BasePath => TfsFolderPathResolver.Contracts.ResolvePathForVersionAndProduct(zenonVersion, TfsFolderPathResolver.Contracts.Folder.Supervisor);
+      public static string BasePath => Contracts.ResolvePathForVersionAndProduct(zenonVersion, Contracts.Folder.Supervisor);
 
       public static string UserAnalyzerPath
       {
         get
         {
-          var bp = TfsFolderPathResolver.Contracts.ResolvePathForFolder("Scrum");
+          var bp = Contracts.ResolvePathForFolder("Scrum");
           return $"{bp}\\Analyzer\\{CurrrentAnalzerVersion}";
         }
       }
 
-      public static string CustomSolutionsBasePath => TfsFolderPathResolver.Contracts.ResolvePathForFolder("zenon") + "\\CustomSolutions";
+      public static string CustomSolutionsBasePath => Contracts.ResolvePathForFolder("zenon") + "\\CustomSolutions";
     }
 
     /// <summary>

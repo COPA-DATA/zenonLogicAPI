@@ -6,10 +6,7 @@ namespace zenonApi.MetaDescription.Parser.XML
   {
     public static Property Parse(IScadaProperty scadaProperty)
     {
-      Property propertyForXml = new Property();
-
-      propertyForXml.HostName = scadaProperty.HostName;
-      propertyForXml.ViewName = scadaProperty.ViewName;
+      Property propertyForXml = new Property(scadaProperty.ViewName,scadaProperty.HostName);
       propertyForXml.IsMethodInHost = scadaProperty.IsMethodInHost;
 
       return propertyForXml;

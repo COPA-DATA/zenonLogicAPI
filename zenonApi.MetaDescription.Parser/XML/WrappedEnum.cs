@@ -6,10 +6,7 @@ namespace zenonApi.MetaDescription.Parser.XML
   {
     public static Enum Parse(IScadaEnum scadaEnum)
     {
-      Enum enumForXml = new Enum();
-
-      enumForXml.HostName = scadaEnum.HostName;
-      enumForXml.ViewName = scadaEnum.ViewName;
+      Enum enumForXml = new Enum(scadaEnum.ViewName, scadaEnum.HostName);
 
       foreach (IScadaEnumValue scadaEnumValue in scadaEnum.Values)
       {

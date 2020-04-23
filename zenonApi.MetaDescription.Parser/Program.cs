@@ -1,9 +1,8 @@
-﻿using Scada.Common.DynPropertyParser;
-using System;
-using System.IO;
+﻿using System;
+using CopaData.Tools.AuthorIt.AitConnector;
+using Scada.Common.DynPropertyParser;
 using System.Linq;
 using System.Reflection;
-using CopaData.Tools.AuthorIt.AitConnector;
 using zenonApi.MetaDescription.Parser.AdapterAnalysis;
 using zenonApi.MetaDescription.Parser.OdlWrapperClasses;
 using zenonApi.MetaDescription.Parser.XML;
@@ -44,8 +43,8 @@ namespace zenonApi.MetaDescription.Parser
 
 
 
-      Namespaces namespacesForXml = WrappedNamespaces.Parse(sortedNamespaces);
-      namespacesForXml.ExportAsFile(@"C:\Users\Lukas.Rieser\OneDrive - COPA-DATA\Documents\XML Api\metadata_generated_all.xml");
+      Definitions definitions = WrappedNamespaces.Parse(sortedNamespaces);
+      definitions.ExportAsFile($@"C:\Users\Lukas.Rieser\OneDrive - COPA-DATA\Documents\XML Api\MetaFile\metadata_generated_{DateTime.Now:yyMMdd}.xml");
     }
 
 

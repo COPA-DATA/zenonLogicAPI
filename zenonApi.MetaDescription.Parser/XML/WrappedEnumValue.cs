@@ -6,13 +6,8 @@ namespace zenonApi.MetaDescription.Parser.XML
   {
     public static EnumValue Parse(IScadaEnumValue scadaEnumValue)
     {
-      EnumValue enumValueForXml = new EnumValue();
-
-      enumValueForXml.HostName = scadaEnumValue.HostName;
-      enumValueForXml.ViewName = scadaEnumValue.ViewName;
-
+      EnumValue enumValueForXml = new EnumValue(scadaEnumValue.ViewName, scadaEnumValue.HostName);
       enumValueForXml.Value = scadaEnumValue.Ordinal;
-
       return enumValueForXml;
     }
   }

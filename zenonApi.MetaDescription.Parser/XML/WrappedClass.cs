@@ -6,10 +6,7 @@ namespace zenonApi.MetaDescription.Parser.XML
   {
     public static Class Parse(IScadaInterface scadaInterface)
     {
-      Class classForXml = new Class();
-
-      classForXml.ViewName = scadaInterface.ViewName;
-      classForXml.HostName = scadaInterface.HostName;
+      Class classForXml = new Class(scadaInterface.ViewName,scadaInterface.HostName);
 
       foreach (IScadaProperty scadaProperty in scadaInterface.Properties)
       {
