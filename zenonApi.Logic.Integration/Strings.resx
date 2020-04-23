@@ -225,4 +225,7 @@
   <data name="ZenonStratonNgDriverConfigFilePrefix" xml:space="preserve">
     <value>stratonNG_zenon Logic_</value>
   </data>
+  <data name="K5PRPFileName" xml:space="preserve">
+    <value>K5Prp.dll</value>
+  </data>
 </root>

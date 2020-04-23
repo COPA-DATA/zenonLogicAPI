@@ -117,11 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DimensionConverterArgumOutOfRangeExcp" xml:space="preserve">
+    <value>Maximum supported dimension are 3.</value>
+  </data>
+  <data name="DimensionConverterFormatExcp" xml:space="preserve">
+    <value>Invalid data type for converter of type {0}. Datatype ValueTuple&lt;int, int, int&gt; expected.</value>
+  </data>
+  <data name="DimensionConverterParseException" xml:space="preserve">
+    <value>Error while parsing int Datatype values.</value>
+  </data>
   <data name="DimensionTypeInvalidFormat" xml:space="preserve">
     <value>Invalid format for {0} type. Format {1} not valid.</value>
     <comment>0 = datatype of converted value, 1 = value with invalid format</comment>
   </data>
-  <data name="ErrorMessageDimensionsInvalidDatatype" xml:space="preserve">
+  <data name="GeneralMethodArgumentNullException" xml:space="preserve">
+    <value>Invalid call of method {0}. Argument {1} cannot be null or whitespace.</value>
+   </data>
+ <data name="ErrorMessageDimensionsInvalidDatatype" xml:space="preserve">
     <value>Invalid format for variable dimensions. Zero-sized dimensions are only allowed if all dimension parts are zero, or if they occur after a non-zero-sized entry.</value>
   </data>
   <data name="ErrorMessageDimensionsOutOfRange" xml:space="preserve">
@@ -142,11 +154,20 @@
     <value>Invalid constructor call of type {0}. The specified path must belong to a K5DBXS.INI file.</value>
     <comment>0 = type name of K5Dbxs ini file</comment>
   </data>
+  <data name="K5DbxsIniFileName" xml:space="preserve">
+    <value>K5DBXS.INI</value>
+  </data>
+  <data name="K5XmlExportRootNodeName" xml:space="preserve">
+    <value>K5project</value>
+  </data>
   <data name="LogicDefinesConstructorArgumentException" xml:space="preserve">
     <value>Invalid constructor call of type {0}. Argument of constructor cannot be null or whitespace.</value>
   </data>
   <data name="LogicOptionTupleConstructorArgumentException" xml:space="preserve">
     <value>Invalid constructor call of type {0}. Arguments of constructor cannot be null or whitespace.</value>
+  </data>
+  <data name="StringVariableDataType" xml:space="preserve">
+    <value>STRING</value>
   </data>
   <data name="StringVariableDefaultMaxLength" xml:space="preserve">
     <value>255</value>

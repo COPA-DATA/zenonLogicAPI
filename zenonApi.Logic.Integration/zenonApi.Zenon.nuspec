@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>zenonApi.Zenon</id>
+    <version>1.0.0</version>
+    <authors>Ing. Punzenberger COPA-DATA GmbH</authors>
+    <owners>Ing. Punzenberger COPA-DATA GmbH</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://copadata.com/</licenseUrl>
+    <projectUrl>https://copadata.com/</projectUrl>
+    <description>API for zenon</description>
+    <copyright>Ing. Punzenberger COPA-DATA GmbH</copyright>
+    <dependencies>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="zenonApi.Logic" version="1.0.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\*.dll" target="lib\net45" />
+  </files>
+</package>

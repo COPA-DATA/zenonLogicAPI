@@ -26,18 +26,75 @@ namespace zenonApi.Zenon.K5Prp
     /// </summary>
     private const string ZenonLogicCompileLogFileName = "__build.log";
 
+    static K5ToolSet()
+    {
+      K5PCall = (K5PRPCall)LoadFunction<K5PRPCall>("K5PRPCall");
+    }
+
     /// <summary>
-    /// Import of extern dll method contained in K5Prp.dll.
-    /// Methode represents CLI to set of commands for interaction with straton.
+    /// Delegate for the K5PRPCall
     /// </summary>
-    /// <param name="szProject"></param>
-    /// <param name="szCommand"></param>
-    /// <param name="dwOk"></param>
-    /// <param name="dwDataIn"></param>
-    /// <param name="dwDataOut"></param>
-    /// <returns></returns>
-    [DllImport("C:\\Program Files (x86)\\COPA-DATA\\zenon 8.00 SP0\\K5Prp.dll", CallingConvention = CallingConvention.StdCall)] // TODO: This is version dependent! Remove that call and replace it dynamically
-    private static extern IntPtr K5PRPCall(string szProject, string szCommand, ref uint dwOk, ref uint dwDataIn, ref uint dwDataOut);
+    private delegate IntPtr K5PRPCall(string szProject, string szCommand, ref uint dwOk, ref uint dwDataIn, ref uint dwDataOut);
+
+    static private K5PRPCall K5PCall;
+
+    /// <summary>
+    /// Function to load a library and get the address of it
+    /// </summary>
+    [DllImport("Kernel32.dll", SetLastError = true)]
+    private static extern IntPtr LoadLibraryEx(string path, IntPtr hFile, uint dwFlags);
+
+    /// <summary>
+    /// Function to get the address of the function which is defined in procName
+    /// </summary>
+    [DllImport("Kernel32.dll", CharSet = CharSet.Ansi, ExactSpelling = true, SetLastError = true)]
+    private static extern IntPtr GetProcAddress(IntPtr hModule, string procName);
+
+    /// <summary>
+    /// Gets the used zenon version over the registry and gets the delegate of the function which is defined in procName
+    /// </summary>
+    private static Delegate LoadFunction<T>(string functionName)
+    {
+      RegistryKey registryDir;
+      try
+      {
+        registryDir = Registry.LocalMachine.OpenSubKey(Strings.ZenonRegistrySoftwareDataDirPath);
+      }
+      catch (Exception e)
+      {
+        return null;
+      }
+
+      if (registryDir == null) { return null; }
+
+      string currentVersion = (string)registryDir.GetValue(Strings.ZenonRegistryCurrentVersionKey);
+      string zenonDir = null;
+
+      if (IntPtr.Size == 4)
+      {
+        zenonDir = (string)registryDir.GetValue(Strings.ZenonRegistryCurrentProgramDir32Prefix + currentVersion);
+      }
+      else if (IntPtr.Size == 8)
+      {
+        zenonDir = (string)registryDir.GetValue(Strings.ZenonRegistryCurrentProgramDir64Prefix + currentVersion);
+      }
+
+      if (zenonDir == null) { return null; }
+
+      string k5pPath = Path.Combine(zenonDir, Strings.K5PRPFileName);
+
+      //0x00000008 stands for LOAD_WITH_ALTERED_SEARCH_PATH
+      //https://docs.microsoft.com/de-de/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryexa
+      IntPtr hModule = LoadLibraryEx(k5pPath, IntPtr.Zero, 0x000000008);
+
+      if (hModule == IntPtr.Zero) {return null; }
+
+      IntPtr functionAddress = GetProcAddress(hModule, functionName);
+
+      if (functionAddress == IntPtr.Zero) { return null; }
+
+      return Marshal.GetDelegateForFunctionPointer(functionAddress, typeof(T));
+    }
 
     private string _k5BexeFilePath;
     /// <summary>
@@ -326,8 +383,7 @@ namespace zenonApi.Zenon.K5Prp
         uint dwDataIn = 0;
         uint dwDataOut = 0;
 
-
-        IntPtr commandResult = K5PRPCall(ZenonLogicProjectDirectory, k5Command, ref dwOk, ref dwDataIn, ref dwDataOut);
+        IntPtr commandResult = K5PCall(ZenonLogicProjectDirectory, k5Command, ref dwOk, ref dwDataIn, ref dwDataOut);
 
         returnMessage = Marshal.PtrToStringAnsi(commandResult);
         Marshal.FreeBSTR(commandResult);
