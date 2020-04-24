@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace zenonApi.MetaDescription.Parser.OdlWrapperClasses
 {
-  class ComDynPropTable
+  public class ComDynPropTable
   {
     private List<ComDynProp> _dynPropList;
     public string description { get; }
@@ -17,10 +17,22 @@ namespace zenonApi.MetaDescription.Parser.OdlWrapperClasses
       _dynPropList = new List<ComDynProp>();
       foreach (var entry in entries)
       {
-        _dynPropList.Add(new ComDynProp((ZenPropEntry)entry));
+        if (entry is ZenPropEntry)
+        {
+          _dynPropList.Add(new ComDynProp((ZenPropEntry)entry));
+        }
+        else
+        {
+          _dynPropList.Add(new ComDynProp((DrvPropEntry)entry));
+        }
       }
       _dynPropList = _dynPropList.OrderBy(x => x.Externalname).ToList();
 
+    }
+
+    public void Add(ComDynPropTable dynPropTable)
+    {
+      _dynPropList.AddRange(dynPropTable._dynPropList);
     }
 
   }

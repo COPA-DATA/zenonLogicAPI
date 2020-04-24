@@ -58,6 +58,28 @@ namespace zenonApi.MetaDescription.Parser.OdlWrapperClasses
         if (c.Key == comClassName)
         {
 
+          foreach (var dynPropertyMapKvp in c.Value.ChildMaps)
+          {
+
+            if (!(dynPropertyMapKvp.Value is DrvPropMap))
+            {
+              _dicComDynProperties.Add(dynPropertyMapKvp.Key, new ComDynPropTable(dynPropertyMapKvp.Value.Entries));
+            }
+            else
+            {
+              foreach (DrvPropGroupEntry drvPropMap in dynPropertyMapKvp.Value.Entries)
+              {
+                if (_dicComDynProperties.ContainsKey(drvPropMap.ExternalName))
+                {
+                  _dicComDynProperties[drvPropMap.ExternalName].Add(new ComDynPropTable(drvPropMap.ChildEntries));
+                }
+                else
+                {
+                  _dicComDynProperties.Add(drvPropMap.ExternalName, new ComDynPropTable(drvPropMap.ChildEntries));
+                }
+              }
+            }
+          }
           DynPropertyMap = c.Value;
         }
       }

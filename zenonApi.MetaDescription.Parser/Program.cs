@@ -18,8 +18,9 @@ namespace zenonApi.MetaDescription.Parser
     static void Main(string[] args)
     {
       Globals.ZenonVersion = "820";
+      Globals.Ait.Database = Globals.Ait.Database + "_"  + Globals.ZenonVersion;
       Globals.FilePaths.CopyMonoCecilFromG();
-      Setup.Login(Globals.Ait.Server, Globals.Ait.Database+"_"+Globals.ZenonVersion, Globals.Ait.User, Globals.Ait.Password);
+      Setup.Login(Globals.Ait.Server, Globals.Ait.Database, Globals.Ait.User, Globals.Ait.Password);
 
       Assembly assembly;
       IOrderedEnumerable<IScadaNamespace> orderedNamespaces = Adapter.Adapt();
@@ -41,14 +42,8 @@ namespace zenonApi.MetaDescription.Parser
       
       var sortedNamespaces = Adapter.OrderNamespacesIntoDict(orderedNamespaces, Globals.FilePaths.ContratcsDllFilePath);
 
-
-
-      Definitions definitions = WrappedNamespaces.Parse(sortedNamespaces);
+      Definitions definitions = WrappedNamespaces.Parse(sortedNamespaces, _zenonCom);
       definitions.ExportAsFile($@"C:\Users\Lukas.Rieser\OneDrive - COPA-DATA\Documents\XML Api\MetaFile\metadata_generated_{DateTime.Now:yyMMdd}.xml");
     }
-
-
-    
-
   }
 }

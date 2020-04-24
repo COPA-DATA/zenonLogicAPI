@@ -51,7 +51,7 @@ namespace zenonApi.MetaDescription
     {
       ViewName = viewName;
       HostName = hostName;
-      XmlName = ViewName;
+      XmlName = HostName;
       Constructor = new Constructor();
       Properties = new List<Property>();
       Methods = new List<Method>();

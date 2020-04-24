@@ -5,13 +5,13 @@ namespace zenonApi.MetaDescription.Parser.XML
 {
   public static class WrappedNamespaces
   {
-    public static Definitions Parse(IDictionary<string,NamespaceStruct> namespaceStructs)
+    internal static Definitions Parse(IDictionary<string,NamespaceStruct> namespaceStructs, OdlWrapperClasses.ZenonCom _zenonCom)
     {
       Definitions definitions = new Definitions("8200");
 
       foreach(KeyValuePair<string,NamespaceStruct> namespaceStructKeyValuePair in namespaceStructs)
       {
-        WrappedNamespace.Parse(definitions, namespaceStructKeyValuePair);
+        WrappedNamespace.Parse(definitions, namespaceStructKeyValuePair, _zenonCom);
       }
       return definitions;
     }
