@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\zenonApi.Logic\zenonApi.Logic.csproj" />
-    <ProjectReference Include="..\zenonApi.MetaDescription\zenonApi.MetaDescription.csproj" />
     <ProjectReference Include="..\zenonApi.Xml\zenonApi.Xml.csproj" />
   </ItemGroup>
 

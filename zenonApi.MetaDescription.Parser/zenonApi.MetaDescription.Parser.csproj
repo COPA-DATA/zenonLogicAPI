@@ -267,10 +267,6 @@
       <Project>{0AFC2B69-4315-40D2-BC1F-5F87DCBB513D}</Project>
       <Name>zenonApi.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\zenonApi.MetaDescription\zenonApi.MetaDescription.csproj">
-      <Project>{039a7e83-07e7-4317-9680-02c992fd946c}</Project>
-      <Name>zenonApi.MetaDescription</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Strings.resx">

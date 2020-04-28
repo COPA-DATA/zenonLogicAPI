@@ -6,7 +6,6 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using zenonApi.Logic;
-using zenonApi.MetaDescription;
 using zenonApi.Xml.Variable;
 
 namespace Tester
@@ -15,15 +14,12 @@ namespace Tester
   {
     static void Main(string[] args)
     {
-      XDocument demoProject = XDocument.Load($@"C:\Users\Lukas.Rieser\OneDrive - COPA-DATA\Documents\XML Api\Metafile\metadata_generated.xml");
-
-      Definitions definitions = Definitions.Import(demoProject.Root);
 
 
       //  // TODO: Write a sample app, which demonstrates the usage of the API and remove this whole test project
 
       //  // Import the project from the XML
-      LogicProject project = LogicProject.Import(demoProject.Element("K5project"));
+      //LogicProject project = LogicProject.Import(demoProject.Element("K5project"));
 
       //  var varGrp = project.GlobalVariables.VariableGroups.FirstOrDefault();
       //  for (int i = 0; i < 50; i++)
