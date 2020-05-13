@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text;
 using System.Xml.Linq;
 
 namespace zenonApi.Serialization
@@ -40,5 +41,15 @@ namespace zenonApi.Serialization
     /// Status about the origin and the current state of the object.
     /// </summary>
     zenonSerializableStatusEnum ObjectStatus { get; set; }
+
+    XElement ExportAsXElement();
+
+    string ExportAsString(string xmlEncoding = "utf-8");
+
+    string ExportAsString(Encoding xmlEncoding);
+
+    void ExportAsFile(string fileName, string xmlEncoding = "utf-8");
+
+    void ExportAsFile(string fileName, Encoding xmlEncoding);
   }
 }
