@@ -34,7 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Interop.zenOn.760">
-      <HintPath>..\..\..\..\source\repos\LogicCreateProjectDemo\zenonLogicAPI\Binaries\Interop.zenOn.760.dll</HintPath>
+      <HintPath>..\Binaries\Interop.zenOn.760.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
