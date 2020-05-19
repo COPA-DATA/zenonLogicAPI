@@ -25,6 +25,9 @@ namespace zenonApi.Logic
       // Initialize members which require the current object in their ctor-parameters:
       this.Settings = new LogicProjectSettings(this);
       this.DataTypes = new ExtendedObservableCollection<LogicDataType>();
+
+      PopulateBasicLogicDataTypes();
+
       this.LogicDefinitions = new LogicDefinitions(this);
       this.GlobalVariables = new LogicGlobalVariables(this);
       this.Networks = new LogicNetwork(this);
@@ -34,6 +37,11 @@ namespace zenonApi.Logic
 
     public LogicProject(string name) : this()
     {
+      if (name.Length > 15)
+      {
+        name = name.Substring(0, 15);
+      }
+
       this.ProjectName = name;
     }
 
@@ -239,5 +247,26 @@ namespace zenonApi.Logic
     public ApplicationTree ApplicationTree { get; protected set; }
 
     #endregion
+
+    private void PopulateBasicLogicDataTypes()
+    {
+      this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "BOOL" });
+      this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "BYTE" });
+      this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "DINT" });
+      this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "DWORD" });
+      this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "INT" });
+      this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "LINT" });
+      this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "LREAL" });
+      this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "LWORD" });
+      this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "REAL" });
+      this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "SINT" });
+      this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "STRING" });
+      this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "TIME" });
+      this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "UDINT" });
+      this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "UINT" });
+      this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "ULINT" });
+      this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "USINT" });
+      this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "WORD" });	
+    }
   }
 }

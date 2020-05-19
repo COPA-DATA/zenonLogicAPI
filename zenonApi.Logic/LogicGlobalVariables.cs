@@ -13,7 +13,7 @@ namespace zenonApi.Logic
 
     #region zenonSerializable Implementation
     public override string NodeName => "variables";
-    #endregion  
+    #endregion
 
     /// <summary>
     /// This tag groups variables of a same variable group.
@@ -21,7 +21,11 @@ namespace zenonApi.Logic
     /// </summary>
     [zenonSerializableNode("vargroup", NodeOrder = 0)]
     public ExtendedObservableCollection<LogicVariableGroup> VariableGroups { get; set; }
-      = new ExtendedObservableCollection<LogicVariableGroup>();
+      = new ExtendedObservableCollection<LogicVariableGroup>()
+      {
+        new LogicVariableGroup(){Kind = LogicVariableKind.Global, Name = "(GLOBAL)"},
+        new LogicVariableGroup(){Kind = LogicVariableKind.Retain, Name = "(RETAIN)"}
+      };
 
     public LogicVariableGroup this[LogicVariableKind kind] =>
       VariableGroups.FirstOrDefault(variableGroup => variableGroup.Kind == kind);

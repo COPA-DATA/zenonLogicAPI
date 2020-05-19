@@ -14,7 +14,7 @@ namespace zenonApi.Logic
     }
 
     // ReSharper disable once VirtualMemberCallInConstructor : This is intended.
-    public ApplicationTree(LogicProject parent) => Parent = Root = parent;
+    public ApplicationTree(LogicProject parent) : this() => Parent = Root = parent;
 
     #region interface implementation
     public override string NodeName => "Appli";
