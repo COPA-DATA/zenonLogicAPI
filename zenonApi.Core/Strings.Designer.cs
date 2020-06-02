@@ -19,7 +19,7 @@ namespace zenonApi {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Strings {
@@ -81,23 +81,6 @@ namespace zenonApi {
         /// <summary>
         ///   Looks up a localized string similar to Attribute {0} is not supported for usage on {1}..
         /// </summary>
-        internal static string MsgErrorAttributeNotSupported {
-            get {
-                return ResourceManager.GetString("MsgErrorAttributeNotSupported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Currently, only lists of types derived by {0} are supported..
-        /// </summary>
-        internal static string MsgErrorInvalidSerializationListType {
-            get {
-                return ResourceManager.GetString("MsgErrorInvalidSerializationListType", resourceCulture);
-            }
-        }
-        /// <summary>
-        ///   Looks up a localized string similar to Attribute {0} is not supported for usage on {1}..
-        /// </summary>
         internal static string ErrorMessageAttributeNotSupported {
             get {
                 return ResourceManager.GetString("ErrorMessageAttributeNotSupported", resourceCulture);
@@ -128,6 +111,24 @@ namespace zenonApi {
         internal static string ErrorMessageParameterIsNullOrWhitespace {
             get {
                 return ResourceManager.GetString("ErrorMessageParameterIsNullOrWhitespace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attribute {0} is not supported for usage on {1}..
+        /// </summary>
+        internal static string MsgErrorAttributeNotSupported {
+            get {
+                return ResourceManager.GetString("MsgErrorAttributeNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Currently, only lists with a generic type parameter compatible to {0} are supported..
+        /// </summary>
+        internal static string MsgErrorInvalidSerializationListType {
+            get {
+                return ResourceManager.GetString("MsgErrorInvalidSerializationListType", resourceCulture);
             }
         }
     }

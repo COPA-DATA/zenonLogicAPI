@@ -59,7 +59,9 @@ namespace zenonApi.Serialization
 
     internal override bool InternalEncapsulateChildsIfList => false;
 
-    internal override Type InternalConverter => null;
+    internal override Type InternalConverter => null; // Not supported for raw contents
+
+    internal override Type InternalTypeResolver => null; // Not supported for raw contents
     #endregion
   }
 }

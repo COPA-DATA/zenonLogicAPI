@@ -70,6 +70,8 @@ namespace zenonApi.Serialization
     internal override bool InternalEncapsulateChildsIfList => false;
 
     internal override Type InternalConverter => this.Converter;
+
+    internal override Type InternalTypeResolver => null; // TODO: Check if this would make sense for attributes
     #endregion
   }
 }

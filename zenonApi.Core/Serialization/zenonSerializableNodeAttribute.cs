@@ -16,7 +16,7 @@ namespace zenonApi.Serialization
     /// The <paramref name="nodeName"/> is required to control how the node is named in the XML.
     /// </summary>
     /// <param name="nodeName">The name of the resulting XML node.</param>
-    public zenonSerializableNodeAttribute(string nodeName)
+    public zenonSerializableNodeAttribute(string nodeName, Type resolver = null)
     {
       if (string.IsNullOrWhiteSpace(nodeName))
       {
@@ -33,6 +33,19 @@ namespace zenonApi.Serialization
       }
 
       this.NodeName = nodeName;
+      this.TypeResolver = resolver;
+    }
+
+    public zenonSerializableNodeAttribute(Type resolver)
+    {
+      if (resolver != null && typeof(IZenonSerializableResolver).IsAssignableFrom(resolver))
+      {
+        this.TypeResolver = resolver;
+      }
+      else
+      {
+        throw new Exception($"Only a type implementing {typeof(IZenonSerializableResolver)} can be passed as a resolver.");
+      }
     }
 
     /// <summary>
@@ -41,21 +54,23 @@ namespace zenonApi.Serialization
     public string NodeName { get; private set; }
 
     /// <summary>
-    /// If the <see cref="zenonSerializableNodeAttribute"/> is applied to an IList, then this property defines
-    /// if a node for every item is generated (false, default), or if an extra node layer with the <see cref="NodeName"/>
-    /// is created and filled with the child nodes.
+    ///   If the <see cref="zenonSerializableNodeAttribute"/> is applied to an IList, then this property defines
+    ///   if a node for every item is generated, or if an extra node layer with the <see cref="NodeName"/>
+    ///   is created and filled with the child nodes.
     /// </summary>
     public bool EncapsulateChildsIfList { get; set; }
 
     /// <summary>
-    /// Controls the serialization order of properties within an <see cref="IZenonSerializable"/>.
+    ///   Controls the serialization order of properties within an <see cref="IZenonSerializable"/>.
     /// </summary>
     public byte NodeOrder { get; set; }
 
     /// <summary>
-    /// Specifies if a node shall be omitted if it is null or contains no items in case of lists (default = true).
+    ///   Specifies if a node shall be omitted if it is null or contains no items in case of lists (default = true).
     /// </summary>
     public bool OmitIfNull { get; set; } = true;
+
+    public Type TypeResolver { get; private set; }
 
 
     #region Internal base class overrides
@@ -70,6 +85,8 @@ namespace zenonApi.Serialization
     internal override bool InternalOmitIfNull => this.OmitIfNull;
 
     internal override Type InternalConverter => null; // No converters are allowed for nodes
+
+    internal override Type InternalTypeResolver => this.TypeResolver;
     #endregion
   }
 }
