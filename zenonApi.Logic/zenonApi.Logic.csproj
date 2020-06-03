@@ -16,6 +16,11 @@
   <PropertyGroup>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>bin\release</OutputPath>
+    <DocumentationFile>bin\release\zenonApi.Logic.xml</DocumentationFile>
+  </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="Fody" Version="4.2.1" />

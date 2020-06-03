@@ -203,7 +203,7 @@ namespace zenonApi.Extensions
       return encoding.GetString(encoding.GetBytes(self));
     }
 
-    public static string RemoveNonUnicodeAlphaNumerics(this string self)
+    public static string ReplaceNonUnicodeAlphaNumerics(this string self, char replacement = '_')
     {
       if (self == null)
       {
@@ -219,7 +219,7 @@ namespace zenonApi.Extensions
           {
             if (!char.IsLetterOrDigit(*current))
             {
-              *current = '_';
+              *current = replacement;
             }
 
             current++;

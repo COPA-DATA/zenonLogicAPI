@@ -64,7 +64,7 @@ namespace zenonApi.Serialization
     /// The name of the item in its XML representation.
     /// </summary>
     [DoNotNotify]
-    public virtual string NodeName => this.GetType().Name.RemoveNonUnicodeAlphaNumerics();
+    public virtual string NodeName => this.GetType().Name.ReplaceNonUnicodeAlphaNumerics();
 
     /// <summary>
     /// Contains all unknown nodes, which are not covered by this API and were found for the current item.
@@ -489,7 +489,7 @@ namespace zenonApi.Serialization
         return defaultValue;
       }
 
-      string newName = resolver.GetNodeNameForSerialization(property, targetType, index)?.RemoveNonUnicodeAlphaNumerics();
+      string newName = resolver.GetNodeNameForSerialization(property, targetType, index)?.ReplaceNonUnicodeAlphaNumerics();
       if (string.IsNullOrWhiteSpace(newName))
       {
         throw new Exception(

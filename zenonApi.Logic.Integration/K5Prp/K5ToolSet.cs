@@ -60,7 +60,7 @@ namespace zenonApi.Zenon.K5Prp
       {
         registryDir = Registry.LocalMachine.OpenSubKey(Strings.ZenonRegistrySoftwareDataDirPath);
       }
-      catch (Exception e)
+      catch
       {
         return null;
       }
