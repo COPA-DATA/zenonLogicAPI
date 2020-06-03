@@ -29,7 +29,7 @@ namespace zenonApi.Serialization
 
     internal override Type InternalConverter => this.Converter;
 
-    internal override Type InternalTypeResolver => null; // TODO: Check if this would make sense for node-contents
+    internal override Type InternalTypeResolver => null; // Not foreseen/required on node-contents.
     #endregion
   }
 }

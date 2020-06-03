@@ -202,5 +202,34 @@ namespace zenonApi.Extensions
 
       return encoding.GetString(encoding.GetBytes(self));
     }
+
+    public static string RemoveNonUnicodeAlphaNumerics(this string self)
+    {
+      if (self == null)
+      {
+        return null;
+      }
+
+      unsafe
+      {
+        fixed (char* first = self)
+        {
+          char* current = first;
+          while (*current != 0)
+          {
+            if (!char.IsLetterOrDigit(*current))
+            {
+              *current = '_';
+            }
+
+            current++;
+          }
+
+          current++;
+        }
+      }
+
+      return self;
+    }
   }
 }

@@ -32,7 +32,7 @@ namespace zenonApi.Serialization
     /// <summary>
     /// Specifies if an attribute shall be omitted if it is null (default = true).
     /// </summary>
-    public bool OmitIfNull { get; set; } = true;
+    public bool OmitIfNull { get; set; } = true; // TODO: this does not seem to work properly on attributes!
 
     /// <summary>
     /// The type of an <see cref="IZenonSerializationConverter"/> to use for serialization and deserialization.
@@ -71,7 +71,7 @@ namespace zenonApi.Serialization
 
     internal override Type InternalConverter => this.Converter;
 
-    internal override Type InternalTypeResolver => null; // TODO: Check if this would make sense for attributes
+    internal override Type InternalTypeResolver => null; // Not foreseen/required on attributes.
     #endregion
   }
 }
