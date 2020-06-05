@@ -57,7 +57,7 @@ namespace zenonApi.Serialization
   {
     protected zenonSerializable()
     {
-      this._nodeName = this.GetType().Name.ReplaceNonUnicodeAlphaNumerics();
+      this.NodeName = this.GetType().Name.ReplaceNonUnicodeAlphaNumerics('_');
     }
 
     /// <summary>
@@ -66,27 +66,11 @@ namespace zenonApi.Serialization
     private const int DefaultXmlIndentation = 3;
 
     #region Interface implementation
-    private string _nodeName;
-
     /// <summary>
     /// The name of the item in its XML representation.
     /// </summary>
     [DoNotNotify]
-    public virtual string NodeName
-    {
-      get => _nodeName;
-      internal set
-      {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-          _nodeName = this.GetType().Name.ReplaceNonUnicodeAlphaNumerics();
-        }
-        else
-        {
-          _nodeName = value.ReplaceNonUnicodeAlphaNumerics();
-        }
-      }
-    }
+    public virtual string NodeName { get; }
 
     /// <summary>
     /// Contains all unknown nodes, which are not covered by this API and were found for the current item.

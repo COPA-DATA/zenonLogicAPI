@@ -203,29 +203,34 @@ namespace zenonApi.Extensions
       return encoding.GetString(encoding.GetBytes(self));
     }
 
-    public static string ReplaceNonUnicodeAlphaNumerics(this string self, char replacement = '_')
+    public static string ReplaceNonUnicodeAlphaNumerics(this string self, char replacement = '_', char[] ignore = null)
     {
       if (self == null)
       {
         return null;
       }
 
+      if (ignore == null)
+      {
+        ignore = Array.Empty<char>();
+      }
+
       unsafe
       {
         fixed (char* first = self)
         {
-          char* current = first;
-          while (*current != 0)
+          char* pos = first;
+          while (*pos != 0)
           {
-            if (!char.IsLetterOrDigit(*current))
+            if (!char.IsLetterOrDigit(*pos) && !ignore.Contains(*pos))
             {
-              *current = replacement;
+              *pos = replacement;
             }
 
-            current++;
+            pos++;
           }
 
-          current++;
+          pos++;
         }
       }
 
