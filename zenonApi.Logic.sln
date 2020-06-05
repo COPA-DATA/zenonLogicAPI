@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2046
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "zenonApi.Logic", "zenonApi.Logic\zenonApi.Logic.csproj", "{EE3B8095-9286-4EA5-9D4F-F41387C5DC8F}"
 EndProject
@@ -9,7 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "zenonApi.Core", "zenonApi.C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{40BF74F7-B97A-4B00-AB5E-0EFDA55BD4E5}"
 	ProjectSection(SolutionItems) = preProject
-		Readme-zenonApi.Logic.md = Readme-zenonApi.Logic.md
+		LICENSE = LICENSE
+		ReadMe.md = ReadMe.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{941B9D5A-5E77-44A0-B913-B8A5440387A7}"

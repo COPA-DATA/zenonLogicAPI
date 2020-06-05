@@ -33,7 +33,7 @@ namespace zenonApi.Serialization
     /// <param name="index">
     ///   An optional index may be passed, if the <paramref name="targetProperty"/> is a collection type.
     /// </param>
-    string GetNodeNameForSerialization(PropertyInfo targetProperty, Type targetType, int index);
+    string GetNodeNameForSerialization(PropertyInfo targetProperty, Type targetType, object value, int index);
 
     /// <summary>
     ///   Implementing classes are supposed to return a concrete type for deserialization, based on the given node name and optionally

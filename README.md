@@ -8,9 +8,13 @@ See the sample project on how to use the API.
 
 ## Changelog
 
-| Project              | Version  | Changes                                                                           |
-| :------------------: | :------: | :-------------------------------------------------------------------------------- |
-| zenonApi.Core        | 1.1.x.x  | Made NodeName optional for deriving classes, added Resolver support for varying nodes and abstract/interface properties |
+### zenonApi.Core
+
+#### 1.1.x.x
+
+- Made NodeName optional for deriving classes
+- Added Resolver support for varying nodes and abstract/interface properties
+- Added OnDeserialized/OnSerialize/OnSerialized to zenonSerializable
 
 ## Next major steps
 

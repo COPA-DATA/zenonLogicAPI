@@ -14,9 +14,7 @@ namespace zenonApi.Serialization
   }
 
   // ReSharper disable once UnusedTypeParameter : "Unused" type parameter is required for serialization.
-  public interface IZenonSerializable<out TSelf> : IZenonSerializable
-    where TSelf : class
-  { }
+  public interface IZenonSerializable<out TSelf> : IZenonSerializable where TSelf : class { }
 
   public interface IZenonSerializable : INotifyPropertyChanged
   {
@@ -51,5 +49,11 @@ namespace zenonApi.Serialization
     void ExportAsFile(string fileName, string xmlEncoding = "utf-8");
 
     void ExportAsFile(string fileName, Encoding xmlEncoding);
+
+    void OnSerialize();
+
+    void OnSerialized();
+
+    void OnDeserialized();
   }
 }
