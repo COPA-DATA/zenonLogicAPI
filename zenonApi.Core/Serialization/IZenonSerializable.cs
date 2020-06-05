@@ -54,6 +54,6 @@ namespace zenonApi.Serialization
 
     void OnSerialized();
 
-    void OnDeserialized();
+    void OnDeserialized(string nameOfDeserializedNode);
   }
 }

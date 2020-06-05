@@ -179,9 +179,9 @@ namespace zenonApi.Serialization
     protected virtual void AfterSerialized() { }
 
     /// <inheritdoc />
-    void IZenonSerializable.OnDeserialized() => AfterDeserialized();
+    void IZenonSerializable.OnDeserialized(string nameOfDeserializedNode) => AfterDeserialized(nameOfDeserializedNode);
 
-    protected virtual void AfterDeserialized() { }
+    protected virtual void AfterDeserialized(string nameOfDeserializedNode) { }
     #endregion
 
     #region Export methods
@@ -731,7 +731,7 @@ namespace zenonApi.Serialization
       ImportUnknownNodes(result, source);
 
       result.ObjectStatus = zenonSerializableStatusEnum.Loaded;
-      result.OnDeserialized();
+      result.OnDeserialized(source.Name.LocalName);
 
       return result;
     }
