@@ -16,12 +16,20 @@ See the sample project on how to use the API.
 - Added Resolver support for varying nodes and abstract/interface properties
 - Added OnDeserialized/OnSerialize/OnSerialized to zenonSerializable
 
+#### 1.2.x.x
+
+- Added support for Nullable<T> serialization/deserialization without extra converters
+- Added support for Enums in nodes
+- Bugfix for zenonSerializableNodeContent: Was possible that the full node was overriden by it
+- Added UnknownNodeContent
+
 ## Next major steps
 
 - [ ] Refactor the serializer:
   - [ ] Dictionaries to be serialized
   - [ ] Support Converters for zenonSerializableNodeContent
   - [ ] Support Converters for zenonSerializableNodes
+  - [ ] Support for UnknownNodeContent
   - [ ] Do we really need the "Parent" property everywhere?
         Shouldn't we use Parents only for file structures etc?
 - [ ] Map the K5Project tree completely
@@ -31,8 +39,10 @@ See the sample project on how to use the API.
 - [ ] Ensure that no invalid objects can be created, i.e. check constructor parameters
 - [ ] Downgrade .NET version to lowest possible .NET standard version for hightest compatibility
 - [ ] Provide samples for Add-In/COM
+- [x] Support for Nullable<T> serialization and deserialization (added in v1.2)
 
 ## Bugs
 
 - [ ] zenonApi.Core
-  - [ ] Up to current version: OmitIfNull in zenonSerializableAttributes does not seem to be considered.
+  - [ ] Minor: Up to current version: OmitIfNull in zenonSerializableAttributes does not seem to be considered.
+  - [x] Major: zenonSerializableNodeContent may override the full node if present (fixed in v1.2)

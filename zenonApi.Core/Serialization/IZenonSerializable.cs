@@ -36,6 +36,11 @@ namespace zenonApi.Serialization
     Dictionary<string, string> UnknownAttributes { get; }
 
     /// <summary>
+    /// Contains node content, which was not handled by a <see cref="zenonSerializableNodeContentAttribute"/>.
+    /// </summary>
+    string UnknownNodeContent { get; set; }
+
+    /// <summary>
     /// Status about the origin and the current state of the object.
     /// </summary>
     zenonSerializableStatusEnum ObjectStatus { get; set; }
