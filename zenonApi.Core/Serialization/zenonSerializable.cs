@@ -453,7 +453,7 @@ namespace zenonApi.Serialization
         {
           if (nodeAttribute.InternalName == null)
           {
-              // ReSharper disable once PossibleNullReferenceException : property will not be null at this point.
+            // ReSharper disable once PossibleNullReferenceException : property will not be null at this point.
             throw new Exception(
               $"Property {property.Name} in class {property.DeclaringType.Name} requires a {nameof(zenonSerializableNodeAttribute.NodeName)} "
               + $"if {nameof(zenonSerializableNodeAttribute.EncapsulateChildsIfList)} is set.");
@@ -992,8 +992,10 @@ namespace zenonApi.Serialization
         xmlAttribute.Remove();
         return;
       }
-      
-      throw new Exception($"Cannot convert types without an {nameof(IZenonSerializationConverter)}, which do not implement {nameof(IConvertible)}.");
+
+      throw new Exception($"Expected property '{property.Name}' in class '{property.DeclaringType.Name}' to be a "
+        + $"type, which implements 'IConvertible', inherits from '{typeof(zenonSerializable<>).Name}', or has an "
+        + $"'{nameof(IZenonSerializationConverter)}' in its '{nameof(zenonSerializableAttributeAttribute)}' defined.");
     }
 
 
@@ -1154,7 +1156,7 @@ namespace zenonApi.Serialization
                               + $"{nameof(zenonSerializableEnumAttribute)} must be set for the enum fields or "
                               + "the name must exactly match the XML value.");
         }
-        
+
         if (typeof(IConvertible).IsAssignableFrom(type))
         {
           var value = Convert.ChangeType(node.Value, type);
@@ -1165,7 +1167,9 @@ namespace zenonApi.Serialization
         }
         else
         {
-          throw new Exception($"Cannot convert types without an {nameof(IZenonSerializationConverter)}, which do not implement {nameof(IConvertible)}.");
+          throw new Exception($"Expected property '{property.Name}' in class '{property.DeclaringType.Name}' to be a "
+            + $"type, which implements 'IConvertible', inherits from '{typeof(zenonSerializable<>).Name}', or has an "
+            + $"'{nameof(IZenonSerializationConverter)}' in its '{nameof(zenonSerializableNodeAttribute)}' defined.");
         }
       }
     }
@@ -1218,7 +1222,7 @@ namespace zenonApi.Serialization
       else
       {
         // ReSharper disable once PossibleNullReferenceException : 'property' is never null at this point.
-        throw new Exception($"Expected a property '{property.Name}' in class '{property.DeclaringType.Name}' to be of type string. "
+        throw new Exception($"Expected property '{property.Name}' in class '{property.DeclaringType.Name}' to be of type string. "
           + $"Either specify a '{nameof(IZenonSerializationConverter)}' in the '{nameof(zenonSerializableNodeContentAttribute)}', or "
           + "change the property to be a string.");
       }
