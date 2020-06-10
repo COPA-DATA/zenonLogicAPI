@@ -18,10 +18,12 @@ See the sample project on how to use the API.
 
 #### 1.2.x.x
 
-- Added support for Nullable<T> serialization/deserialization without extra converters
+- Added support for Nullable&lt;T&gt; serialization/deserialization without extra converters
 - Added support for Enums in nodes
 - Bugfix for zenonSerializableNodeContent: Was possible that the full node was overriden by it
 - Added UnknownNodeContent
+- Set default encoding for logic-projects to iso-8859-1 (otherwise we had formatting issues during import, logic ignores the actual xml encoding)
+- Added further Import/Export methods for streams/files/etc.
 
 ## Next major steps
 

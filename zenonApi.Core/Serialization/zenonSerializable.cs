@@ -243,7 +243,7 @@ namespace zenonApi.Serialization
     /// is null, then UTF-8 is used.
     /// </summary>
     /// <param name="xmlEncoding">The XML encoding to use.</param>
-    public string ExportAsString(string xmlEncoding = "utf-8")
+    public string ExportAsString(string xmlEncoding = null)
     {
       BeforeSerialize();
 
@@ -301,7 +301,7 @@ namespace zenonApi.Serialization
     /// </summary>
     /// <param name="fileName">The path to the target file.</param>
     /// <param name="xmlEncoding">The XML encoding to use.</param>
-    public virtual void ExportAsFile(string fileName, string xmlEncoding = "utf-8")
+    public virtual void ExportAsFile(string fileName, string xmlEncoding = null)
     {
       if (string.IsNullOrEmpty(fileName))
       {
@@ -348,6 +348,44 @@ namespace zenonApi.Serialization
       }
 
       ExportAsFile(fileName, xmlEncoding.BodyName);
+    }
+
+    public virtual void ExportAsStream(Stream targetStream, string xmlEncoding = null)
+    {
+      if (string.IsNullOrWhiteSpace(xmlEncoding))
+      {
+        xmlEncoding = "utf-8";
+      }
+
+      ExportAsStream(targetStream, Encoding.GetEncoding(xmlEncoding));
+    }
+
+    public virtual void ExportAsStream(Stream targetStream, Encoding xmlEncoding = null)
+    {
+      BeforeSerialize();
+
+      if (xmlEncoding == null)
+      {
+        xmlEncoding = Encoding.UTF8;
+      }
+
+      XElement self = this.InternalExportAsXElement();
+      XDocument document = new XDocument
+      {
+        Declaration = new XDeclaration("1.0", xmlEncoding.BodyName, "yes")
+      };
+
+      document.Add(self);
+
+      using (XmlTextWriter writer = new XmlTextWriter(targetStream, xmlEncoding))
+      {
+        writer.Indentation = DefaultXmlIndentation;
+        writer.Formatting = Formatting.Indented;
+        document.Save(writer);
+        writer.Flush();
+      }
+
+      AfterSerialized();
     }
 
     private static void ExportAttribute(XElement target, IZenonSerializable source, PropertyInfo property, zenonSerializableBaseAttribute attributeAttribute)
@@ -741,6 +779,18 @@ namespace zenonApi.Serialization
     {
       // Create a deep copy: Has quite a performance impact, however
       source = new XElement(source);
+      return ImportWithoutClone(typeof(TSelf), source, parent, root) as TSelf;
+    }
+
+    public static TSelf Import(string fileName, object parent = null, object root = null)
+    {
+      XElement source = XElement.Load(fileName);
+      return ImportWithoutClone(typeof(TSelf), source, parent, root) as TSelf;
+    }
+
+    public static TSelf Import(Stream sourceStream, object parent = null, object root = null)
+    {
+      XElement source = XElement.Load(sourceStream);
       return ImportWithoutClone(typeof(TSelf), source, parent, root) as TSelf;
     }
 

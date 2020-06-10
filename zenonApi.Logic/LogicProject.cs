@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
+using System.Text;
 using System.Xml.Linq;
 using zenonApi.Collections;
 using zenonApi.Logic.Ini;
@@ -68,6 +70,56 @@ namespace zenonApi.Logic
       }
 
       return zenonLogicProject;
+    }
+
+    public override void ExportAsFile(string fileName, string xmlEncoding = null)
+    {
+      if (xmlEncoding == null)
+      {
+        xmlEncoding = "iso-8859-1";
+      }
+
+      base.ExportAsFile(fileName, xmlEncoding);
+    }
+
+    public override void ExportAsFile(string fileName, Encoding xmlEncoding)
+    {
+      if (xmlEncoding == null)
+      {
+        xmlEncoding = Encoding.GetEncoding("iso-8859-1");
+      }
+
+      base.ExportAsFile(fileName, xmlEncoding);
+    }
+
+    public override string ExportAsString(Encoding xmlEncoding)
+    {
+      if (xmlEncoding == null)
+      {
+        xmlEncoding = Encoding.GetEncoding("iso-8859-1");
+      }
+
+      return base.ExportAsString(xmlEncoding);
+    }
+
+    public override void ExportAsStream(Stream targetStream, string xmlEncoding = null)
+    {
+      if (string.IsNullOrWhiteSpace(xmlEncoding))
+      {
+        xmlEncoding = "iso-8859-1";
+      }
+
+      base.ExportAsStream(targetStream, xmlEncoding);
+    }
+
+    public override void ExportAsStream(Stream targetStream, Encoding xmlEncoding = null)
+    {
+      if (xmlEncoding == null)
+      {
+        xmlEncoding = Encoding.GetEncoding("iso-8859-1");
+      }
+
+      base.ExportAsStream(targetStream, xmlEncoding);
     }
 
     #region zenonSerializable Implementation
@@ -159,6 +211,8 @@ namespace zenonApi.Logic
     #endregion
 
     #region Specific properties
+    [zenonSerializableNode("prjdesc", NodeOrder = 0)]
+    public string ProjectDescription { get; set; }
 
     /// <summary>
     /// The mandatory version of the K5 project.
@@ -266,7 +320,7 @@ namespace zenonApi.Logic
       this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "UINT" });
       this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "ULINT" });
       this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "USINT" });
-      this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "WORD" });	
+      this.DataTypes.Add(new LogicDataType() { Kind = LogicDataTypeKind.Basic, Name = "WORD" });
     }
   }
 }
