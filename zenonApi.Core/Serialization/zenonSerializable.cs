@@ -1341,6 +1341,7 @@ namespace zenonApi.Serialization
         }
 
         list.Add(node);
+        list.Remove();
         Debug.WriteLine($"zenonSerializable - Import Warning: Unknown sub-node \"{nodeName}\" found in node \"{target.NodeName}\".");
       }
     }
