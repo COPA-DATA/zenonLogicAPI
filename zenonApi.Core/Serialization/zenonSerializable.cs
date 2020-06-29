@@ -1118,7 +1118,7 @@ namespace zenonApi.Serialization
         }
         else
         {
-          nodes.AddRange(sourceXml.Elements(attribute.NodeName).OfType<XNode>().Cast<XElement>().Select(x => (property.PropertyType, x)));
+          nodes.AddRange(sourceXml.Elements().Where(x => x.Name.LocalName == attribute.NodeName).OfType<XNode>().Cast<XElement>().Select(x => (property.PropertyType, x)));
         }
       }
 
@@ -1291,7 +1291,7 @@ namespace zenonApi.Serialization
         }
 
         // ReSharper disable once RedundantEnumerableCastCall : Not redundant.
-        var xmlNodes = sourceXml.Elements(prop.NodeName).OfType<XNode>().Cast<XElement>().ToList();
+        var xmlNodes = sourceXml.Elements().Where(x => x.Name.LocalName == prop.NodeName).OfType<XNode>().Cast<XElement>().ToList();
         if (xmlNodes.Count == 0)
         {
           return;
@@ -1329,7 +1329,7 @@ namespace zenonApi.Serialization
       foreach (var node in sourceXml.Elements())
       {
         List<XElement> list;
-        string nodeName = node.Name.ToString();
+        string nodeName = node.Name.LocalName;
         if (target.UnknownNodes.ContainsKey(nodeName))
         {
           list = target.UnknownNodes[nodeName];
