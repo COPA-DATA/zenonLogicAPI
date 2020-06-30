@@ -1,126 +1,19 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using zenonApi.Logic;
-using zenonApi.Serialization;
 
 namespace Sample
 {
-
-  public abstract class TestBaseClass : zenonSerializable<TestBaseClass>
-  {
-    [zenonSerializableAttribute(nameof(SomeValue), OmitIfNull = false)]
-    public string SomeValue { get; set; }
-  }
-
-  public class TestChildA : TestBaseClass
-  {
-    [zenonSerializableNode(nameof(SpecificPropertyA1))]
-    public string SpecificPropertyA1 { get; set; }
-
-    [zenonSerializableAttribute(nameof(SpecificPropertyA2))]
-    public string SpecificPropertyA2 { get; set; }
-  }
-
-  public class TestChildB : TestBaseClass
-  {
-    public override string NodeName => "TestChildB";
-
-    [zenonSerializableNode(nameof(SpecificPropertyB1))]
-    public string SpecificPropertyB1 { get; set; }
-
-    [zenonSerializableAttribute(nameof(SpecificPropertyB2))]
-    public string SpecificPropertyB2 { get; set; }
-  }
-
-  public class Container : zenonSerializable<Container>
-  {
-    public override string NodeName { get => "Container"; }
-
-    [zenonSerializableNode(nameof(Elements), typeof(Resolver), EncapsulateChildsIfList = false)]
-    public List<TestBaseClass> Elements { get; set; } = new List<TestBaseClass>();
-
-    [zenonSerializableNode("OtherName", EncapsulateChildsIfList = false)]
-    public List<TestChildA> Problem1 { get; set; } = new List<TestChildA>();
-
-    [zenonSerializableNode("AgainAnotherName", EncapsulateChildsIfList = false)]
-    public List<TestChildA> Problem2 { get; set; } = new List<TestChildA>();
-
-    [zenonSerializableNode(nameof(WithBaseClassA), EncapsulateChildsIfList = true)]
-    public TestChildA WithBaseClassA { get; set; }
-  }
-
-  public class Resolver : IZenonSerializableResolver
-  {
-    public string GetNodeNameForSerialization(PropertyInfo targetProperty, Type targetType, object value, int index)
-    {
-      return targetType.Name + "TestAppended";
-    }
-
-    public Type GetTypeForDeserialization(string nodeName, int index)
-    {
-      var types = new[] { typeof(TestChildA), typeof(TestChildB) };
-      return types.FirstOrDefault(x => nodeName.StartsWith(x.Name + "T"));
-    }
-  }
-
-  public class Resolver2 : IZenonSerializableResolver
-  {
-    public string GetNodeNameForSerialization(PropertyInfo targetProperty, Type targetType, object value, int index)
-    {
-      return targetType.Name + "VerySpecific";
-    }
-
-    public Type GetTypeForDeserialization(string nodeName, int index)
-    {
-      if (nodeName.EndsWith("VerySpecific"))
-      {
-        return typeof(TestChildA);
-      }
-
-      var types = new[] { typeof(TestChildA), typeof(TestChildB) };
-      return types.FirstOrDefault(x => nodeName.StartsWith(x.Name));
-    }
-  }
-
   class Program
   {
     private const string ZenonRuntimeComObjectName = "zenOn.ApplicationED";
 
     private static void Main(string[] args)
     {
-      Container testContainer = new Container()
-      {
-        WithBaseClassA = new TestChildA() { SpecificPropertyA1 = "interesting", SpecificPropertyA2 = "lets see" },
-        Elements = new List<TestBaseClass>()
-        {
-          new TestChildA() { SpecificPropertyA1 = "s1", SpecificPropertyA2 = "s2", SomeValue = "Child A" },
-          new TestChildB() { SpecificPropertyB1 = "b1", SpecificPropertyB2 = "b2", SomeValue = "Child B" }
-        },
-        Problem1 = new List<TestChildA>()
-        {
-          new TestChildA(){ SpecificPropertyA1 = "prob1", SpecificPropertyA2 = "prob2"},
-          new TestChildA(){ SpecificPropertyA1 = "prob2", SpecificPropertyA2 = "prob4"}
-        },
-        Problem2 = new List<TestChildA>()
-        {
-          new TestChildA(){ SpecificPropertyA1 = "prob5", SpecificPropertyA2 = "prob6"},
-          new TestChildA(){ SpecificPropertyA1 = "prob7", SpecificPropertyA2 = "prob8"}
-        }
-      };
-
-      testContainer.ExportAsFile(@"C:\Users\Mathias.Lackner\Desktop\apiNew.xml");
-
-      var result = Container.Import(XElement.Load(@"C:\Users\Mathias.Lackner\Desktop\apiNew.xml"));
-
-      return;
-
       // NOTE: No error handling etc. is included here, this sample is just intended to give you a starting point on
       // handling zenon Logic projects via code,
       // IMPORTANT: To avoid side effects, you should make sure that the Logic workbench is not running,

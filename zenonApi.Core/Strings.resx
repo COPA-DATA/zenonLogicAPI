@@ -122,6 +122,7 @@
   </data>
   <data name="ErrorMessageInvalidSerializationListType" xml:space="preserve">
     <value>Currently, only lists of types derived by {0} are supported.</value>
+    <comment>TODO: Remove</comment>
   </data>
   <data name="ErrorMessageParameterIsNull" xml:space="preserve">
     <value>Argment {0} must not be null.</value>
@@ -140,5 +141,6 @@
   </data>
   <data name="MsgErrorInvalidSerializationListType" xml:space="preserve">
     <value>Currently, only lists with a generic type parameter compatible to {0} are supported.</value>
+    <comment>TODO: Remove</comment>
   </data>
 </root>

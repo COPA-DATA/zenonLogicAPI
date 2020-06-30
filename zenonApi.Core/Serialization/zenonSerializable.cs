@@ -450,16 +450,27 @@ namespace zenonApi.Serialization
       }
 
       object sourceValue = property.GetValue(source);
-      if (nodeAttribute.InternalOmitIfNull && sourceValue == null)
+
+      if (sourceValue == null)
       {
-        // Omit the whole node
+        if (nodeAttribute.InternalOmitIfNull)
+        {
+          // Omit the whole node
+          return;
+        }
+
+        // Write an empty node
+        string name = TryResolveName(property, nodeAttribute, property.PropertyType, null, 0, null);
+        if (string.IsNullOrWhiteSpace(name))
+        {
+          name = nodeAttribute.InternalName;
+        }
+
+        target.Add(new XElement(name));
         return;
       }
 
-      bool isEnumerable = property.IsEnumerableOf(typeof(IZenonSerializable));
-      bool isZenonSerializable = property.CanBeAssignedTo<IZenonSerializable>();
-
-      if (isZenonSerializable)
+      if (property.CanBeAssignedTo<IZenonSerializable>())
       {
         MethodInfo exportMethod = property.PropertyType.GetMethod(nameof(ExportAsXElement), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
         // ReSharper disable once PossibleNullReferenceException : Cannot be null, since provided by the interface.
@@ -468,24 +479,13 @@ namespace zenonApi.Serialization
 
         target.Add(child);
       }
-      else if (isEnumerable)
+      else if (property.IsEnumerableOf<object>() && !typeof(string).IsAssignableFrom(property.PropertyType))
       {
         IEnumerable list = (IEnumerable)sourceValue;
-        if (list == null)
-        {
-          return;
-        }
 
-        // Currently we only support a list of IZenonSerializable and collections deriving from it
         // ReSharper disable once PossibleNullReferenceException : x will never be null.
         Type baseInterface = property.PropertyType.GetInterfaces().FirstOrDefault(x => x.FullName.StartsWith(typeof(IEnumerable<>).FullName));
         Type genericParameterType = baseInterface?.GenericTypeArguments[0];
-
-        if (genericParameterType == null || !typeof(IZenonSerializable).IsAssignableFrom(baseInterface.GenericTypeArguments[0]))
-        {
-          throw new NotImplementedException(
-            String.Format(Strings.ErrorMessageInvalidSerializationListType, nameof(IZenonSerializable)));
-        }
 
         if (nodeAttribute.InternalEncapsulateChildsIfList)
         {
@@ -496,28 +496,55 @@ namespace zenonApi.Serialization
               $"Property {property.Name} in class {property.DeclaringType.Name} requires a {nameof(zenonSerializableNodeAttribute.NodeName)} "
               + $"if {nameof(zenonSerializableNodeAttribute.EncapsulateChildsIfList)} is set.");
           }
-          XElement listWithChilds = new XElement(nodeAttribute.InternalName);
+          XElement listWithChildren = new XElement(nodeAttribute.InternalName);
 
           int index = 0;
-          foreach (IZenonSerializable listItem in list)
+          if (property.IsEnumerableOf<IZenonSerializable>())
           {
-            if (listItem == null)
+            foreach (IZenonSerializable listItem in list)
             {
-              continue;
+              if (listItem == null)
+              {
+                continue;
+              }
+
+              // ReSharper disable once PossibleNullReferenceException : "genericParameterType" cannot be null at this point.
+              MethodInfo exportMethod = genericParameterType.GetMethod(nameof(ExportAsXElement), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+              // ReSharper disable once PossibleNullReferenceException : "exportMethod" cannot be null at this point.
+              XElement child = (XElement)exportMethod.Invoke(listItem, null);
+              child.Name = TryResolveName(property, nodeAttribute, listItem.GetType(), listItem, index++, child.Name.LocalName);
+
+              listWithChildren.Add(child);
             }
+          }
+          else
+          {
+            foreach (object listItem in list)
+            {
+              // LATER: We might want to serialize null-references, the use-case for this needs to be checked and implemented.
+              // The same applies to the IZenonSerializable equivalent above.
+              // Furthermore, this whole file needs to be refactored, it is quite messy at the moment
+              if (listItem == null)
+              {
+                continue;
+              }
 
-            // ReSharper disable once PossibleNullReferenceException : "genericParameterType" cannot be null at this point.
-            MethodInfo exportMethod = genericParameterType.GetMethod(nameof(ExportAsXElement), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
-            // ReSharper disable once PossibleNullReferenceException : "exportMethod" cannot be null at this point.
-            XElement child = (XElement)exportMethod.Invoke(listItem, null);
-            child.Name = TryResolveName(property, nodeAttribute, listItem.GetType(), listItem, index++, child.Name.LocalName);
+              var name = TryResolveName(property, nodeAttribute, property.PropertyType, sourceValue, 0, nodeAttribute.InternalName);
+              XElement child = new XElement(name);
 
-            listWithChilds.Add(child);
+              var value = sourceValue.ToString();
+              if (value != null)
+              {
+                child.Value = value;
+              }
+
+              listWithChildren.Add(child);
+            }
           }
 
-          target.Add(listWithChilds);
+          target.Add(listWithChildren);
         }
-        else
+        else if (property.IsEnumerableOf<IZenonSerializable>())
         {
           int index = 0;
           foreach (IZenonSerializable listItem in list)
@@ -536,18 +563,36 @@ namespace zenonApi.Serialization
             target.Add(child);
           }
         }
+        else
+        {
+          int index = 0;
+          foreach (object listItem in list)
+          {
+            if (listItem == null)
+            {
+              continue;
+            }
+
+            var name = TryResolveName(property, nodeAttribute, property.PropertyType, sourceValue, index++, nodeAttribute.InternalName);
+            XElement child = new XElement(name);
+
+            var value = listItem.ToString();
+            if (value != null)
+            {
+              child.Value = value;
+            }
+
+            target.Add(child);
+          }
+        }
       }
       else
       {
         // Just write the string representation of the property as the value
-        var name = TryResolveName(property, nodeAttribute, property.PropertyType, sourceValue, 0, null);
-        if (string.IsNullOrWhiteSpace(name))
-        {
-          name = nodeAttribute.InternalName;
-        }
-
+        var name = TryResolveName(property, nodeAttribute, property.PropertyType, sourceValue, 0, nodeAttribute.InternalName);
         XElement child = new XElement(name);
-        var value = sourceValue?.ToString();
+
+        var value = sourceValue.ToString();
         if (value != null)
         {
           child.Value = value;
@@ -810,13 +855,6 @@ namespace zenonApi.Serialization
       }
 
       Type genericParameterType = baseInterface.GenericTypeArguments[0];
-      if (!typeof(IZenonSerializable).IsAssignableFrom(genericParameterType))
-      {
-        throw new Exception(
-          $"Property {targetListProperty.Name} in class {targetListProperty.DeclaringType.Name} cannot be deserialized, since "
-          + $"the used generic type ({genericParameterType.Name}) does not implement {nameof(IZenonSerializable)}.");
-      }
-
       return genericParameterType;
     }
 
@@ -902,22 +940,34 @@ namespace zenonApi.Serialization
         }
       }
 
-      // ReSharper disable once ForCanBeConvertedToForeach : for is faster than foreach.
-      for (int i = 0; i < nodes.Count; i++)
+      if (targetArray is IEnumerable<IZenonSerializable>)
       {
-        var entry = nodes[i];
-        MethodInfo importMethod = GetImportMethod(entry.Type);
+        for (int i = 0; i < nodes.Count; i++)
+        {
+          var entry = nodes[i];
+          MethodInfo importMethod = GetImportMethod(entry.Type);
 
-        object child;
-        int index = 0;
 
-        // The child is not capable of handling parents and roots, therefore pass null
-        // ReSharper disable once PossibleNullReferenceException : "importMethod" comes from the interface,
-        // will never be null at this point.
-        child = importMethod.Invoke(null, new object[] { entry.Type, entry.Element, null, null });
-        targetArray.SetValue(child, index);
+          // The child is not capable of handling parents and roots, therefore pass null
+          // ReSharper disable once PossibleNullReferenceException : "importMethod" comes from the interface,
+          // will never be null at this point.
+          object child = importMethod.Invoke(null, new object[] { entry.Type, entry.Element, null, null });
+          targetArray.SetValue(child, i);
 
-        entry.Element.Remove();
+          entry.Element.Remove();
+        }
+      }
+      else
+      {
+        for (int i = 0; i < nodes.Count; i++)
+        {
+          var node = nodes[i];
+          if (ImportPrimitive(node.Type, node.Element.Value, out object value))
+          {
+            targetArray.SetValue(value, i);
+            node.Element.Remove();
+          }
+        }
       }
     }
 
@@ -939,18 +989,32 @@ namespace zenonApi.Serialization
         }
       }
 
-      foreach (var entry in nodes)
+      if (targetList is IEnumerable<IZenonSerializable>)
       {
-        MethodInfo importMethod = GetImportMethod(entry.Type);
+        foreach (var entry in nodes)
+        {
+          MethodInfo importMethod = GetImportMethod(entry.Type);
 
-        object child;
-        // The child is not capable of handling parents and roots, therefore pass null
-        // ReSharper disable once PossibleNullReferenceException : "importMethod" comes from the interface,
-        // will never be null at this point.
-        child = importMethod.Invoke(null, new[] { entry.Type, entry.Element, parentContainer, root });
-        targetList.Add(child);
+          object child;
+          // The child is not capable of handling parents and roots, therefore pass null
+          // ReSharper disable once PossibleNullReferenceException : "importMethod" comes from the interface,
+          // will never be null at this point.
+          child = importMethod.Invoke(null, new[] { entry.Type, entry.Element, parentContainer, root });
+          targetList.Add(child);
 
-        entry.Element.Remove();
+          entry.Element.Remove();
+        }
+      }
+      else
+      {
+        foreach (var entry in nodes)
+        {
+          if (ImportPrimitive(entry.Type, entry.Element.Value, out object value))
+          {
+            targetList.Add(value);
+            entry.Element.Remove();
+          }
+        }
       }
     }
 
@@ -1009,36 +1073,9 @@ namespace zenonApi.Serialization
         return;
       }
 
-      if (type.IsEnum)
+      if (ImportPrimitive(type, xmlAttribute.Value, out object result))
       {
-        // If no converter is registered, try to convert it manually
-        foreach (var value in Enum.GetValues(type))
-        {
-          var field = type.GetField(value.ToString());
-
-          // Try to match the enum value either by the attribute or the string name
-          var attribute = field.GetCustomAttribute<zenonSerializableEnumAttribute>();
-          if ((attribute != null && xmlAttribute.Value == attribute.Name)
-            || xmlAttribute.Value == field.Name)
-          {
-            property.SetValue(target, value);
-
-            // Remove the attribute, so that we can check later on for unhandled ones
-            xmlAttribute.Remove();
-            return;
-          }
-        }
-
-        // If neither the attribute nor the string name matches, something went wrong
-        throw new Exception($"Cannot set value \"{xmlAttribute.Value}\" for {type.Name}, either a "
-          + $"{nameof(zenonSerializableEnumAttribute)} must be set for the enum fields or "
-          + $"the name must exactly match the XML value.");
-      }
-
-      if (typeof(IConvertible).IsAssignableFrom(type))
-      {
-        var converted = Convert.ChangeType(xmlAttribute.Value, type);
-        property.SetValue(target, converted);
+        property.SetValue(target, result);
         xmlAttribute.Remove();
         return;
       }
@@ -1046,6 +1083,42 @@ namespace zenonApi.Serialization
       throw new Exception($"Expected property '{property.Name}' in class '{property.DeclaringType.Name}' to be a "
         + $"type, which implements 'IConvertible', inherits from '{typeof(zenonSerializable<>).Name}', or has an "
         + $"'{nameof(IZenonSerializationConverter)}' in its '{nameof(zenonSerializableAttributeAttribute)}' defined.");
+    }
+
+    private static bool ImportPrimitive(Type targetType, string stringValue, out object result)
+    {
+      if (targetType.IsEnum)
+      {
+        // If no converter is registered, try to convert it manually
+        foreach (var value in Enum.GetValues(targetType))
+        {
+          var field = targetType.GetField(value.ToString());
+
+          // Try to match the enum value either by the attribute or the string name
+          var attribute = field.GetCustomAttribute<zenonSerializableEnumAttribute>();
+          if ((attribute != null && stringValue == attribute.Name)
+              || stringValue == field.Name)
+          {
+            result = value;
+            return true;
+          }
+        }
+
+        // If neither the attribute nor the string name matches, something went wrong
+        throw new Exception($"Cannot set value \"{stringValue}\" for {targetType.Name}, either a "
+                            + $"{nameof(zenonSerializableEnumAttribute)} must be set for the enum fields or "
+                            + $"the name must exactly match the XML value.");
+      }
+
+      if (typeof(IConvertible).IsAssignableFrom(targetType))
+      {
+        var converted = Convert.ChangeType(stringValue, targetType);
+        result = converted;
+        return true;
+      }
+
+      result = null;
+      return false;
     }
 
 
@@ -1060,7 +1133,7 @@ namespace zenonApi.Serialization
       IEnumerable<XElement> consideredChildren = sourceXml.Elements().OfType<XNode>().Cast<XElement>();
       IEnumerable<XElement> listElementContainers = null;
 
-      bool isEnumerable = property.IsEnumerableOf(typeof(IZenonSerializable));
+      bool isEnumerable = property.IsEnumerableOf<object>() && !typeof(string).IsAssignableFrom(property.PropertyType);
       bool isZenonSerializable = property.CanBeAssignedTo<IZenonSerializable>();
 
       if (isEnumerable && attribute.EncapsulateChildsIfList)
