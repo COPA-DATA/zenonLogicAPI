@@ -72,8 +72,6 @@ namespace zenonApi.Serialization
 
     public Type TypeResolver { get; private set; }
 
-    public bool AssignNodeNameFromSource { get; set; }
-
 
     #region Internal base class overrides
     internal override zenonSerializableAttributeType AttributeType => zenonSerializableAttributeType.Node;

@@ -532,7 +532,7 @@ namespace zenonApi.Serialization
               var name = TryResolveName(property, nodeAttribute, property.PropertyType, sourceValue, 0, nodeAttribute.InternalName);
               XElement child = new XElement(name);
 
-              var value = sourceValue.ToString();
+              var value = listItem.ToString();
               if (value != null)
               {
                 child.Value = value;
