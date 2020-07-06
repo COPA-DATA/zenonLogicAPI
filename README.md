@@ -25,6 +25,7 @@ See the sample project on how to use the API.
 - Set default encoding for logic-projects to iso-8859-1 (otherwise we had formatting issues during import, logic ignores the actual xml encoding)
 - Added further Import/Export methods for streams/files/etc.
 - Fixes for serializing lists/arrays of primitive types
+- Now allowing to disable the reload of the zenon project after the import with the ImportLogicProjectsIntoZenon method
 
 ## Next major steps
 

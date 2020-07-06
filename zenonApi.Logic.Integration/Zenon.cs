@@ -150,7 +150,7 @@ namespace zenonApi.Zenon
     /// As an import requires an existing project it trys to create a default project first.
     /// </summary>
     /// <param name="zenonLogicProjectsToImport"></param>
-    private void ImportLogicProjectsIntoZenon(IEnumerable<LogicProject> zenonLogicProjectsToImport)
+    private void ImportLogicProjectsIntoZenon(IEnumerable<LogicProject> zenonLogicProjectsToImport, bool reloadZenonProject = true)
     {
       foreach (LogicProject logicProject in zenonLogicProjectsToImport)
       {
@@ -180,8 +180,11 @@ namespace zenonApi.Zenon
         k5ToolSet.ImportZenonLogicProject(logicProject);
       }
 
-      // The following line is just necessary to force zenon to reload the logic projects within the displayed list.
-      ZenonProject.Parent.Parent.Workspace.LoadProject(ZenonProjectGuid);
+      if (reloadZenonProject)
+      {
+        // The following line is just necessary to force zenon to reload the logic projects within the displayed list.
+        ZenonProject.Parent.Parent.Workspace.LoadProject(ZenonProjectGuid);
+      }
     }
 
     /// <summary>
