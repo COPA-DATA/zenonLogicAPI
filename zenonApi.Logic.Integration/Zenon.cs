@@ -69,7 +69,7 @@ namespace zenonApi.Zenon
     /// Imports the zenon Logic project with specified project name into zenon
     /// </summary>
     /// <param name="zenonLogicProjectName"></param>
-    public void ImportLogicProjectIntoZenonByName(string zenonLogicProjectName)
+    public void ImportLogicProjectIntoZenonByName(string zenonLogicProjectName, bool reloadZenonProject = true)
     {
       if (string.IsNullOrWhiteSpace(zenonLogicProjectName))
       {
@@ -86,15 +86,15 @@ namespace zenonApi.Zenon
           zenonLogicProjectName));
       }
 
-      ImportLogicProjectsIntoZenon(logicProjectsWithSearchedNames);
+      ImportLogicProjectsIntoZenon(logicProjectsWithSearchedNames, reloadZenonProject);
     }
 
     /// <summary>
     /// Imports all zenon Logic projects which are stored in <see cref="LogicProjects"/> into zenon
     /// </summary>
-    public void ImportLogicProjectsIntoZenon()
+    public void ImportLogicProjectsIntoZenon(bool reloadZenonProject = true)
     {
-      ImportLogicProjectsIntoZenon(LogicProjects);
+      ImportLogicProjectsIntoZenon(LogicProjects, reloadZenonProject);
     }
 
     /// <summary>
