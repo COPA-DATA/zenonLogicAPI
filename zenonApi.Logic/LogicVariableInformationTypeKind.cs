@@ -17,6 +17,11 @@ namespace zenonApi.Logic
     [zenonSerializableEnum("profile")]
     Profile,
     /// <summary>
+    /// Variable tag (short comment)
+    /// </summary>
+    [zenonSerializableEnum("subgroup")]
+    Subgroup,
+    /// <summary>
     /// Set of embedded properties.
     /// </summary>
     [zenonSerializableEnum("embed")]
