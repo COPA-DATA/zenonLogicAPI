@@ -271,6 +271,40 @@
    &lt;/SimpleSerializationWithAttributes&gt;
 &lt;/NestedSerializationWithAttributes&gt;</value>
   </data>
+  <data name="OmitComplexWithOmit" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
+&lt;OmitComplexWithOmitClass&gt;
+   &lt;SimpleSingleSerializationClass&gt;
+      &lt;SimpleInteger&gt;5&lt;/SimpleInteger&gt;
+      &lt;SimpleDouble&gt;5.3&lt;/SimpleDouble&gt;
+      &lt;SimpleString&gt;TestString&lt;/SimpleString&gt;
+   &lt;/SimpleSingleSerializationClass&gt;
+&lt;/OmitComplexWithOmitClass&gt;</value>
+  </data>
+  <data name="OmitComplexWithoutOmit" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
+&lt;OmitComplexWithoutOmitClass&gt;
+   &lt;SimpleSingleSerializationClass&gt;
+      &lt;SimpleInteger&gt;5&lt;/SimpleInteger&gt;
+      &lt;SimpleDouble&gt;5.3&lt;/SimpleDouble&gt;
+      &lt;SimpleString&gt;TestString&lt;/SimpleString&gt;
+   &lt;/SimpleSingleSerializationClass&gt;
+   &lt;NullSimpleSingleSerializationClass /&gt;
+&lt;/OmitComplexWithoutOmitClass&gt;</value>
+  </data>
+  <data name="OmitPrimitivesWithOmit" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
+&lt;OmitPrimitivesWithOmitClass&gt;
+   &lt;SimpleInteger&gt;12&lt;/SimpleInteger&gt;
+&lt;/OmitPrimitivesWithOmitClass&gt;</value>
+  </data>
+  <data name="OmitPrimitivesWithoutOmit" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
+&lt;OmitPrimitivesWithoutOmitClass&gt;
+   &lt;NullInteger /&gt;
+   &lt;SimpleInteger&gt;12&lt;/SimpleInteger&gt;
+&lt;/OmitPrimitivesWithoutOmitClass&gt;</value>
+  </data>
   <data name="ResolverOnNodesThatAreNotLists" xml:space="preserve">
     <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
 &lt;ResolverOnNodesThatAreNotListsClass&gt;
@@ -286,6 +320,30 @@
    &lt;SimpleInteger_1&gt;def&lt;/SimpleInteger_1&gt;
    &lt;SimpleInteger_2&gt;hij&lt;/SimpleInteger_2&gt;
 &lt;/ResolverThatReturnsPropertyInfoTypeClass&gt;</value>
+  </data>
+  <data name="SimpleAttributeOrdering" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
+&lt;SimpleAttributeOrderingClass SimpleAttrInteger="12" SimpleAttrString="Abc" SimpleAttrDouble="88.88"&gt;
+   &lt;SimpleDouble&gt;88.88&lt;/SimpleDouble&gt;
+   &lt;SimpleString&gt;Abc&lt;/SimpleString&gt;
+   &lt;SimpleInteger&gt;12&lt;/SimpleInteger&gt;
+&lt;/SimpleAttributeOrderingClass&gt;</value>
+  </data>
+  <data name="SimpleNodeOrdering" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
+&lt;SimpleNodeOrderingClass&gt;
+   &lt;SimpleDouble&gt;88.88&lt;/SimpleDouble&gt;
+   &lt;SimpleString&gt;Abc&lt;/SimpleString&gt;
+   &lt;SimpleInteger&gt;12&lt;/SimpleInteger&gt;
+&lt;/SimpleNodeOrderingClass&gt;</value>
+  </data>
+  <data name="SimpleNodeOrderingDuplicateOrderNumbers" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
+&lt;SimpleNodeOrderingDuplicateOrderNumbersClass&gt;
+   &lt;SimpleDouble&gt;88.88&lt;/SimpleDouble&gt;
+   &lt;SimpleString&gt;Abc&lt;/SimpleString&gt;
+   &lt;SimpleInteger&gt;12&lt;/SimpleInteger&gt;
+&lt;/SimpleNodeOrderingDuplicateOrderNumbersClass&gt;</value>
   </data>
   <data name="SimpleSerializationWithAttributesToString" xml:space="preserve">
     <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;

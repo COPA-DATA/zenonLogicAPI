@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using System.Xml.Linq;
-using Moq;
 using Xunit;
 using zenonApi.Serialization;
 
@@ -192,6 +190,56 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
 
     #endregion
 
+    #region ResolverThatReturnsPropertyWrongType
+
+    public class ResolverThatReturnsPropertyWrongTypeClass : zenonSerializable<ResolverThatReturnsPropertyWrongTypeClass>
+    {
+      [zenonSerializableNode(nameof(SimpleInteger), resolver: typeof(ResolverThatReturnsPropertyInfoTypeResolver))]
+      public List<string> SimpleInteger { get; set; }
+
+      [zenonSerializableNode(nameof(SimpleString))]
+      public string SimpleString { get; set; }
+    }
+
+    public class ResolverThatReturnsPropertyWrongTypeResolver : IZenonSerializableResolver
+    {
+      public string GetNodeNameForSerialization(PropertyInfo targetProperty, Type targetType, object value, int index)
+      {
+        return targetProperty.Name + "_" + index;
+      }
+
+      public Type GetTypeForDeserialization(string nodeName, int index)
+      {
+        return typeof(ResolverThatReturnsPropertyWrongTypeClass).GetProperty(nodeName.Substring(0, nodeName.IndexOf("_"))).GetType();
+      }
+    }
+
+    public static ResolverThatReturnsPropertyWrongTypeClass ResolverThatReturnsPropertyWrongTypeClassImpl => new ResolverThatReturnsPropertyWrongTypeClass
+    {
+      SimpleInteger = new List<string>
+      {
+        "abc", "def", "hij"
+      }
+    };
+
+    [Fact]
+    public void TestResolverThatReturnsPropertyWrongType()
+    {
+      // Arrange
+
+      ResolverThatReturnsPropertyWrongTypeClass resolverThatReturnsPropertyWrongTypeClass = ResolverThatReturnsPropertyWrongTypeClassImpl;
+
+      // Apply 
+
+      string result = resolverThatReturnsPropertyWrongTypeClass.ExportAsString();
+
+      // Assert
+      
+      Assert.ThrowsAny<Exception>(() => ResolverThatReturnsPropertyWrongTypeClass.Import(XElement.Parse(result)));
+    }
+
+
+    #endregion
 
   }
 }

@@ -243,6 +243,64 @@ namespace zenonApi.Core.Tests.Serialization {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;OmitComplexWithOmitClass&gt;
+        ///   &lt;SimpleSingleSerializationClass&gt;
+        ///      &lt;SimpleInteger&gt;5&lt;/SimpleInteger&gt;
+        ///      &lt;SimpleDouble&gt;5.3&lt;/SimpleDouble&gt;
+        ///      &lt;SimpleString&gt;TestString&lt;/SimpleString&gt;
+        ///   &lt;/SimpleSingleSerializationClass&gt;
+        ///&lt;/OmitComplexWithOmitClass&gt;.
+        /// </summary>
+        internal static string OmitComplexWithOmit {
+            get {
+                return ResourceManager.GetString("OmitComplexWithOmit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;OmitComplexWithoutOmitClass&gt;
+        ///   &lt;SimpleSingleSerializationClass&gt;
+        ///      &lt;SimpleInteger&gt;5&lt;/SimpleInteger&gt;
+        ///      &lt;SimpleDouble&gt;5.3&lt;/SimpleDouble&gt;
+        ///      &lt;SimpleString&gt;TestString&lt;/SimpleString&gt;
+        ///   &lt;/SimpleSingleSerializationClass&gt;
+        ///   &lt;NullSimpleSingleSerializationClass /&gt;
+        ///&lt;/OmitComplexWithoutOmitClass&gt;.
+        /// </summary>
+        internal static string OmitComplexWithoutOmit {
+            get {
+                return ResourceManager.GetString("OmitComplexWithoutOmit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;OmitPrimitivesWithOmitClass&gt;
+        ///   &lt;SimpleInteger&gt;12&lt;/SimpleInteger&gt;
+        ///&lt;/OmitPrimitivesWithOmitClass&gt;.
+        /// </summary>
+        internal static string OmitPrimitivesWithOmit {
+            get {
+                return ResourceManager.GetString("OmitPrimitivesWithOmit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;OmitPrimitivesWithoutOmitClass&gt;
+        ///   &lt;NullInteger /&gt;
+        ///   &lt;SimpleInteger&gt;12&lt;/SimpleInteger&gt;
+        ///&lt;/OmitPrimitivesWithoutOmitClass&gt;.
+        /// </summary>
+        internal static string OmitPrimitivesWithoutOmit {
+            get {
+                return ResourceManager.GetString("OmitPrimitivesWithoutOmit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
         ///&lt;ResolverOnNodesThatAreNotListsClass&gt;
         ///   &lt;SimpleInteger_0&gt;abc&lt;/SimpleInteger_0&gt;
         ///   &lt;SimpleDouble_0&gt;hij&lt;/SimpleDouble_0&gt;
@@ -266,6 +324,48 @@ namespace zenonApi.Core.Tests.Serialization {
         internal static string ResolverThatReturnsPropertyInfoType {
             get {
                 return ResourceManager.GetString("ResolverThatReturnsPropertyInfoType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;SimpleAttributeOrderingClass SimpleAttrInteger=&quot;12&quot; SimpleAttrString=&quot;Abc&quot; SimpleAttrDouble=&quot;88.88&quot;&gt;
+        ///   &lt;SimpleDouble&gt;88.88&lt;/SimpleDouble&gt;
+        ///   &lt;SimpleString&gt;Abc&lt;/SimpleString&gt;
+        ///   &lt;SimpleInteger&gt;12&lt;/SimpleInteger&gt;
+        ///&lt;/SimpleAttributeOrderingClass&gt;.
+        /// </summary>
+        internal static string SimpleAttributeOrdering {
+            get {
+                return ResourceManager.GetString("SimpleAttributeOrdering", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;SimpleNodeOrderingClass&gt;
+        ///   &lt;SimpleDouble&gt;88.88&lt;/SimpleDouble&gt;
+        ///   &lt;SimpleString&gt;Abc&lt;/SimpleString&gt;
+        ///   &lt;SimpleInteger&gt;12&lt;/SimpleInteger&gt;
+        ///&lt;/SimpleNodeOrderingClass&gt;.
+        /// </summary>
+        internal static string SimpleNodeOrdering {
+            get {
+                return ResourceManager.GetString("SimpleNodeOrdering", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;SimpleNodeOrderingDuplicateOrderNumbersClass&gt;
+        ///   &lt;SimpleDouble&gt;88.88&lt;/SimpleDouble&gt;
+        ///   &lt;SimpleString&gt;Abc&lt;/SimpleString&gt;
+        ///   &lt;SimpleInteger&gt;12&lt;/SimpleInteger&gt;
+        ///&lt;/SimpleNodeOrderingDuplicateOrderNumbersClass&gt;.
+        /// </summary>
+        internal static string SimpleNodeOrderingDuplicateOrderNumbers {
+            get {
+                return ResourceManager.GetString("SimpleNodeOrderingDuplicateOrderNumbers", resourceCulture);
             }
         }
         
