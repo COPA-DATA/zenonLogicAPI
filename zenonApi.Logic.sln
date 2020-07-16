@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zenonApi.Zenon", "zenonApi.Logic.Integration\zenonApi.Zenon.csproj", "{8F1B19E1-56BF-436F-9D99-1A360538B241}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zenonApi.Core.Tests", "zenonApi.Core.Tests\zenonApi.Core.Tests.csproj", "{0941B1FD-5871-497E-BA50-0D1BE5B8345E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,14 @@ Global
 		{8F1B19E1-56BF-436F-9D99-1A360538B241}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8F1B19E1-56BF-436F-9D99-1A360538B241}.Release|x86.ActiveCfg = Release|x86
 		{8F1B19E1-56BF-436F-9D99-1A360538B241}.Release|x86.Build.0 = Release|x86
+		{0941B1FD-5871-497E-BA50-0D1BE5B8345E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0941B1FD-5871-497E-BA50-0D1BE5B8345E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0941B1FD-5871-497E-BA50-0D1BE5B8345E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{0941B1FD-5871-497E-BA50-0D1BE5B8345E}.Debug|x86.Build.0 = Debug|Any CPU
+		{0941B1FD-5871-497E-BA50-0D1BE5B8345E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0941B1FD-5871-497E-BA50-0D1BE5B8345E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0941B1FD-5871-497E-BA50-0D1BE5B8345E}.Release|x86.ActiveCfg = Release|Any CPU
+		{0941B1FD-5871-497E-BA50-0D1BE5B8345E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
