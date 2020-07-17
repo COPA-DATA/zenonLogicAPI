@@ -19,7 +19,6 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
 
       public string GetNodeNameForSerialization(PropertyInfo targetProperty, Type targetType, object value, int index)
       {
-        Counter = 0;
         return targetProperty.Name + "_" + index;
       }
 
@@ -87,10 +86,10 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
       // Arrange
 
       ResolverOnNodesThatAreNotListsClass resolverOnNodesThatAreNotListsClass = ResolverOnNodesThatAreNotListsClassImpl;
+      ResolverOnNodesThatAreNotListsResolver.Counter = 0;
       
       // Apply
       string result = resolverOnNodesThatAreNotListsClass.ExportAsString();
-
       try
       {
         ResolverOnNodesThatAreNotListsClass des = ResolverOnNodesThatAreNotListsClass.Import(XElement.Parse(result));

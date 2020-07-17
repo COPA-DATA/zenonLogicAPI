@@ -124,6 +124,19 @@
    &lt;SimpleString&gt;HelloWorld&lt;/SimpleString&gt;
 &lt;/TestConverterSerializationConverterUsage&gt;</value>
   </data>
+  <data name="EnumSerializationAsNode" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
+&lt;EnumSerializationAsNodeClass&gt;
+   &lt;SimpleInteger&gt;1234&lt;/SimpleInteger&gt;
+   &lt;SimpleEnumSerializationEnum&gt;AbcTest&lt;/SimpleEnumSerializationEnum&gt;
+&lt;/EnumSerializationAsNodeClass&gt;</value>
+  </data>
+  <data name="EnumSerializationAsParameter" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
+&lt;EnumSerializationAsParameterClass SimpleEnumSerializationEnum="AbcTest"&gt;
+   &lt;SimpleInteger&gt;1234&lt;/SimpleInteger&gt;
+&lt;/EnumSerializationAsParameterClass&gt;</value>
+  </data>
   <data name="ListHandlingComplexListEncapsulateChildsIfListFalse" xml:space="preserve">
     <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
 &lt;ListHandlingComplexListEncapsulateChildsIfListFalse&gt;
@@ -360,6 +373,14 @@
    &lt;SimpleDouble&gt;5.3&lt;/SimpleDouble&gt;
    &lt;SimpleString&gt;TestString&lt;/SimpleString&gt;
 &lt;/SimpleSingleSerializationClass&gt;</value>
+  </data>
+  <data name="StatusEnum" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
+&lt;StatusEnumClass&gt;
+   &lt;SimpleInteger&gt;5&lt;/SimpleInteger&gt;
+   &lt;SimpleDouble&gt;5.3&lt;/SimpleDouble&gt;
+   &lt;SimpleString&gt;TestString&lt;/SimpleString&gt;
+&lt;/StatusEnumClass&gt;</value>
   </data>
   <data name="TestNestedSerializationNodes" xml:space="preserve">
     <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;

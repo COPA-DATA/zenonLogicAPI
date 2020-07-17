@@ -75,6 +75,31 @@ namespace zenonApi.Core.Tests.Serialization {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;EnumSerializationAsNodeClass&gt;
+        ///   &lt;SimpleInteger&gt;1234&lt;/SimpleInteger&gt;
+        ///   &lt;SimpleEnumSerializationEnum&gt;AbcTest&lt;/SimpleEnumSerializationEnum&gt;
+        ///&lt;/EnumSerializationAsNodeClass&gt;.
+        /// </summary>
+        internal static string EnumSerializationAsNode {
+            get {
+                return ResourceManager.GetString("EnumSerializationAsNode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;EnumSerializationAsParameterClass SimpleEnumSerializationEnum=&quot;AbcTest&quot;&gt;
+        ///   &lt;SimpleInteger&gt;1234&lt;/SimpleInteger&gt;
+        ///&lt;/EnumSerializationAsParameterClass&gt;.
+        /// </summary>
+        internal static string EnumSerializationAsParameter {
+            get {
+                return ResourceManager.GetString("EnumSerializationAsParameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
         ///&lt;ListHandlingComplexListEncapsulateChildsIfListFalse&gt;
         ///   &lt;PrimitiveList&gt;
         ///      &lt;SimpleInteger&gt;5&lt;/SimpleInteger&gt;
@@ -394,6 +419,20 @@ namespace zenonApi.Core.Tests.Serialization {
         internal static string SimpleSingleSerializationToString {
             get {
                 return ResourceManager.GetString("SimpleSingleSerializationToString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;StatusEnumClass&gt;
+        ///   &lt;SimpleInteger&gt;5&lt;/SimpleInteger&gt;
+        ///   &lt;SimpleDouble&gt;5.3&lt;/SimpleDouble&gt;
+        ///   &lt;SimpleString&gt;TestString&lt;/SimpleString&gt;
+        ///&lt;/StatusEnumClass&gt;.
+        /// </summary>
+        internal static string StatusEnum {
+            get {
+                return ResourceManager.GetString("StatusEnum", resourceCulture);
             }
         }
         
