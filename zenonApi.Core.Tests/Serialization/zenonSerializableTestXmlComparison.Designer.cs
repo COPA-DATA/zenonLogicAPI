@@ -370,7 +370,12 @@ namespace zenonApi.Core.Tests.Serialization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;SelectiveNodeOrderingClass&gt;
+        ///   &lt;SimpleDouble&gt;88.88&lt;/SimpleDouble&gt;
+        ///   &lt;SimpleInteger&gt;12&lt;/SimpleInteger&gt;
+        ///   &lt;SimpleString&gt;Abc&lt;/SimpleString&gt;
+        ///&lt;/SelectiveNodeOrderingClass&gt;.
         /// </summary>
         internal static string SelectiveNodeOrdering {
             get {
