@@ -119,7 +119,7 @@
   </resheader>
   <data name="AllInOneClass" xml:space="preserve">
     <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
-&lt;AllInOneClass&gt;
+&lt;AllInOneClass EnumSerializationEnum="AbcTest"&gt;
    &lt;SimpleSingleSerializationEncapsulateTrueClasses&gt;
       &lt;SimpleSingleSerializationEncapsulateTrueClasses_0 SimpleAttrInteger="8" SimpleAttrDouble="8.88" SimpleAttrString="HelloWorld"&gt;
          &lt;SimpleInteger&gt;5&lt;/SimpleInteger&gt;
@@ -177,6 +177,7 @@
       &lt;SimpleDouble&gt;5.3&lt;/SimpleDouble&gt;
       &lt;SimpleString&gt;TestString&lt;/SimpleString&gt;
    &lt;/SimpleSingleSerializationClass_0&gt;
+    &lt;EnumSerializationAttrEnum&gt;AbcTest&lt;/EnumSerializationAttrEnum&gt;
 &lt;/AllInOneClass&gt;</value>
   </data>
   <data name="ConverterFunctionalityTest" xml:space="preserve">

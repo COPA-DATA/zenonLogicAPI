@@ -62,14 +62,14 @@ namespace zenonApi.Core.Tests.Serialization {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
-        ///&lt;AllInOneClass&gt;
+        ///&lt;AllInOneClass EnumSerializationEnum=&quot;AbcTest&quot;&gt;
         ///   &lt;SimpleSingleSerializationEncapsulateTrueClasses&gt;
         ///      &lt;SimpleSingleSerializationEncapsulateTrueClasses_0 SimpleAttrInteger=&quot;8&quot; SimpleAttrDouble=&quot;8.88&quot; SimpleAttrString=&quot;HelloWorld&quot;&gt;
         ///         &lt;SimpleInteger&gt;5&lt;/SimpleInteger&gt;
         ///         &lt;SimpleDouble&gt;5.3&lt;/SimpleDouble&gt;
         ///         &lt;SimpleString&gt;TestString&lt;/SimpleString&gt;
         ///      &lt;/SimpleSingleSerializationEncapsulateTrueClasses_0&gt;
-        ///      &lt;SimpleSingleSerializationEncapsulateTrueClasse [rest of string was truncated]&quot;;.
+        ///      &lt;SimpleSingleSe [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string AllInOneClass {
             get {

@@ -23,6 +23,11 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
       [zenonSerializableNode(nameof(SimpleSingleSerializationEncapsulateTrueClasses), typeof(AllInOneResolver), EncapsulateChildsIfList = true, NodeOrder = 10)]
       public List<SimpleSerializationWithAttributes.SimpleSerializationWithAttributesClass> SimpleSingleSerializationEncapsulateTrueClasses { get; set; }
 
+      [zenonSerializableNode(nameof(EnumSerializationAttrEnum))]
+      public EnumSerialization.EnumSerializationEnum EnumSerializationAttrEnum { get; set; }
+
+      [zenonSerializableAttribute(nameof(EnumSerializationEnum))]
+      public EnumSerialization.EnumSerializationEnum EnumSerializationEnum { get; set; }
     }
 
     public class AllInOneResolver: IZenonSerializableResolver
@@ -57,7 +62,7 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
         SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
         SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl
       },
-
+      EnumSerializationEnum = EnumSerialization.EnumSerializationEnum.Abc
     };
 
     [Fact]

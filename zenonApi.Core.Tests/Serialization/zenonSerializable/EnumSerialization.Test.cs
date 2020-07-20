@@ -124,6 +124,5 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
 
     #endregion
 
-
   }
 }
