@@ -62,6 +62,23 @@ namespace zenonApi.Core.Tests.Serialization {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;AllInOneClass&gt;
+        ///   &lt;SimpleSingleSerializationEncapsulateTrueClasses&gt;
+        ///      &lt;SimpleSingleSerializationEncapsulateTrueClasses_0 SimpleAttrInteger=&quot;8&quot; SimpleAttrDouble=&quot;8.88&quot; SimpleAttrString=&quot;HelloWorld&quot;&gt;
+        ///         &lt;SimpleInteger&gt;5&lt;/SimpleInteger&gt;
+        ///         &lt;SimpleDouble&gt;5.3&lt;/SimpleDouble&gt;
+        ///         &lt;SimpleString&gt;TestString&lt;/SimpleString&gt;
+        ///      &lt;/SimpleSingleSerializationEncapsulateTrueClasses_0&gt;
+        ///      &lt;SimpleSingleSerializationEncapsulateTrueClasse [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string AllInOneClass {
+            get {
+                return ResourceManager.GetString("AllInOneClass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
         ///&lt;TestConverterSerializationConverterUsage SimpleInteger=&quot;Test + 5&quot;&gt;
         ///   &lt;SimpleDouble&gt;5.25&lt;/SimpleDouble&gt;
         ///   &lt;SimpleString&gt;HelloWorld&lt;/SimpleString&gt;
@@ -349,6 +366,15 @@ namespace zenonApi.Core.Tests.Serialization {
         internal static string ResolverThatReturnsPropertyInfoType {
             get {
                 return ResourceManager.GetString("ResolverThatReturnsPropertyInfoType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string SelectiveNodeOrdering {
+            get {
+                return ResourceManager.GetString("SelectiveNodeOrdering", resourceCulture);
             }
         }
         

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using Xunit;
 using zenonApi.Serialization;
@@ -462,6 +463,34 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
       // Assert
 
       Assert.True(XNode.DeepEquals(result, XElement.Parse(zenonSerializableTestXmlComparison.ListHandlingComplexListEncapsulateChildsIfListTrue)));
+    }
+
+    #endregion
+
+    #region ListHandlingOnSingleNodes
+
+    public class ListHandlingOnSingleNodesClass: zenonSerializable<ListHandlingOnSingleNodesClass>
+    {
+      [zenonSerializableNode(nameof(SimpleInteger), EncapsulateChildsIfList = true)]
+      public int SimpleInteger { get; set; }
+    }
+
+    public static ListHandlingOnSingleNodesClass ListHandlingOnSingleNodesClassImpl =>
+      new ListHandlingOnSingleNodesClass
+      {
+        SimpleInteger = 123
+      };
+
+    [Fact]
+    public void ListHandlingOnSingleNodesClassTest()
+    {
+      // Arrange
+
+      ListHandlingOnSingleNodesClass listHandlingOnSingleNodesClassImpl = ListHandlingOnSingleNodesClassImpl;
+
+      // Apply and Assert
+
+      Assert.ThrowsAny<Exception>(() => listHandlingOnSingleNodesClassImpl.ExportAsString());
     }
 
     #endregion

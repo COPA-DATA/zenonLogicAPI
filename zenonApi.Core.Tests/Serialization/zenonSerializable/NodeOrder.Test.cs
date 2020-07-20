@@ -176,5 +176,58 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
 
     #endregion
 
+    #region SelectiveNodeOrdering
+
+    public class SelectiveNodeOrderingClass : zenonSerializable<SelectiveNodeOrderingClass>
+    {
+      [zenonSerializableNode(nameof(SimpleInteger), NodeOrder = 30)]
+      public int SimpleInteger { get; set; }
+      [zenonSerializableNode(nameof(SimpleDouble), NodeOrder = 10)]
+      public double SimpleDouble { get; set; }
+      [zenonSerializableNode(nameof(SimpleString))]
+      public string SimpleString { get; set; }
+    }
+
+    public static SelectiveNodeOrderingClass SelectiveNodeOrderingImpl => new SelectiveNodeOrderingClass
+    {
+      SimpleInteger = 12,
+      SimpleDouble = 88.88,
+      SimpleString = "Abc"
+    };
+
+    [Fact]
+    public void TestSelectiveNodeOrderingToString()
+    {
+      // Arrange
+      SelectiveNodeOrderingClass selectiveNodeOrdering = SelectiveNodeOrderingImpl;
+
+      // Apply
+
+      string result = selectiveNodeOrdering.ExportAsString();
+
+      // Assert
+
+      Assert.Equal(zenonSerializableTestXmlComparison.SelectiveNodeOrdering, result);
+
+    }
+
+    [Fact]
+    public void TestSelectiveNodeOrderingToXElement()
+    {
+      // Arrange
+      SimpleNodeOrderingClass selectiveNodeOrdering = SimpleNodeOrderingImpl;
+
+      // Apply
+
+      XElement result = selectiveNodeOrdering.ExportAsXElement();
+
+      // Assert
+
+      Assert.True(XNode.DeepEquals(XElement.Parse(zenonSerializableTestXmlComparison.SelectiveNodeOrdering), result));
+
+    }
+
+    #endregion
+
   }
 }
