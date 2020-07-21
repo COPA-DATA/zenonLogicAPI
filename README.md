@@ -30,7 +30,7 @@ See the sample project on how to use the API.
 ## Next major steps
 
 - [ ] Refactor the serializer:  
-  - [ ] Implement unit tests before refactoring:  
+  - [#] IN PROGRESS - Implement unit tests before refactoring:  
     This project came from a POC and grew too quickly without unit tests.  
     Although the code needs cleanup, it is already used for several projects, so unit tests are crucial.
   - [ ] Actual refactoring
