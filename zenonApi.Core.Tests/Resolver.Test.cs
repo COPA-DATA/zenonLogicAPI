@@ -5,18 +5,13 @@ using System.Xml.Linq;
 using Xunit;
 using zenonApi.Serialization;
 
-namespace zenonApi.Core.Tests.Serialization.zenonSerializable
+namespace zenonApi.Core.Tests
 {
   public class Resolver
   {
-
     #region ResolverOnNodesThatAreNotLists
-
     public class ResolverOnNodesThatAreNotListsResolver : IZenonSerializableResolver
     {
-
-      public static int Counter;
-
       public string GetNodeNameForSerialization(PropertyInfo targetProperty, Type targetType, object value, int index)
       {
         return targetProperty.Name + "_" + index;
@@ -24,8 +19,9 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
 
       public Type GetTypeForDeserialization(string nodeName, int index)
       {
-        Counter++;
-        return typeof(ResolverOnNodesThatAreNotListsClass).GetProperty(nodeName.Substring(0, nodeName.IndexOf("_"))).PropertyType;
+        var name = nodeName.Substring(0, nodeName.IndexOf("_", StringComparison.InvariantCulture));
+        // ReSharper disable once PossibleNullReferenceException : Property exists, will not be null.
+        return typeof(ResolverOnNodesThatAreNotListsClass).GetProperty(name).PropertyType;
       }
     }
 
@@ -52,55 +48,23 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
     [Fact]
     public void TestResolverOnNodesThatAreNotListsResolver()
     {
-      // Arrange
-
       ResolverOnNodesThatAreNotListsClass resolverOnNodesThatAreNotListsClass = ResolverOnNodesThatAreNotListsClassImpl;
-
-      // Apply
-
       string result = resolverOnNodesThatAreNotListsClass.ExportAsString();
-
-      // Assert
-      Assert.Equal(result, zenonSerializableTestXmlComparison.ResolverOnNodesThatAreNotLists);
+      Assert.Equal(result, ComparisonValues.ResolverOnNodesThatAreNotLists);
     }
 
     [Fact]
     public void TestResolverOnNodesThatAreNotListsResolverDeserialized()
     {
-      // Arrange
-
       ResolverOnNodesThatAreNotListsClass resolverOnNodesThatAreNotListsClass = ResolverOnNodesThatAreNotListsClassImpl;
-
-      // Apply
-
       string result = resolverOnNodesThatAreNotListsClass.ExportAsString();
 
-      // Assert
-      ResolverOnNodesThatAreNotListsClass deserialized =
-        ResolverOnNodesThatAreNotListsClass.Import(XElement.Parse(result));
+      Assert.ThrowsAny<Exception>(() => ResolverOnNodesThatAreNotListsClass.Import(XElement.Parse(result)));
     }
-
-    [Fact]
-    public void TestResolverOnNodesThatAreNotListsResolverNumberOfResolverCalls()
-    {
-      ResolverOnNodesThatAreNotListsClass resolverOnNodesThatAreNotListsClass = ResolverOnNodesThatAreNotListsClassImpl;
-      ResolverOnNodesThatAreNotListsResolver.Counter = 0;
-
-      string result = resolverOnNodesThatAreNotListsClass.ExportAsString();
-      try
-      {
-        ResolverOnNodesThatAreNotListsClass des = ResolverOnNodesThatAreNotListsClass.Import(XElement.Parse(result));
-      }
-      catch (Exception) { }
-
-      Assert.Equal(2, ResolverOnNodesThatAreNotListsResolver.Counter);
-    }
-
-
     #endregion
 
-    #region ResolverOnNodeThatIsNotLists
 
+    #region ResolverOnNodeThatIsNotLists
     public class ResolverOnNodeThatIsNotListsClass : zenonSerializable<ResolverOnNodeThatIsNotListsClass>
     {
       [zenonSerializableNode(nameof(SimpleInteger), resolver: typeof(ResolverOnNodesThatAreNotListsResolver))]
@@ -115,23 +79,17 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
     [Fact]
     public void TestResolverOnNodeThatIsNotLists()
     {
-      // Arrange
-
       ResolverOnNodeThatIsNotListsClass resolverOnNodesThatAreNotListsClass = ResolverOnNodeThatIsNotListsClassImpl;
-
-      // Apply
-
       string result = resolverOnNodesThatAreNotListsClass.ExportAsString();
 
-      // Assert
       ResolverOnNodeThatIsNotListsClass deserialized =
         ResolverOnNodeThatIsNotListsClass.Import(XElement.Parse(result));
+      Assert.Equal("abc", deserialized.SimpleInteger);
     }
-
     #endregion
 
-    #region ResolverThatReturnsPropertyInfoType
 
+    #region ResolverThatReturnsPropertyInfoType
     public class ResolverThatReturnsPropertyInfoTypeClass : zenonSerializable<ResolverThatReturnsPropertyInfoTypeClass>
     {
       [zenonSerializableNode(nameof(SimpleInteger), resolver: typeof(ResolverThatReturnsPropertyInfoTypeResolver))]
@@ -150,7 +108,9 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
 
       public Type GetTypeForDeserialization(string nodeName, int index)
       {
-        return typeof(ResolverOnNodesThatAreNotListsClass).GetProperty(nodeName.Substring(0, nodeName.IndexOf("_"))).PropertyType;
+        string name = nodeName.Substring(0, nodeName.IndexOf("_", StringComparison.InvariantCulture));
+        // ReSharper disable once PossibleNullReferenceException : Will not be null, property exists.
+        return typeof(ResolverOnNodesThatAreNotListsClass).GetProperty(name).PropertyType;
       }
     }
 
@@ -165,24 +125,15 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
     [Fact]
     public void TestResolverThatReturnsPropertyInfoType()
     {
-      // Arrange
-
       ResolverThatReturnsPropertyInfoTypeClass resolverThatReturnsPropertyInfoTypeClass = ResolverThatReturnsPropertyInfoTypeClassImpl;
 
-      // Apply
-
       string result = resolverThatReturnsPropertyInfoTypeClass.ExportAsString();
-
-      // Assert
-
-      Assert.Equal(result, zenonSerializableTestXmlComparison.ResolverThatReturnsPropertyInfoType);
+      Assert.Equal(ComparisonValues.ResolverThatReturnsPropertyInfoType, result);
     }
-
-
     #endregion
 
-    #region ResolverThatReturnsPropertyWrongType
 
+    #region ResolverThatReturnsPropertyWrongType
     public class ResolverThatReturnsPropertyWrongTypeClass : zenonSerializable<ResolverThatReturnsPropertyWrongTypeClass>
     {
       [zenonSerializableNode(nameof(SimpleInteger), resolver: typeof(ResolverThatReturnsPropertyWrongTypeResolver))]
@@ -201,7 +152,9 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
 
       public Type GetTypeForDeserialization(string nodeName, int index)
       {
-        return typeof(ResolverThatReturnsPropertyWrongTypeClass).GetProperty(nodeName.Substring(0, nodeName.IndexOf("_"))).GetType();
+        string name = nodeName.Substring(0, nodeName.IndexOf("_", StringComparison.InvariantCulture));
+        // ReSharper disable once PossibleNullReferenceException : Property exists in our cases, will not be null.
+        return typeof(ResolverThatReturnsPropertyWrongTypeClass).GetProperty(name).GetType();
       }
     }
 
@@ -220,9 +173,6 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
       string result = resolverThatReturnsPropertyWrongTypeClass.ExportAsString();
       Assert.ThrowsAny<Exception>(() => ResolverThatReturnsPropertyWrongTypeClass.Import(XElement.Parse(result)));
     }
-
-
     #endregion
-
   }
 }

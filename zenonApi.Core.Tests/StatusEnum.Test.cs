@@ -2,14 +2,12 @@
 using Xunit;
 using zenonApi.Serialization;
 
-namespace zenonApi.Core.Tests.Serialization.zenonSerializable
+namespace zenonApi.Core.Tests
 {
   public class StatusEnum
   {
-
-    public class StatusEnumClass: zenonSerializable<StatusEnumClass>
+    public class StatusEnumClass : zenonSerializable<StatusEnumClass>
     {
-
       private int _simpleInteger;
 
       [zenonSerializableNode(nameof(SimpleInteger))]
@@ -40,75 +38,46 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
 
 
     #region New
-
     [Fact]
     public void StatusStatusEnumNew()
     {
-      // Arrange Apply
-
       StatusEnumClass statusEnumClass = new StatusEnumClass();
-
-      // Assert
-
       Assert.Equal(zenonSerializableStatusEnum.New, statusEnumClass.ObjectStatus);
-
     }
-
     #endregion
 
 
     #region Loaded
-
     [Fact]
     public void StatusStatusEnumLoaded()
     {
-      StatusEnumClass statusEnumClass = StatusEnumClass.Import(XElement.Parse(zenonSerializableTestXmlComparison.StatusEnum)); 
+      StatusEnumClass statusEnumClass = StatusEnumClass.Import(XElement.Parse(ComparisonValues.StatusEnum));
       Assert.Equal(zenonSerializableStatusEnum.Loaded, statusEnumClass.ObjectStatus);
     }
     #endregion
 
 
     #region Modified
-
     [Fact]
     public void StatusStatusEnumModified()
     {
-      // Arrange
-
       StatusEnumClass statusEnumClass = StatusEnumClassImpl;
 
-      // Apply
-
       statusEnumClass.SimpleInteger = 1503;
-
-      // Assert
-
       Assert.Equal(zenonSerializableStatusEnum.Modified, statusEnumClass.ObjectStatus);
-
     }
-
     #endregion
 
 
     #region Deserialized
-
     [Fact]
     public void StatusStatusEnumDeserialized()
     {
-      // Arrange
-
       StatusEnumClass statusEnumClass = StatusEnumClassImpl;
-
-      // Apply
-
       statusEnumClass.ExportAsString();
 
-      // Assert
-
       Assert.Equal(zenonSerializableStatusEnum.Deserialized, statusEnumClass.ObjectStatus);
-
     }
-
     #endregion
   }
 }

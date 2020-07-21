@@ -3,12 +3,11 @@ using System.Xml.Linq;
 using Xunit;
 using zenonApi.Serialization;
 
-namespace zenonApi.Core.Tests.Serialization.zenonSerializable
+namespace zenonApi.Core.Tests
 {
   public class NestedSerialization
   {
     #region NestedSerializationNodes
-
     public class NestedSerializationNodes : zenonSerializable<NestedSerializationNodes>
     {
       [zenonSerializableNode(nameof(SimpleInteger))]
@@ -35,24 +34,16 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
     [Fact]
     public void TestNestedSerializationNodes()
     {
-      // Arrange
-
       NestedSerializationNodes nestedSerializationNodes = NestedSerializationNodesImpl;
 
-      // Apply
-
       string result = nestedSerializationNodes.ExportAsString();
-
-      // Assert
-
       Assert.NotNull(result);
-      Assert.Equal(result, zenonSerializableTestXmlComparison.TestNestedSerializationNodes);
+      Assert.Equal(result, ComparisonValues.TestNestedSerializationNodes);
     }
-
     #endregion
 
-    #region NestedSerializationWithAttributes
 
+    #region NestedSerializationWithAttributes
     public class NestedSerializationWithAttributes : zenonSerializable<NestedSerializationWithAttributes>
     {
       [zenonSerializableAttribute(nameof(SimpleAttrInteger))]
@@ -89,52 +80,33 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
         SimpleAttrString = "HelloWorld"
       };
 
-    #region ToString
 
+    #region ToString
     [Fact]
     public void TestNestedSerializationWithAttributesToString()
     {
-      // Arrange
-
       NestedSerializationWithAttributes nestedSerializationWithAttributes = NestedSerializationWithAttributesImpl;
 
-      // Apply
-
       string result = nestedSerializationWithAttributes.ExportAsString();
-
-      // Assert
-
-      Assert.Equal(result, zenonSerializableTestXmlComparison.NestedSerializationWithAttributes);
-
+      Assert.Equal(result, ComparisonValues.NestedSerializationWithAttributes);
     }
-
     #endregion
 
     #region ToXElement
-
     [Fact]
     public void TestNestedSerializationWithAttributesXDocument()
     {
-      // Arrange
-
       NestedSerializationWithAttributes nestedSerializationWithAttributes = NestedSerializationWithAttributesImpl;
 
-      // Apply
-
       XElement result = nestedSerializationWithAttributes.ExportAsXElement();
-
-      // Assert
-
       Assert.NotNull(result);
-      Assert.True(XNode.DeepEquals(result, XElement.Parse(zenonSerializableTestXmlComparison.NestedSerializationWithAttributes)));
+      Assert.True(XNode.DeepEquals(result, XElement.Parse(ComparisonValues.NestedSerializationWithAttributes)));
     }
-
+    #endregion
     #endregion
 
-    #endregion
 
     #region NestedSerializationNestedXmlAsAttribute
-
     public class NestedSerializationNestedXmlAsAttribute : zenonSerializable<NestedSerializationNestedXmlAsAttribute>
     {
       [zenonSerializableNode(nameof(SimpleInteger))]
@@ -150,29 +122,22 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
       public SimpleSerializationWithAttributes.SimpleSerializationWithAttributesClass SimpleSingleSerialization { get; set; }
     }
 
-    public static NestedSerializationNestedXmlAsAttribute NestedSerializationNestedXmlAsAttributeImpl = new NestedSerializationNestedXmlAsAttribute
-    {
-      SimpleSingleSerialization = SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
-      SimpleInteger = 5,
-      SimpleDouble = 5.3,
-      SimpleString = "TestString"
-    };
+    public static NestedSerializationNestedXmlAsAttribute NestedSerializationNestedXmlAsAttributeImpl
+      = new NestedSerializationNestedXmlAsAttribute
+      {
+        SimpleSingleSerialization = SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
+        SimpleInteger = 5,
+        SimpleDouble = 5.3,
+        SimpleString = "TestString"
+      };
 
-
-    // should fail as a nested Serialzation should not be in an Attribute
     [Fact]
     public void TestNestedSerializationNestedXmlAsAttribute()
     {
-      // Arrange
-
+      // Should fail as a nested Serialzation should not be in an Attribute
       NestedSerializationNestedXmlAsAttribute nestedSerializationNestedXmlAsAttribute = NestedSerializationNestedXmlAsAttributeImpl;
-
-      // Apply * Assert
-
       Assert.ThrowsAny<Exception>(() => nestedSerializationNestedXmlAsAttribute.ExportAsString());
-
     }
-
     #endregion
   }
 }

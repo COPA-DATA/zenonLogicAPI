@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace zenonApi.Core.Tests.Serialization {
+namespace zenonApi.Core.Tests {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace zenonApi.Core.Tests.Serialization {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class zenonSerializableTestXmlComparison {
+    internal class ComparisonValues {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal zenonSerializableTestXmlComparison() {
+        internal ComparisonValues() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace zenonApi.Core.Tests.Serialization {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("zenonApi.Core.Tests.Serialization.zenonSerializableTestXmlComparison", typeof(zenonSerializableTestXmlComparison).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("zenonApi.Core.Tests.ComparisonValues", typeof(ComparisonValues).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -63,13 +63,13 @@ namespace zenonApi.Core.Tests.Serialization {
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
         ///&lt;AllInOneClass EnumSerializationEnum=&quot;AbcTest&quot;&gt;
+        ///   &lt;EnumSerializationAttrEnum&gt;AbcTest&lt;/EnumSerializationAttrEnum&gt;
         ///   &lt;SimpleSingleSerializationEncapsulateTrueClasses&gt;
         ///      &lt;SimpleSingleSerializationEncapsulateTrueClasses_0 SimpleAttrInteger=&quot;8&quot; SimpleAttrDouble=&quot;8.88&quot; SimpleAttrString=&quot;HelloWorld&quot;&gt;
         ///         &lt;SimpleInteger&gt;5&lt;/SimpleInteger&gt;
         ///         &lt;SimpleDouble&gt;5.3&lt;/SimpleDouble&gt;
         ///         &lt;SimpleString&gt;TestString&lt;/SimpleString&gt;
-        ///      &lt;/SimpleSingleSerializationEncapsulateTrueClasses_0&gt;
-        ///      &lt;SimpleSingleSe [rest of string was truncated]&quot;;.
+        ///      &lt;/Simple [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string AllInOneClass {
             get {
@@ -87,6 +87,18 @@ namespace zenonApi.Core.Tests.Serialization {
         internal static string ConverterFunctionalityTest {
             get {
                 return ResourceManager.GetString("ConverterFunctionalityTest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;ListHandlingOnSingleNodesClass&gt;
+        ///   &lt;SimpleInteger&gt;123&lt;/SimpleInteger&gt;
+        ///&lt;/ListHandlingOnSingleNodesClass&gt;.
+        /// </summary>
+        internal static string EncapsulateChildsOnNonListEntity {
+            get {
+                return ResourceManager.GetString("EncapsulateChildsOnNonListEntity", resourceCulture);
             }
         }
         
@@ -372,9 +384,9 @@ namespace zenonApi.Core.Tests.Serialization {
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
         ///&lt;SelectiveNodeOrderingClass&gt;
+        ///   &lt;SimpleString&gt;Abc&lt;/SimpleString&gt;
         ///   &lt;SimpleDouble&gt;88.88&lt;/SimpleDouble&gt;
         ///   &lt;SimpleInteger&gt;12&lt;/SimpleInteger&gt;
-        ///   &lt;SimpleString&gt;Abc&lt;/SimpleString&gt;
         ///&lt;/SelectiveNodeOrderingClass&gt;.
         /// </summary>
         internal static string SelectiveNodeOrdering {

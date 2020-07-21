@@ -2,7 +2,7 @@
 using Xunit;
 using zenonApi.Serialization;
 
-namespace zenonApi.Core.Tests.Serialization.zenonSerializable
+namespace zenonApi.Core.Tests
 {
   public class DoubleNaming
   {
@@ -37,8 +37,10 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
     {
       [zenonSerializableAttribute(nameof(SimpleInteger))]
       public int SimpleInteger { get; set; }
+
       [zenonSerializableAttribute(nameof(SimpleInteger))]
       public double SimpleDouble { get; set; }
+      
       [zenonSerializableNode(nameof(SimpleString))]
       public string SimpleString { get; set; }
     }

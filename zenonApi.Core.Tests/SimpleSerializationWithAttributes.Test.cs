@@ -2,7 +2,7 @@
 using Xunit;
 using zenonApi.Serialization;
 
-namespace zenonApi.Core.Tests.Serialization.zenonSerializable
+namespace zenonApi.Core.Tests
 {
   public class SimpleSerializationWithAttributes
   {
@@ -39,46 +39,30 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
       };
 
     #region ToString
-
     [Fact]
 
     public void TestSimpleSerializationWithAttributesToString()
     {
-      // Arrange
-
       SimpleSerializationWithAttributesClass simpleSerializationWithAttributes = SimpleSerializationWithAttributesImpl;
-
-      // Apply
 
       string result = simpleSerializationWithAttributes.ExportAsString();
 
-      // Assert
-
       Assert.NotNull(result);
-      Assert.Equal(result, zenonSerializableTestXmlComparison.SimpleSerializationWithAttributesToString);
+      Assert.Equal(result, ComparisonValues.SimpleSerializationWithAttributesToString);
     }
-
     #endregion
 
-    #region ToXElement
 
+    #region ToXElement
     [Fact]
     public void TestSimpleSerializationWithAttributesToXDocument()
     {
-      // Arrange
-
       SimpleSerializationWithAttributesClass simpleSerializationWithAttributes = SimpleSerializationWithAttributesImpl;
-
-      // Apply
-
       XElement result = simpleSerializationWithAttributes.ExportAsXElement();
 
-      // Assert
-
       Assert.NotNull(result);
-      Assert.True(XNode.DeepEquals(result, XElement.Parse(zenonSerializableTestXmlComparison.SimpleSerializationWithAttributesToString)));
+      Assert.True(XNode.DeepEquals(result, XElement.Parse(ComparisonValues.SimpleSerializationWithAttributesToString)));
     }
-
     #endregion
   }
 }

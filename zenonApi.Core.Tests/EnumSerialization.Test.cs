@@ -2,7 +2,7 @@
 using Xunit;
 using zenonApi.Serialization;
 
-namespace zenonApi.Core.Tests.Serialization.zenonSerializable
+namespace zenonApi.Core.Tests
 {
   public class EnumSerialization
   {
@@ -17,7 +17,6 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
     }
 
     #region EnumSerializationAsNode
-
     public class EnumSerializationAsNodeClass : zenonSerializable<EnumSerializationAsNodeClass>
     {
       [zenonSerializableNode(nameof(SimpleInteger))]
@@ -37,41 +36,22 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
     [Fact]
     public void TestEnumSerializationAsNodeToString()
     {
-      // Arrange
-
       EnumSerializationAsNodeClass enumSerializationAsNodeClass = EnumSerializationAsNodeClassImpl;
-
-      // Apply
-
       string result = enumSerializationAsNodeClass.ExportAsString();
-
-      // Assert
-
-      Assert.Equal(zenonSerializableTestXmlComparison.EnumSerializationAsNode, result);
-
+      Assert.Equal(ComparisonValues.EnumSerializationAsNode, result);
     }
 
     [Fact]
     public void TestEnumSerializationAsNodeToXElement()
     {
-      // Arrange
-
       EnumSerializationAsNodeClass enumSerializationAsNodeClass = EnumSerializationAsNodeClassImpl;
-
-      // Apply
-
       XElement result = enumSerializationAsNodeClass.ExportAsXElement();
-
-      // Assert
-
-      Assert.True(XNode.DeepEquals(XElement.Parse(zenonSerializableTestXmlComparison.EnumSerializationAsNode), result));
-
+      Assert.True(XNode.DeepEquals(XElement.Parse(ComparisonValues.EnumSerializationAsNode), result));
     }
-
     #endregion
 
-    #region EnumSerializationAsParameter
 
+    #region EnumSerializationAsParameter
     public class EnumSerializationAsParameterClass : zenonSerializable<EnumSerializationAsParameterClass>
     {
       [zenonSerializableNode(nameof(SimpleInteger))]
@@ -91,38 +71,20 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
     [Fact]
     public void TestEnumSerializationAsParameterToString()
     {
-      // Arrange
-
       EnumSerializationAsParameterClass enumSerializationAsParameterClass = EnumSerializationAsParameterClassImpl;
-
-      // Apply
-
       string result = enumSerializationAsParameterClass.ExportAsString();
-
-      // Assert
-
-      Assert.Equal(zenonSerializableTestXmlComparison.EnumSerializationAsParameter, result);
-
+      Assert.Equal(ComparisonValues.EnumSerializationAsParameter, result);
     }
 
     [Fact]
     public void TestEnumSerializationAsParameterToXElement()
     {
-      // Arrange
-
       EnumSerializationAsParameterClass enumSerializationAsParameterClass = EnumSerializationAsParameterClassImpl;
-
-      // Apply
-
       XElement result = enumSerializationAsParameterClass.ExportAsXElement();
 
-      // Assert
-
-      Assert.True(XNode.DeepEquals(XElement.Parse(zenonSerializableTestXmlComparison.EnumSerializationAsParameter), result));
-
+      XElement withoutXmlHeader = XDocument.Parse(ComparisonValues.EnumSerializationAsParameter).Root;
+      Assert.True(XNode.DeepEquals(withoutXmlHeader, result));
     }
-
     #endregion
-
   }
 }

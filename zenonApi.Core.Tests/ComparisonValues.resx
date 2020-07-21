@@ -120,6 +120,7 @@
   <data name="AllInOneClass" xml:space="preserve">
     <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
 &lt;AllInOneClass EnumSerializationEnum="AbcTest"&gt;
+   &lt;EnumSerializationAttrEnum&gt;AbcTest&lt;/EnumSerializationAttrEnum&gt;
    &lt;SimpleSingleSerializationEncapsulateTrueClasses&gt;
       &lt;SimpleSingleSerializationEncapsulateTrueClasses_0 SimpleAttrInteger="8" SimpleAttrDouble="8.88" SimpleAttrString="HelloWorld"&gt;
          &lt;SimpleInteger&gt;5&lt;/SimpleInteger&gt;
@@ -177,7 +178,6 @@
       &lt;SimpleDouble&gt;5.3&lt;/SimpleDouble&gt;
       &lt;SimpleString&gt;TestString&lt;/SimpleString&gt;
    &lt;/SimpleSingleSerializationClass_0&gt;
-    &lt;EnumSerializationAttrEnum&gt;AbcTest&lt;/EnumSerializationAttrEnum&gt;
 &lt;/AllInOneClass&gt;</value>
   </data>
   <data name="ConverterFunctionalityTest" xml:space="preserve">
@@ -186,6 +186,12 @@
    &lt;SimpleDouble&gt;5.25&lt;/SimpleDouble&gt;
    &lt;SimpleString&gt;HelloWorld&lt;/SimpleString&gt;
 &lt;/TestConverterSerializationConverterUsage&gt;</value>
+  </data>
+  <data name="EncapsulateChildsOnNonListEntity" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
+&lt;ListHandlingOnSingleNodesClass&gt;
+   &lt;SimpleInteger&gt;123&lt;/SimpleInteger&gt;
+&lt;/ListHandlingOnSingleNodesClass&gt;</value>
   </data>
   <data name="EnumSerializationAsNode" xml:space="preserve">
     <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
@@ -400,9 +406,9 @@
   <data name="SelectiveNodeOrdering" xml:space="preserve">
     <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
 &lt;SelectiveNodeOrderingClass&gt;
+   &lt;SimpleString&gt;Abc&lt;/SimpleString&gt;
    &lt;SimpleDouble&gt;88.88&lt;/SimpleDouble&gt;
    &lt;SimpleInteger&gt;12&lt;/SimpleInteger&gt;
-   &lt;SimpleString&gt;Abc&lt;/SimpleString&gt;
 &lt;/SelectiveNodeOrderingClass&gt;</value>
   </data>
   <data name="SimpleAttributeOrdering" xml:space="preserve">

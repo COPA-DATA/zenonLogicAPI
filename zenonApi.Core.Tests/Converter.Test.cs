@@ -3,7 +3,7 @@ using System.Xml.Linq;
 using Xunit;
 using zenonApi.Serialization;
 
-namespace zenonApi.Core.Tests.Serialization.zenonSerializable
+namespace zenonApi.Core.Tests
 {
   public class Converter
   {
@@ -33,7 +33,6 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
       ConverterSerializationConverterNull converterSerializationImpl = ConverterSerializationConverterNullImpl;
       Assert.Throws<CustomAttributeFormatException>(() => converterSerializationImpl.ExportAsString());
     }
-
     #endregion
 
 
@@ -63,11 +62,10 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
       ConverterSerializationConverterWrong converterSerializationConverterWrongImpl = ConverterSerializationConverterWrongImpl;
       Assert.Throws<CustomAttributeFormatException>(() => converterSerializationConverterWrongImpl.ExportAsString());
     }
-
     #endregion
 
-    #region TryUsageOfConverter
 
+    #region TryUsageOfConverter
     public class TestConverterSerializationConverterUsage : zenonSerializable<TestConverterSerializationConverterUsage>
     {
       [zenonSerializableAttribute(nameof(SimpleInteger), Converter = typeof(SimpleTestConverter))]
@@ -109,7 +107,7 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
       TestConverterSerializationConverterUsage testConverterSerializationConverterUsageImpl
         = TestConverterSerializationConverterUsageImpl;
       string result = testConverterSerializationConverterUsageImpl.ExportAsString();
-      Assert.Equal(zenonSerializableTestXmlComparison.ConverterFunctionalityTest, result);
+      Assert.Equal(ComparisonValues.ConverterFunctionalityTest, result);
     }
 
     [Fact]
@@ -123,7 +121,6 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
 
       Assert.Equal(testConverterSerializationConverterUsageImpl.SimpleInteger, backTransformation.SimpleInteger);
     }
-
     #endregion
   }
 }

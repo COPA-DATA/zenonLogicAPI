@@ -5,7 +5,7 @@ using System.Xml.Linq;
 using Xunit;
 using zenonApi.Serialization;
 
-namespace zenonApi.Core.Tests.Serialization.zenonSerializable
+namespace zenonApi.Core.Tests
 {
   public class AllInOne
   {
@@ -15,10 +15,18 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
       [zenonSerializableNode(nameof(SimpleSingleSerializationClass), typeof(AllInOneResolver), NodeOrder = 40)]
       public SimpleSerializationWithAttributes.SimpleSerializationWithAttributesClass SimpleSingleSerializationClass { get; set; }
 
-      [zenonSerializableNode(nameof(SimpleSingleSerializationEncapsulateFalseClasses), typeof(AllInOneResolver), EncapsulateChildsIfList = false, NodeOrder = 20)]
+      [zenonSerializableNode(
+        nameof(SimpleSingleSerializationEncapsulateFalseClasses),
+        typeof(AllInOneResolver),
+        EncapsulateChildsIfList = false,
+        NodeOrder = 20)]
       public List<SimpleSerializationWithAttributes.SimpleSerializationWithAttributesClass> SimpleSingleSerializationEncapsulateFalseClasses { get; set; }
 
-      [zenonSerializableNode(nameof(SimpleSingleSerializationEncapsulateTrueClasses), typeof(AllInOneResolver), EncapsulateChildsIfList = true, NodeOrder = 10)]
+      [zenonSerializableNode(
+        nameof(SimpleSingleSerializationEncapsulateTrueClasses),
+        typeof(AllInOneResolver),
+        EncapsulateChildsIfList = true,
+        NodeOrder = 10)]
       public List<SimpleSerializationWithAttributes.SimpleSerializationWithAttributesClass> SimpleSingleSerializationEncapsulateTrueClasses { get; set; }
 
       [zenonSerializableNode(nameof(EnumSerializationAttrEnum))]
@@ -37,30 +45,33 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
 
       public Type GetTypeForDeserialization(string nodeName, int index)
       {
+        var name = nodeName.Substring(0, nodeName.IndexOf("_", StringComparison.InvariantCulture));
         // ReSharper disable once PossibleNullReferenceException : This property exits, will never be null.
-        return typeof(AllInOneClass).GetProperty(nodeName.Substring(0, nodeName.IndexOf("_"))).PropertyType;
+        return typeof(AllInOneClass).GetProperty(name).PropertyType;
       }
     }
 
     public AllInOneClass AllInOneClassImpl => new AllInOneClass
     {
       SimpleSingleSerializationClass = SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
-      SimpleSingleSerializationEncapsulateFalseClasses = new List<SimpleSerializationWithAttributes.SimpleSerializationWithAttributesClass>
-      {
-        SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
-        SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
-        SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
-        SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
-        SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl
-      },
-      SimpleSingleSerializationEncapsulateTrueClasses = new List<SimpleSerializationWithAttributes.SimpleSerializationWithAttributesClass>
-      {
-        SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
-        SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
-        SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
-        SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
-        SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl
-      },
+      SimpleSingleSerializationEncapsulateFalseClasses
+        = new List<SimpleSerializationWithAttributes.SimpleSerializationWithAttributesClass>
+          {
+            SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
+            SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
+            SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
+            SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
+            SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl
+          },
+      SimpleSingleSerializationEncapsulateTrueClasses
+        = new List<SimpleSerializationWithAttributes.SimpleSerializationWithAttributesClass>
+          {
+            SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
+            SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
+            SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
+            SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
+            SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl
+          },
       EnumSerializationEnum = EnumSerialization.EnumSerializationEnum.Abc
     };
 
@@ -69,7 +80,7 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
     {
       AllInOneClass allInOneClass = AllInOneClassImpl;
       string result = allInOneClass.ExportAsString();
-      Assert.Equal(zenonSerializableTestXmlComparison.AllInOneClass, result);
+      Assert.Equal(ComparisonValues.AllInOneClass, result);
     }
 
     [Fact]
@@ -77,7 +88,9 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
     {
       AllInOneClass allInOneClass = AllInOneClassImpl;
       XElement result = allInOneClass.ExportAsXElement();
-      Assert.True(XNode.DeepEquals(XElement.Parse(zenonSerializableTestXmlComparison.AllInOneClass), result));
+
+      var withoutXmlHeader = XDocument.Parse(ComparisonValues.AllInOneClass).Root;
+      Assert.True(XNode.DeepEquals(withoutXmlHeader, result));
     }
     #endregion
   }

@@ -22,17 +22,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Serialization\zenonSerializableTestXmlComparison.Designer.cs">
+    <Compile Update="ComparisonValues.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>zenonSerializableTestXmlComparison.resx</DependentUpon>
+      <DependentUpon>ComparisonValues.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Serialization\zenonSerializableTestXmlComparison.resx">
+    <EmbeddedResource Update="ComparisonValues.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>zenonSerializableTestXmlComparison.Designer.cs</LastGenOutput>
+      <LastGenOutput>ComparisonValues.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
