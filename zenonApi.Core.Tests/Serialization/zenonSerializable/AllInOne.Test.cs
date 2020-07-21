@@ -9,10 +9,8 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
 {
   public class AllInOne
   {
-
     #region AllInOne
-
-    public class AllInOneClass: zenonSerializable<AllInOneClass>
+    public class AllInOneClass : zenonSerializable<AllInOneClass>
     {
       [zenonSerializableNode(nameof(SimpleSingleSerializationClass), typeof(AllInOneResolver), NodeOrder = 40)]
       public SimpleSerializationWithAttributes.SimpleSerializationWithAttributesClass SimpleSingleSerializationClass { get; set; }
@@ -30,7 +28,7 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
       public EnumSerialization.EnumSerializationEnum EnumSerializationEnum { get; set; }
     }
 
-    public class AllInOneResolver: IZenonSerializableResolver
+    public class AllInOneResolver : IZenonSerializableResolver
     {
       public string GetNodeNameForSerialization(PropertyInfo targetProperty, Type targetType, object value, int index)
       {
@@ -39,6 +37,7 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
 
       public Type GetTypeForDeserialization(string nodeName, int index)
       {
+        // ReSharper disable once PossibleNullReferenceException : This property exits, will never be null.
         return typeof(AllInOneClass).GetProperty(nodeName.Substring(0, nodeName.IndexOf("_"))).PropertyType;
       }
     }
@@ -68,33 +67,18 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
     [Fact]
     public void TestAllInOneClassToString()
     {
-      // Arrange
       AllInOneClass allInOneClass = AllInOneClassImpl;
-
-      // Apply
-
       string result = allInOneClass.ExportAsString();
-
-      // Assert
-
       Assert.Equal(zenonSerializableTestXmlComparison.AllInOneClass, result);
     }
-    
+
     [Fact]
     public void TestAllInOneClassToXElement()
     {
-      // Arrange
       AllInOneClass allInOneClass = AllInOneClassImpl;
-
-      // Apply
-
       XElement result = allInOneClass.ExportAsXElement();
-
-      // Assert
-
       Assert.True(XNode.DeepEquals(XElement.Parse(zenonSerializableTestXmlComparison.AllInOneClass), result));
     }
     #endregion
-
   }
 }

@@ -7,8 +7,6 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
   public class DoubleNaming
   {
     #region DoubleZenonSerializableNode 
-
-    // TODO should fail error in API
     public class DoubleZenonSerializableNode : zenonSerializable<DoubleZenonSerializableNode>
     {
       [zenonSerializableNode(nameof(SimpleInteger))]
@@ -27,21 +25,14 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
     [Fact]
     public void TestDoubleZenonSerializableNode()
     {
-      // Arrange
-
-      DoubleZenonSerializableNode doubleZenonSerializableNode = DoubleZenonSerializableNodeImpl;
-
-      // Apply & Assert
-
+      DoubleZenonSerializableNode doubleZenonSerializableNode = DoubleZenonSerializableNodeImpl; 
       Assert.ThrowsAny<Exception>(() => doubleZenonSerializableNode.ExportAsString());
     }
 
     #endregion
 
+
     #region DoubleZenonSerializableAttribute
-
-    // TODO should throw an Exception
-
     public class DoubleZenonSerializableAttribute : zenonSerializable<DoubleZenonSerializableAttribute>
     {
       [zenonSerializableAttribute(nameof(SimpleInteger))]
@@ -63,17 +54,9 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
     [Fact]
     public void TestDoubleZenonSerializableAttribute()
     {
-      // Arrange
-
       DoubleZenonSerializableAttribute doubleZenonSerializableAttribute = DoubleZenonSerializableAttributeImpl;
-
-      // Apply & Assert
-
       Assert.ThrowsAny<Exception>(() => doubleZenonSerializableAttribute.ExportAsString());
-
     }
-
-
     #endregion
   }
 }

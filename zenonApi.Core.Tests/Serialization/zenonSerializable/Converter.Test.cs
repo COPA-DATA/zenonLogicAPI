@@ -30,18 +30,14 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
     [Fact]
     public void TestNullConverterException()
     {
-      // arrange
       ConverterSerializationConverterNull converterSerializationImpl = ConverterSerializationConverterNullImpl;
-
-      // apply & assert
-
       Assert.Throws<CustomAttributeFormatException>(() => converterSerializationImpl.ExportAsString());
     }
 
     #endregion
 
-    #region WrongConverter
 
+    #region WrongConverter
     public class ConverterSerializationConverterWrong : zenonSerializable<ConverterSerializationConverterWrong>
     {
       [zenonSerializableAttribute(nameof(SimpleInteger), Converter = null)]
@@ -64,11 +60,7 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
     [Fact]
     public void TestWrongConverterException()
     {
-      // arrange
       ConverterSerializationConverterWrong converterSerializationConverterWrongImpl = ConverterSerializationConverterWrongImpl;
-
-      // apply & assert
-
       Assert.Throws<CustomAttributeFormatException>(() => converterSerializationConverterWrongImpl.ExportAsString());
     }
 
@@ -90,7 +82,6 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
 
     public class SimpleTestConverter : IZenonSerializationConverter
     {
-
       private const string Padding = "Test + ";
 
       public string Convert(object source)
@@ -104,47 +95,33 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
       }
     }
 
-    public static TestConverterSerializationConverterUsage TestConverterSerializationConverterUsageImpl = new TestConverterSerializationConverterUsage
-    {
-      SimpleInteger = 5,
-      SimpleDouble = 5.25,
-      SimpleString = "HelloWorld"
-    };
+    public static TestConverterSerializationConverterUsage TestConverterSerializationConverterUsageImpl
+      = new TestConverterSerializationConverterUsage
+      {
+        SimpleInteger = 5,
+        SimpleDouble = 5.25,
+        SimpleString = "HelloWorld"
+      };
 
     [Fact]
     public void TestConverterFunctionality()
     {
-      // arrange
-
-      TestConverterSerializationConverterUsage testConverterSerializationConverterUsageImpl = TestConverterSerializationConverterUsageImpl;
-
-      // apply
-
+      TestConverterSerializationConverterUsage testConverterSerializationConverterUsageImpl
+        = TestConverterSerializationConverterUsageImpl;
       string result = testConverterSerializationConverterUsageImpl.ExportAsString();
-
-      // assert
-
       Assert.Equal(zenonSerializableTestXmlComparison.ConverterFunctionalityTest, result);
-
     }
 
     [Fact]
     public void TestConverterFunctionalityBack()
     {
-      // arrange
-
       TestConverterSerializationConverterUsage testConverterSerializationConverterUsageImpl = TestConverterSerializationConverterUsageImpl;
-
-      // apply
-
       string result = testConverterSerializationConverterUsageImpl.ExportAsString();
 
       TestConverterSerializationConverterUsage backTransformation =
         TestConverterSerializationConverterUsage.Import(XElement.Parse(result));
 
-      // assert
       Assert.Equal(testConverterSerializationConverterUsageImpl.SimpleInteger, backTransformation.SimpleInteger);
-
     }
 
     #endregion

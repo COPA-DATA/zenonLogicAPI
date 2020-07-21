@@ -38,6 +38,7 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
         SimpleString = "TestString"
       };
 
+
     #region New
 
     [Fact]
@@ -55,24 +56,17 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
 
     #endregion
 
+
     #region Loaded
 
     [Fact]
     public void StatusStatusEnumLoaded()
     {
-      // Arrange & Apply
-
-      StatusEnumClass statusEnumClass =
-        StatusEnumClass.Import(
-          XElement.Parse(zenonSerializableTestXmlComparison.StatusEnum));
-
-      // Assert
-
+      StatusEnumClass statusEnumClass = StatusEnumClass.Import(XElement.Parse(zenonSerializableTestXmlComparison.StatusEnum)); 
       Assert.Equal(zenonSerializableStatusEnum.Loaded, statusEnumClass.ObjectStatus);
-
     }
-
     #endregion
+
 
     #region Modified
 
@@ -95,6 +89,7 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
 
     #endregion
 
+
     #region Deserialized
 
     [Fact]
@@ -115,7 +110,5 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
     }
 
     #endregion
-
-
   }
 }

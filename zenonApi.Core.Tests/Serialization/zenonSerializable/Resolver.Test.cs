@@ -29,7 +29,7 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
       }
     }
 
-    public class ResolverOnNodesThatAreNotListsClass: zenonSerializable<ResolverOnNodesThatAreNotListsClass>
+    public class ResolverOnNodesThatAreNotListsClass : zenonSerializable<ResolverOnNodesThatAreNotListsClass>
     {
       [zenonSerializableNode(nameof(SimpleInteger), resolver: typeof(ResolverOnNodesThatAreNotListsResolver))]
       public string SimpleInteger { get; set; }
@@ -63,7 +63,7 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
       // Assert
       Assert.Equal(result, zenonSerializableTestXmlComparison.ResolverOnNodesThatAreNotLists);
     }
-    
+
     [Fact]
     public void TestResolverOnNodesThatAreNotListsResolverDeserialized()
     {
@@ -83,25 +83,17 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
     [Fact]
     public void TestResolverOnNodesThatAreNotListsResolverNumberOfResolverCalls()
     {
-      // Arrange
-
       ResolverOnNodesThatAreNotListsClass resolverOnNodesThatAreNotListsClass = ResolverOnNodesThatAreNotListsClassImpl;
       ResolverOnNodesThatAreNotListsResolver.Counter = 0;
-      
-      // Apply
+
       string result = resolverOnNodesThatAreNotListsClass.ExportAsString();
       try
       {
         ResolverOnNodesThatAreNotListsClass des = ResolverOnNodesThatAreNotListsClass.Import(XElement.Parse(result));
       }
-      catch(Exception) { }
-
-
-      // Assert
+      catch (Exception) { }
 
       Assert.Equal(2, ResolverOnNodesThatAreNotListsResolver.Counter);
-
-
     }
 
 
@@ -182,7 +174,7 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
       string result = resolverThatReturnsPropertyInfoTypeClass.ExportAsString();
 
       // Assert
-      
+
       Assert.Equal(result, zenonSerializableTestXmlComparison.ResolverThatReturnsPropertyInfoType);
     }
 
@@ -193,7 +185,7 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
 
     public class ResolverThatReturnsPropertyWrongTypeClass : zenonSerializable<ResolverThatReturnsPropertyWrongTypeClass>
     {
-      [zenonSerializableNode(nameof(SimpleInteger), resolver: typeof(ResolverThatReturnsPropertyInfoTypeResolver))]
+      [zenonSerializableNode(nameof(SimpleInteger), resolver: typeof(ResolverThatReturnsPropertyWrongTypeResolver))]
       public List<string> SimpleInteger { get; set; }
 
       [zenonSerializableNode(nameof(SimpleString))]
@@ -224,16 +216,8 @@ namespace zenonApi.Core.Tests.Serialization.zenonSerializable
     [Fact]
     public void TestResolverThatReturnsPropertyWrongType()
     {
-      // Arrange
-
       ResolverThatReturnsPropertyWrongTypeClass resolverThatReturnsPropertyWrongTypeClass = ResolverThatReturnsPropertyWrongTypeClassImpl;
-
-      // Apply 
-
       string result = resolverThatReturnsPropertyWrongTypeClass.ExportAsString();
-
-      // Assert
-      
       Assert.ThrowsAny<Exception>(() => ResolverThatReturnsPropertyWrongTypeClass.Import(XElement.Parse(result)));
     }
 
