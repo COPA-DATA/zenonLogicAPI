@@ -19,9 +19,15 @@ namespace zenonApi.Extensions
         return false;
       }
 
-      return typeof(IEnumerable<>)
-        .MakeGenericType(genericTypeParameter)
-        .IsAssignableFrom(propertyInfo.PropertyType);
+      var enumerableType = propertyInfo.PropertyType.GetInterface(typeof(IEnumerable<>).FullName);
+      if (enumerableType == null)
+      {
+        return false;
+      }
+
+      var ownGenericType = enumerableType.GenericTypeArguments[0];
+
+      return genericTypeParameter.IsAssignableFrom(ownGenericType);
     }
 
     public static bool IsEnumerableOf<T>(this PropertyInfo propertyInfo)

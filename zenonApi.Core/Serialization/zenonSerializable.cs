@@ -204,29 +204,52 @@ namespace zenonApi.Serialization
         .Where(x => x.attribute != null)
         .OrderBy(x => x.attribute.InternalOrder);
 
+      var knownAttributeNames = new List<string>();
+      var knownNodeNames = new List<string>();
+
       foreach (var attributeMapping in attributeMappings)
       {
-        switch (attributeMapping.attribute.AttributeType)
+        var property = attributeMapping.property;
+        var attribute = attributeMapping.attribute;
+
+        switch (attribute.AttributeType)
         {
           case zenonSerializableAttributeType.Attribute:
-            ExportAttribute(current, this, attributeMapping.property, attributeMapping.attribute);
+            if (knownAttributeNames.Contains(attribute.InternalName))
+            {
+              Type declaringType = property.PropertyType.DeclaringType;
+              // ReSharper disable once PossibleNullReferenceException : DeclaringType will not be null.
+              throw new Exception(
+                $"Class '{declaringType.FullName}' defines multiple properties with "
+                + $"{nameof(zenonSerializableAttributeAttribute)}s with the same name '{attribute.InternalName}'.");
+            }
+
+            ExportAttribute(current, this, property, attribute);
+            knownAttributeNames.Add(attribute.InternalName);
             break;
           case zenonSerializableAttributeType.Node:
-            ExportNode(current, this, attributeMapping.property, attributeMapping.attribute);
+            if (knownNodeNames.Contains(attribute.InternalName))
+            {
+              Type declaringType = property.PropertyType.DeclaringType;
+              // ReSharper disable once PossibleNullReferenceException : DeclaringType will not be null.
+              throw new Exception(
+                $"Class '{declaringType.FullName}' defines multiple properties with "
+                + $"{nameof(zenonSerializableNodeAttribute)}s with the same name '{attribute.InternalName}'.");
+            }
+
+            ExportNode(current, this, property, attribute);
+            knownNodeNames.Add(attribute.InternalName);
             break;
           case zenonSerializableAttributeType.NodeContent:
-            ExportNodeContent(current, this, attributeMapping.property, attributeMapping.attribute);
+            ExportNodeContent(current, this, property, attribute);
             break;
           case zenonSerializableAttributeType.RawNode:
-            ExportRaw(current, this, attributeMapping.property, attributeMapping.attribute);
+            ExportRaw(current, this, property, attribute);
             break;
           default:
             // e.g. enum attribute
             throw new NotSupportedException(
-              String.Format(
-                Strings.ErrorMessageAttributeNotSupported,
-                attributeMapping.attribute.AttributeType,
-                attributeMapping.property.Name));
+              string.Format(Strings.ErrorMessageAttributeNotSupported, attribute.AttributeType, property.Name));
         }
       }
 
@@ -418,21 +441,29 @@ namespace zenonApi.Serialization
       else
       {
         var valueType = sourceValue.GetType();
-        string stringValue = sourceValue.ToString();
 
         if (valueType.IsEnum)
         {
           // Try to find a zenonSerializable attribute to write the correct value
-          var attribute = valueType.GetField(stringValue).GetCustomAttribute<zenonSerializableEnumAttribute>();
+          var attribute = valueType.GetField(sourceValue.ToString()).GetCustomAttribute<zenonSerializableEnumAttribute>();
           if (attribute != null)
           {
             // Set the value from the attribute, otherwise use the default string value (after the outer if-clause)
             target.SetAttributeValue(attributeAttribute.InternalName, attribute.Name);
-            return;
           }
         }
-
-        target.SetAttributeValue(attributeAttribute.InternalName, stringValue);
+        else if (sourceValue is IConvertible convertible)
+        {
+          string stringValue = Convert.ToString(sourceValue, CultureInfo.InvariantCulture);
+          target.SetAttributeValue(attributeAttribute.InternalName, stringValue);
+        }
+        else
+        {
+          // ReSharper disable once PossibleNullReferenceException : Declaring type cannot be null here.
+          throw new Exception(
+            $"Cannot export property '{property.Name}' in class '{property.DeclaringType.Name}' as an attribute, since the type is "
+            + $"neither assignable to {nameof(IConvertible)}, nor does it provide a {nameof(IZenonSerializationConverter)}.");
+        }
       }
     }
 
@@ -533,7 +564,16 @@ namespace zenonApi.Serialization
               var name = TryResolveName(property, nodeAttribute, property.PropertyType, sourceValue, 0, nodeAttribute.InternalName);
               XElement child = new XElement(name);
 
-              var value = listItem.ToString();
+              string value;
+              if (listItem is IConvertible convertible)
+              {
+                value = Convert.ToString(convertible, CultureInfo.InvariantCulture);
+              }
+              else
+              {
+                value = listItem.ToString();
+              }
+
               if (value != null)
               {
                 child.Value = value;
@@ -577,7 +617,16 @@ namespace zenonApi.Serialization
             var name = TryResolveName(property, nodeAttribute, property.PropertyType, sourceValue, index++, nodeAttribute.InternalName);
             XElement child = new XElement(name);
 
-            var value = listItem.ToString();
+            string value;
+            if (listItem is IConvertible convertible)
+            {
+              value = Convert.ToString(convertible, CultureInfo.InvariantCulture);
+            }
+            else
+            {
+              value = listItem.ToString();
+            }
+
             if (value != null)
             {
               child.Value = value;
@@ -586,6 +635,20 @@ namespace zenonApi.Serialization
             target.Add(child);
           }
         }
+      }
+      else if (property.PropertyType.IsEnum)
+      {
+        // Try to find a zenonSerializable attribute to write the correct value
+        string value = sourceValue.ToString();
+        var attribute = property.PropertyType.GetField(value).GetCustomAttribute<zenonSerializableEnumAttribute>();
+        if (attribute != null)
+        {
+          value = attribute.Name;
+        }
+        
+        XElement child = new XElement(nodeAttribute.InternalName);
+        child.Value = value;
+        target.Add(child);
       }
       else if (typeof(IConvertible).IsAssignableFrom(property.PropertyType))
       {
@@ -685,10 +748,21 @@ namespace zenonApi.Serialization
             target.Add(new XText(attribute.Name));
             return;
           }
+
+          target.Add(new XText(sourceValue.ToString()));
+          return;
+        }
+        
+        if (typeof(IConvertible).IsAssignableFrom(valueType))
+        {
+          var convertible = (IConvertible) sourceValue;
+          // ReSharper disable once AssignNullToNotNullAttribute
+          // Should never become null, since sourceValue is never null at this point.
+          target.Add(new XText(Convert.ToString(convertible, CultureInfo.InvariantCulture)));
+          return;
         }
 
-        string stringValue = sourceValue?.ToString();
-        target.Add(new XText(stringValue));
+        target.Add(new XText(sourceValue.ToString()));
       }
     }
 
@@ -1261,9 +1335,12 @@ namespace zenonApi.Serialization
         if (nodes.Count > 1)
         {
           throw new Exception(
-            $"Multiple candidates were found in the source XML for property {property.Name} in class {property.DeclaringType}. "
-            + $"Consider using no aliases via a {nameof(IZenonSerializableResolver)} to avoid conflicts, "
-            + $"or change the property to be an IList<{property.PropertyType.Name}>.");
+            $"Multiple candidates were found for property {property.Name} in class {property.DeclaringType} in the source XML, "
+            + "although a single matching node was expected. "
+            + "Either the source XML contains multiple nodes although just a single node was expected, or a custom "
+            + $"{nameof(IZenonSerializableResolver)} was set, which returns a type for more than the targeted candidate node in its "
+            + $"{nameof(IZenonSerializableResolver.GetTypeForDeserialization)} method. "
+            + $"If you intended to serialize a list of nodes, specify property {property.Name} to be e.g. a List<{property.PropertyType}>.");
         }
 
         if (nodes.Count == 0)
@@ -1414,7 +1491,7 @@ namespace zenonApi.Serialization
       // All attributes which were not yet removed are yet unhandled
       foreach (var attribute in sourceXml.Attributes())
       {
-        string name = attribute.Name.ToString();
+        string name = attribute.Name.LocalName;
         target.UnknownAttributes.Add(name, attribute.Value);
         Debug.WriteLine($"zenonSerializable - Import Warning: Unknown attribute \"{name}\" found for XML node \"{target.NodeName}\".");
       }
