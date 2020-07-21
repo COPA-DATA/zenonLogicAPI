@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using zenonApi.Serialization;
 
 namespace zenonApi.Logic.SerializationConverters
@@ -13,7 +14,7 @@ namespace zenonApi.Logic.SerializationConverters
         return null;
       }
 
-      bool value = (bool)System.Convert.ChangeType(conv, typeof(bool));
+      bool value = (bool)System.Convert.ChangeType(conv, typeof(bool), CultureInfo.InvariantCulture);
       if (value)
       {
         return "1";

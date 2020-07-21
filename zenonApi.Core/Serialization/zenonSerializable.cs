@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -586,6 +587,16 @@ namespace zenonApi.Serialization
           }
         }
       }
+      else if (typeof(IConvertible).IsAssignableFrom(property.PropertyType))
+      {
+        var name = TryResolveName(property, nodeAttribute, property.PropertyType, sourceValue, 0, nodeAttribute.InternalName);
+        XElement child = new XElement(name);
+
+        var value = Convert.ToString(sourceValue, CultureInfo.InvariantCulture);
+        // ReSharper disable once AssignNullToNotNullAttribute : 'sourceValue' cannot be null at this point, so can't 'value'.
+        child.Value = value;
+        target.Add(child);
+      }
       else
       {
         // Just write the string representation of the property as the value
@@ -593,11 +604,7 @@ namespace zenonApi.Serialization
         XElement child = new XElement(name);
 
         var value = sourceValue.ToString();
-        if (value != null)
-        {
-          child.Value = value;
-        }
-
+        child.Value = value;
         target.Add(child);
       }
     }
@@ -861,8 +868,7 @@ namespace zenonApi.Serialization
     private static void ImportChilds(
       PropertyInfo targetListProperty,
       IZenonSerializable parentContainer,
-      List<(Type Type, XElement Element)> nodes,
-      zenonSerializableNodeAttribute attribute)
+      List<(Type Type, XElement Element)> nodes)
     {
       if (nodes.Count == 0)
       {
@@ -900,7 +906,7 @@ namespace zenonApi.Serialization
           // We cannot infer the type automatically, therefore we cannot infer a method to add an item
           string name = genericParameterType.Name;
           throw new Exception(
-            $"Property {targetListProperty.Name} in class {targetListProperty.DeclaringType.Name} cannot be deserialized, since "
+            $"Property {targetListProperty.Name} in class {targetListProperty.DeclaringType?.Name} cannot be deserialized, since "
             + $"its type does not implement IList. You may want to use IEnumerable<{name}>, IList<{name}>, or a type deriving "
             + "from List<{name}> instead.");
         }
@@ -911,12 +917,12 @@ namespace zenonApi.Serialization
 
       if (asList != null)
       {
-        ImportChildsAsIList(parentContainer, asList, nodes);
+        ImportChildsAsIList(parentContainer, asList, targetListProperty, genericParameterType, nodes);
         targetListProperty.SetValue(parentContainer, asList);
       }
       else
       {
-        ImportChildsAsArray(parentContainer, asArray, nodes, attribute);
+        ImportChildsAsArray(parentContainer, asArray, targetListProperty, genericParameterType, nodes);
         targetListProperty.SetValue(parentContainer, asArray);
       }
     }
@@ -924,11 +930,12 @@ namespace zenonApi.Serialization
     private static void ImportChildsAsArray(
       IZenonSerializable parentContainer,
       Array targetArray,
-      List<(Type Type, XElement Element)> nodes,
-      zenonSerializableNodeAttribute attribute)
+      PropertyInfo targetArrayProperty,
+      Type genericType,
+      List<(Type Type, XElement Element)> nodes)
     {
       IContainerAwareCollectionItem parent = parentContainer as IContainerAwareCollectionItem;
-      object root;
+      object root = null;
 
       if (parent != null)
       {
@@ -945,13 +952,13 @@ namespace zenonApi.Serialization
         for (int i = 0; i < nodes.Count; i++)
         {
           var entry = nodes[i];
+          EnsureCompatibleEnumerableEntryType(entry.Type, genericType, targetArrayProperty);
+
           MethodInfo importMethod = GetImportMethod(entry.Type);
 
-
-          // The child is not capable of handling parents and roots, therefore pass null
           // ReSharper disable once PossibleNullReferenceException : "importMethod" comes from the interface,
           // will never be null at this point.
-          object child = importMethod.Invoke(null, new object[] { entry.Type, entry.Element, null, null });
+          object child = importMethod.Invoke(null, new object[] { entry.Type, entry.Element, parentContainer, root });
           targetArray.SetValue(child, i);
 
           entry.Element.Remove();
@@ -961,11 +968,13 @@ namespace zenonApi.Serialization
       {
         for (int i = 0; i < nodes.Count; i++)
         {
-          var node = nodes[i];
-          if (ImportPrimitive(node.Type, node.Element.Value, out object value))
+          var entry = nodes[i];
+          EnsureCompatibleEnumerableEntryType(entry.Type, genericType, targetArrayProperty);
+
+          if (ImportPrimitive(entry.Type, entry.Element.Value, out object value))
           {
             targetArray.SetValue(value, i);
-            node.Element.Remove();
+            entry.Element.Remove();
           }
         }
       }
@@ -974,6 +983,8 @@ namespace zenonApi.Serialization
     private static void ImportChildsAsIList(
       IZenonSerializable parentContainer,
       IList targetList,
+      PropertyInfo targetListProperty,
+      Type genericType,
       List<(Type Type, XElement Element)> nodes)
     {
       IContainerAwareCollectionItem parent = parentContainer as IContainerAwareCollectionItem;
@@ -993,13 +1004,12 @@ namespace zenonApi.Serialization
       {
         foreach (var entry in nodes)
         {
+          EnsureCompatibleEnumerableEntryType(entry.Type, genericType, targetListProperty);
           MethodInfo importMethod = GetImportMethod(entry.Type);
 
-          object child;
-          // The child is not capable of handling parents and roots, therefore pass null
           // ReSharper disable once PossibleNullReferenceException : "importMethod" comes from the interface,
           // will never be null at this point.
-          child = importMethod.Invoke(null, new[] { entry.Type, entry.Element, parentContainer, root });
+          var child = importMethod.Invoke(null, new[] { entry.Type, entry.Element, parentContainer, root });
           targetList.Add(child);
 
           entry.Element.Remove();
@@ -1009,6 +1019,7 @@ namespace zenonApi.Serialization
       {
         foreach (var entry in nodes)
         {
+          EnsureCompatibleEnumerableEntryType(entry.Type, genericType, targetListProperty);
           if (ImportPrimitive(entry.Type, entry.Element.Value, out object value))
           {
             targetList.Add(value);
@@ -1016,6 +1027,19 @@ namespace zenonApi.Serialization
           }
         }
       }
+    }
+
+    private static void EnsureCompatibleEnumerableEntryType(Type entryType, Type expectedType, PropertyInfo targetEnumerable)
+    {
+      if (expectedType.IsAssignableFrom(entryType))
+      {
+        return;
+      }
+
+      throw new Exception($"Expected a type compatible with '{expectedType.FullName}' for the enumerable '{targetEnumerable.Name}' "
+        + $"in class '{targetEnumerable.DeclaringType?.Name}', but got type '{entryType.FullName}'. "
+        + $"If you implemented a custom {nameof(IZenonSerializableResolver)}, make sure it returns the correct type "
+        + $"in its {nameof(IZenonSerializableResolver.GetTypeForDeserialization)} method.");
     }
 
     // ReSharper disable once StaticMemberInGenericType : This is intended.
@@ -1032,9 +1056,9 @@ namespace zenonApi.Serialization
       {
         importMethod = targetType
           .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.FlattenHierarchy)
-          .First(
+          .FirstOrDefault(
             x => x.Name == nameof(ImportWithoutClone)
-            && x.ReturnParameter.ParameterType == typeof(object)
+            && x.ReturnParameter?.ParameterType == typeof(object)
             && x.GetParameters().Length == 4);
 
         ImportMethodCache[targetType] = importMethod;
@@ -1112,7 +1136,7 @@ namespace zenonApi.Serialization
 
       if (typeof(IConvertible).IsAssignableFrom(targetType))
       {
-        var converted = Convert.ChangeType(stringValue, targetType);
+        var converted = Convert.ChangeType(stringValue, targetType, CultureInfo.InvariantCulture);
         result = converted;
         return true;
       }
@@ -1224,7 +1248,7 @@ namespace zenonApi.Serialization
       else if (isEnumerable && !isZenonSerializable)
       {
         // Create the list which will hold the instances
-        ImportChilds(property, target, nodes, attribute);
+        ImportChilds(property, target, nodes);
 
         if (listElementContainers != null)
         {
@@ -1282,7 +1306,7 @@ namespace zenonApi.Serialization
 
         if (typeof(IConvertible).IsAssignableFrom(type))
         {
-          var value = Convert.ChangeType(node.Value, type);
+          var value = Convert.ChangeType(node.Value, type, CultureInfo.InvariantCulture);
           property.SetValue(target, value);
 
           // Remove the successfully deserialized value from the source node.
@@ -1338,7 +1362,7 @@ namespace zenonApi.Serialization
       }
       else if (typeof(IConvertible).IsAssignableFrom(property.PropertyType))
       {
-        var converted = Convert.ChangeType(sourceXml.Value, property.PropertyType);
+        var converted = Convert.ChangeType(sourceXml.Value, property.PropertyType, CultureInfo.InvariantCulture);
         property.SetValue(target, converted);
         sourceXml.Value = "";
       }
