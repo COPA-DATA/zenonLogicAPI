@@ -169,7 +169,7 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestSelectiveNodeOrderingToXElement()
     {
-      SimpleNodeOrderingClass selectiveNodeOrdering = SimpleNodeOrderingImpl;
+      SelectiveNodeOrderingClass selectiveNodeOrdering = SelectiveNodeOrderingImpl;
       XElement result = selectiveNodeOrdering.ExportAsXElement();
 
       XElement comparisonWithoutXmlHeader = XDocument.Parse(ComparisonValues.SelectiveNodeOrdering).Root;

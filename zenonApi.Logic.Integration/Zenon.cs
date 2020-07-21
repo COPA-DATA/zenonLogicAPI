@@ -183,7 +183,9 @@ namespace zenonApi.Zenon
       if (reloadZenonProject)
       {
         // The following line is just necessary to force zenon to reload the logic projects within the displayed list.
-        ZenonProject.Parent.Parent.Workspace.LoadProject(ZenonProjectGuid);
+        var workspace = ZenonProject.Parent.Parent.Workspace;
+        workspace.UnloadProject(ZenonProjectGuid);
+        workspace.LoadProject(ZenonProjectGuid);
       }
     }
 
