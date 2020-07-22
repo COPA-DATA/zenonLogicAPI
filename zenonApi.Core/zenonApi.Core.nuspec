@@ -8,7 +8,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <licenseUrl>https://copadata.com/</licenseUrl>
     <projectUrl>https://copadata.com/</projectUrl>
-    <description>Core API for zenon</description>
+    <description>
+      Powerful serialization framework for mapping XML files to an object model in an easy and flexible way.
+    </description>
     <copyright>Ing. Punzenberger COPA-DATA GmbH</copyright>
   </metadata>
   <files>

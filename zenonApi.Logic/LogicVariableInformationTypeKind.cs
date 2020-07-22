@@ -20,7 +20,7 @@ namespace zenonApi.Logic
     /// Variable tag (short comment)
     /// </summary>
     [zenonSerializableEnum("subgroup")]
-    Subgroup,
+    SubGroup,
     /// <summary>
     /// Set of embedded properties.
     /// </summary>

@@ -16,7 +16,7 @@ namespace zenonApi.Logic
   {
     /// <summary>Private default constructor for serialization.</summary>
     // ReSharper disable once UnusedMember.Local : Required default constructor for serialization.
-    public LogicFolder()
+    private LogicFolder()
     {
       Programs = new LogicProgramCollection(this, null);
       Folders = new ContainerAwareObservableCollection<LogicFolder>(this);
