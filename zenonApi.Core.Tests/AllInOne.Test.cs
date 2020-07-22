@@ -17,14 +17,14 @@ namespace zenonApi.Core.Tests
 
       [zenonSerializableNode(
         nameof(SimpleSingleSerializationEncapsulateFalseClasses),
-        typeof(AllInOneResolver),
+        typeof(AllInOneListResolver),
         EncapsulateChildsIfList = false,
         NodeOrder = 20)]
       public List<SimpleSerializationWithAttributes.SimpleSerializationWithAttributesClass> SimpleSingleSerializationEncapsulateFalseClasses { get; set; }
 
       [zenonSerializableNode(
         nameof(SimpleSingleSerializationEncapsulateTrueClasses),
-        typeof(AllInOneResolver),
+        typeof(AllInOneListResolver),
         EncapsulateChildsIfList = true,
         NodeOrder = 10)]
       public List<SimpleSerializationWithAttributes.SimpleSerializationWithAttributesClass> SimpleSingleSerializationEncapsulateTrueClasses { get; set; }
@@ -36,6 +36,31 @@ namespace zenonApi.Core.Tests
       public EnumSerialization.EnumSerializationEnum EnumSerializationEnum { get; set; }
     }
 
+    public class AllInOneListResolver : IZenonSerializableResolver
+    {
+      public string GetNodeNameForSerialization(PropertyInfo targetProperty, Type targetType, object value, int index)
+      {
+        return targetProperty.Name + "_" + index;
+      }
+
+      public Type GetTypeForDeserialization(PropertyInfo targetProperty, string nodeName, int index)
+      {
+        var removeFrom = nodeName.IndexOf("_", StringComparison.InvariantCulture);
+        if (removeFrom == -1)
+        {
+          return null;
+        }
+
+        var name = nodeName.Substring(0, removeFrom);
+        if (name != targetProperty.Name)
+        {
+          return null;
+        }
+
+        return targetProperty.PropertyType.GenericTypeArguments[0];
+      }
+    }
+
     public class AllInOneResolver : IZenonSerializableResolver
     {
       public string GetNodeNameForSerialization(PropertyInfo targetProperty, Type targetType, object value, int index)
@@ -43,11 +68,21 @@ namespace zenonApi.Core.Tests
         return targetProperty.Name + "_" + index;
       }
 
-      public Type GetTypeForDeserialization(string nodeName, int index)
+      public Type GetTypeForDeserialization(PropertyInfo targetProperty, string nodeName, int index)
       {
-        var name = nodeName.Substring(0, nodeName.IndexOf("_", StringComparison.InvariantCulture));
-        // ReSharper disable once PossibleNullReferenceException : This property exits, will never be null.
-        return typeof(AllInOneClass).GetProperty(name).PropertyType;
+        var removeFrom = nodeName.IndexOf("_", StringComparison.InvariantCulture);
+        if (removeFrom == -1)
+        {
+          return null;
+        }
+
+        var name = nodeName.Substring(0, removeFrom);
+        if (name != targetProperty.Name)
+        {
+          return null;
+        }
+
+        return targetProperty.PropertyType;
       }
     }
 
@@ -78,19 +113,23 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestAllInOneClassToString()
     {
-      AllInOneClass allInOneClass = AllInOneClassImpl;
-      string result = allInOneClass.ExportAsString();
+      var allInOneClass = AllInOneClassImpl;
+      var result = allInOneClass.ExportAsString();
       Assert.Equal(ComparisonValues.AllInOneClass, result);
     }
 
     [Fact]
     public void TestAllInOneClassToXElement()
     {
-      AllInOneClass allInOneClass = AllInOneClassImpl;
-      XElement result = allInOneClass.ExportAsXElement();
+      var allInOneClass = AllInOneClassImpl;
+      var result = allInOneClass.ExportAsXElement();
 
       var withoutXmlHeader = XDocument.Parse(ComparisonValues.AllInOneClass).Root;
       Assert.True(XNode.DeepEquals(withoutXmlHeader, result));
+
+      var deserialized = AllInOneClass.Import(result);
+
+      Assert.True(allInOneClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
   }

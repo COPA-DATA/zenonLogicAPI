@@ -29,19 +29,25 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestSimpleNodeOrderingToString()
     {
-      SimpleNodeOrderingClass nodeOrderingClass = SimpleNodeOrderingImpl;
+      var nodeOrderingClass = SimpleNodeOrderingImpl;
 
-      string result = nodeOrderingClass.ExportAsString();
+      var result = nodeOrderingClass.ExportAsString();
       Assert.Equal(ComparisonValues.SimpleNodeOrdering, result);
+
+      var deserialized = SimpleNodeOrderingClass.Import(XElement.Parse(result));
+      Assert.True(nodeOrderingClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
     [Fact]
     public void TestSimpleNodeOrderingToXElement()
     {
-      SimpleNodeOrderingClass nodeOrderingClass = SimpleNodeOrderingImpl;
+      var nodeOrderingClass = SimpleNodeOrderingImpl;
 
-      XElement result = nodeOrderingClass.ExportAsXElement();
+      var result = nodeOrderingClass.ExportAsXElement();
       Assert.True(XNode.DeepEquals(XElement.Parse(ComparisonValues.SimpleNodeOrdering), result));
+
+      var deserialized = SimpleNodeOrderingClass.Import(result);
+      Assert.True(nodeOrderingClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
 
@@ -68,20 +74,25 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestSimpleNodeOrderingDuplicateOrderNumbersToString()
     {
-      SimpleNodeOrderingDuplicateOrderNumbersClass nodeOrderingClass = SimpleNodeOrderingDuplicateOrderNumbersImpl;
+      var nodeOrderingClass = SimpleNodeOrderingDuplicateOrderNumbersImpl;
 
-      string result = nodeOrderingClass.ExportAsString();
+      var result = nodeOrderingClass.ExportAsString();
       Assert.Equal(ComparisonValues.SimpleNodeOrderingDuplicateOrderNumbers, result);
 
+      var deserialized = SimpleNodeOrderingDuplicateOrderNumbersClass.Import(XElement.Parse(result));
+      Assert.True(nodeOrderingClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
     [Fact]
     public void TestSimpleNodeOrderingDuplicateOrderNumbersToXElement()
     {
-      SimpleNodeOrderingDuplicateOrderNumbersClass nodeOrderingClass = SimpleNodeOrderingDuplicateOrderNumbersImpl;
+      var nodeOrderingClass = SimpleNodeOrderingDuplicateOrderNumbersImpl;
 
-      XElement result = nodeOrderingClass.ExportAsXElement();
+      var result = nodeOrderingClass.ExportAsXElement();
       Assert.True(XNode.DeepEquals(XElement.Parse(ComparisonValues.SimpleNodeOrderingDuplicateOrderNumbers), result));
+
+      var deserialized = SimpleNodeOrderingDuplicateOrderNumbersClass.Import(result);
+      Assert.True(nodeOrderingClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
 
@@ -121,19 +132,25 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestSimpleAttributeOrderingToString()
     {
-      SimpleAttributeOrderingClass simpleAttributeOrderingClass = SimpleAttributeOrderingClassImpl;
+      var simpleAttributeOrderingClass = SimpleAttributeOrderingClassImpl;
 
-      string result = simpleAttributeOrderingClass.ExportAsString();
+      var result = simpleAttributeOrderingClass.ExportAsString();
       Assert.Equal(ComparisonValues.SimpleAttributeOrdering, result);
+
+      var deserialized = SimpleAttributeOrderingClass.Import(XElement.Parse(result));
+      Assert.True(simpleAttributeOrderingClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
     [Fact]
     public void TestSimpleAttributeOrderingToXElement()
     {
-      SimpleAttributeOrderingClass simpleAttributeOrderingClass = SimpleAttributeOrderingClassImpl;
+      var simpleAttributeOrderingClass = SimpleAttributeOrderingClassImpl;
 
-      XElement result = simpleAttributeOrderingClass.ExportAsXElement();
+      var result = simpleAttributeOrderingClass.ExportAsXElement();
       Assert.True(XNode.DeepEquals(XElement.Parse(ComparisonValues.SimpleAttributeOrdering), result));
+
+      var deserialized = SimpleAttributeOrderingClass.Import(result);
+      Assert.True(simpleAttributeOrderingClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
 
@@ -161,19 +178,25 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestSelectiveNodeOrderingToString()
     {
-      SelectiveNodeOrderingClass selectiveNodeOrdering = SelectiveNodeOrderingImpl;
-      string result = selectiveNodeOrdering.ExportAsString();
+      var selectiveNodeOrdering = SelectiveNodeOrderingImpl;
+      var result = selectiveNodeOrdering.ExportAsString();
       Assert.Equal(ComparisonValues.SelectiveNodeOrdering, result);
+
+      var deserialized = SelectiveNodeOrderingClass.Import(XElement.Parse(result));
+      Assert.True(selectiveNodeOrdering.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
     [Fact]
     public void TestSelectiveNodeOrderingToXElement()
     {
-      SelectiveNodeOrderingClass selectiveNodeOrdering = SelectiveNodeOrderingImpl;
-      XElement result = selectiveNodeOrdering.ExportAsXElement();
+      var selectiveNodeOrdering = SelectiveNodeOrderingImpl;
+      var result = selectiveNodeOrdering.ExportAsXElement();
 
-      XElement comparisonWithoutXmlHeader = XDocument.Parse(ComparisonValues.SelectiveNodeOrdering).Root;
+      var comparisonWithoutXmlHeader = XDocument.Parse(ComparisonValues.SelectiveNodeOrdering).Root;
       Assert.True(XNode.DeepEquals(comparisonWithoutXmlHeader, result));
+
+      var deserialized = SelectiveNodeOrderingClass.Import(result);
+      Assert.True(selectiveNodeOrdering.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
   }

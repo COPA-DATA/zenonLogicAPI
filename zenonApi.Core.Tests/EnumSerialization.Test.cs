@@ -24,7 +24,6 @@ namespace zenonApi.Core.Tests
 
       [zenonSerializableNode(nameof(SimpleEnumSerializationEnum))]
       public EnumSerializationEnum SimpleEnumSerializationEnum { get; set; }
-
     }
 
     public static EnumSerializationAsNodeClass EnumSerializationAsNodeClassImpl => new EnumSerializationAsNodeClass
@@ -36,17 +35,23 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestEnumSerializationAsNodeToString()
     {
-      EnumSerializationAsNodeClass enumSerializationAsNodeClass = EnumSerializationAsNodeClassImpl;
-      string result = enumSerializationAsNodeClass.ExportAsString();
+      var enumSerializationAsNodeClass = EnumSerializationAsNodeClassImpl;
+      var result = enumSerializationAsNodeClass.ExportAsString();
       Assert.Equal(ComparisonValues.EnumSerializationAsNode, result);
+
+      var deserialized = EnumSerializationAsNodeClass.Import(XElement.Parse(result));
+      Assert.True(enumSerializationAsNodeClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
     [Fact]
     public void TestEnumSerializationAsNodeToXElement()
     {
-      EnumSerializationAsNodeClass enumSerializationAsNodeClass = EnumSerializationAsNodeClassImpl;
-      XElement result = enumSerializationAsNodeClass.ExportAsXElement();
+      var enumSerializationAsNodeClass = EnumSerializationAsNodeClassImpl;
+      var result = enumSerializationAsNodeClass.ExportAsXElement();
       Assert.True(XNode.DeepEquals(XElement.Parse(ComparisonValues.EnumSerializationAsNode), result));
+
+      var deserialized = EnumSerializationAsNodeClass.Import(result);
+      Assert.True(enumSerializationAsNodeClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
 
@@ -71,19 +76,25 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestEnumSerializationAsParameterToString()
     {
-      EnumSerializationAsParameterClass enumSerializationAsParameterClass = EnumSerializationAsParameterClassImpl;
-      string result = enumSerializationAsParameterClass.ExportAsString();
+      var enumSerializationAsParameterClass = EnumSerializationAsParameterClassImpl;
+      var result = enumSerializationAsParameterClass.ExportAsString();
       Assert.Equal(ComparisonValues.EnumSerializationAsParameter, result);
+
+      var deserialized = EnumSerializationAsParameterClass.Import(XElement.Parse(result));
+      Assert.True(enumSerializationAsParameterClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
     [Fact]
     public void TestEnumSerializationAsParameterToXElement()
     {
-      EnumSerializationAsParameterClass enumSerializationAsParameterClass = EnumSerializationAsParameterClassImpl;
-      XElement result = enumSerializationAsParameterClass.ExportAsXElement();
+      var enumSerializationAsParameterClass = EnumSerializationAsParameterClassImpl;
+      var result = enumSerializationAsParameterClass.ExportAsXElement();
 
-      XElement withoutXmlHeader = XDocument.Parse(ComparisonValues.EnumSerializationAsParameter).Root;
+      var withoutXmlHeader = XDocument.Parse(ComparisonValues.EnumSerializationAsParameter).Root;
       Assert.True(XNode.DeepEquals(withoutXmlHeader, result));
+
+      var deserialized = EnumSerializationAsParameterClass.Import(result);
+      Assert.True(enumSerializationAsParameterClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
   }

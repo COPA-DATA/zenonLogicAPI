@@ -645,7 +645,7 @@ namespace zenonApi.Serialization
         {
           value = attribute.Name;
         }
-        
+
         XElement child = new XElement(nodeAttribute.InternalName);
         child.Value = value;
         target.Add(child);
@@ -752,10 +752,10 @@ namespace zenonApi.Serialization
           target.Add(new XText(sourceValue.ToString()));
           return;
         }
-        
+
         if (typeof(IConvertible).IsAssignableFrom(valueType))
         {
-          var convertible = (IConvertible) sourceValue;
+          var convertible = (IConvertible)sourceValue;
           // ReSharper disable once AssignNullToNotNullAttribute
           // Should never become null, since sourceValue is never null at this point.
           target.Add(new XText(Convert.ToString(convertible, CultureInfo.InvariantCulture)));
@@ -1253,7 +1253,7 @@ namespace zenonApi.Serialization
         {
           try
           {
-            var type = resolver.GetTypeForDeserialization(element.Name.LocalName, index++);
+            var type = resolver.GetTypeForDeserialization(property, element.Name.LocalName, index++);
             if (type == null)
             {
               // Unknown type for this resolver, all fine. We ignore this value for now.
@@ -1262,35 +1262,35 @@ namespace zenonApi.Serialization
 
             nodes.Add((type, element));
           }
-          catch
+          catch (Exception ex)
           {
-            // Same as above, just continue.
+            throw new Exception(
+              $"Custom type resolver '{attribute.InternalTypeResolver}' caused an error on property '{property.Name}'. "
+              + $"See the inner exception for details.", ex);
           }
+        }
+      }
+      else if (isEnumerable)
+      {
+        // This is a list, array or similar. Let's find the generic type parameter, so that we can store the correct types.
+        var genericTypeProperty = GetIEnumerableGenericTypeArgument(property);
+
+        if (listElementContainers != null)
+        {
+          // There is a parent element, which may have a specific name.
+          // For the children, we need to assume that they are all of the correct type, independent of the node name.
+          nodes.AddRange(consideredChildren.Select(x => (genericTypeProperty, x)));
+        }
+        else
+        {
+          // Only use the nodes with the correct name
+          nodes.AddRange(consideredChildren.Where(x => x.Name.LocalName == attribute.InternalName).Select(x => (genericTypeProperty, x)));
         }
       }
       else
       {
         // No multiple types are allowed without a resolver, we expect the childs to properly match here.
-        if (isEnumerable && !isZenonSerializable)
-        {
-          // This is a list, array or similar. Let's find the generic type parameter, so that we can store the correct types.
-          var genericTypeProperty = GetIEnumerableGenericTypeArgument(property);
-
-          if (listElementContainers != null)
-          {
-            // There is a parent element, which may have a specific name.
-            // For the children, we need to assume that they are all of the correct type, independent of the node name.
-            nodes.AddRange(consideredChildren.Select(x => (genericTypeProperty, x)));
-          }
-          else
-          {
-            nodes.AddRange(consideredChildren.Where(x => x.Name.LocalName == attribute.InternalName).Select(x => (genericTypeProperty, x)));
-          }
-        }
-        else
-        {
-          nodes.AddRange(sourceXml.Elements().Where(x => x.Name.LocalName == attribute.NodeName).OfType<XNode>().Cast<XElement>().Select(x => (property.PropertyType, x)));
-        }
+        nodes.AddRange(sourceXml.Elements().Where(x => x.Name.LocalName == attribute.NodeName).Select(x => (property.PropertyType, x)));
       }
 
       if (typeof(IZenonSerializable).IsAssignableFrom(property.PropertyType))
@@ -1383,11 +1383,19 @@ namespace zenonApi.Serialization
 
         if (typeof(IConvertible).IsAssignableFrom(type))
         {
-          var value = Convert.ChangeType(node.Value, type, CultureInfo.InvariantCulture);
-          property.SetValue(target, value);
+          if (node.Value == string.Empty)
+          {
+            // No value, nothing to do here, leave the default value instead.
+            node.Remove();
+          }
+          else
+          {
+            var value = Convert.ChangeType(node.Value, type, CultureInfo.InvariantCulture);
+            property.SetValue(target, value);
 
-          // Remove the successfully deserialized value from the source node.
-          node.Remove();
+            // Remove the successfully deserialized value from the source node.
+            node.Remove();
+          }
         }
         else
         {

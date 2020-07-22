@@ -25,7 +25,7 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestDoubleZenonSerializableNode()
     {
-      DoubleZenonSerializableNode doubleZenonSerializableNode = DoubleZenonSerializableNodeImpl; 
+      var doubleZenonSerializableNode = DoubleZenonSerializableNodeImpl; 
       Assert.ThrowsAny<Exception>(() => doubleZenonSerializableNode.ExportAsString());
     }
 
@@ -56,7 +56,7 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestDoubleZenonSerializableAttribute()
     {
-      DoubleZenonSerializableAttribute doubleZenonSerializableAttribute = DoubleZenonSerializableAttributeImpl;
+      var doubleZenonSerializableAttribute = DoubleZenonSerializableAttributeImpl;
       Assert.ThrowsAny<Exception>(() => doubleZenonSerializableAttribute.ExportAsString());
     }
     #endregion

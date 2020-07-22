@@ -30,7 +30,7 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestNullConverterException()
     {
-      ConverterSerializationConverterNull converterSerializationImpl = ConverterSerializationConverterNullImpl;
+      var converterSerializationImpl = ConverterSerializationConverterNullImpl;
       Assert.Throws<CustomAttributeFormatException>(() => converterSerializationImpl.ExportAsString());
     }
     #endregion
@@ -59,7 +59,7 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestWrongConverterException()
     {
-      ConverterSerializationConverterWrong converterSerializationConverterWrongImpl = ConverterSerializationConverterWrongImpl;
+      var converterSerializationConverterWrongImpl = ConverterSerializationConverterWrongImpl;
       Assert.Throws<CustomAttributeFormatException>(() => converterSerializationConverterWrongImpl.ExportAsString());
     }
     #endregion
@@ -104,22 +104,28 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestConverterFunctionality()
     {
-      TestConverterSerializationConverterUsage testConverterSerializationConverterUsageImpl
+      var testConverterSerializationConverterUsageImpl
         = TestConverterSerializationConverterUsageImpl;
-      string result = testConverterSerializationConverterUsageImpl.ExportAsString();
+      var result = testConverterSerializationConverterUsageImpl.ExportAsString();
       Assert.Equal(ComparisonValues.ConverterFunctionalityTest, result);
+
+      var deserialized = TestConverterSerializationConverterUsage.Import(XElement.Parse(result));
+      Assert.True(testConverterSerializationConverterUsageImpl.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
     [Fact]
     public void TestConverterFunctionalityBack()
     {
-      TestConverterSerializationConverterUsage testConverterSerializationConverterUsageImpl = TestConverterSerializationConverterUsageImpl;
-      string result = testConverterSerializationConverterUsageImpl.ExportAsString();
+      var testConverterSerializationConverterUsageImpl = TestConverterSerializationConverterUsageImpl;
+      var result = testConverterSerializationConverterUsageImpl.ExportAsString();
 
-      TestConverterSerializationConverterUsage backTransformation =
+      var backTransformation =
         TestConverterSerializationConverterUsage.Import(XElement.Parse(result));
 
       Assert.Equal(testConverterSerializationConverterUsageImpl.SimpleInteger, backTransformation.SimpleInteger);
+
+      var deserialized = TestConverterSerializationConverterUsage.Import(XElement.Parse(result));
+      Assert.True(testConverterSerializationConverterUsageImpl.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
   }

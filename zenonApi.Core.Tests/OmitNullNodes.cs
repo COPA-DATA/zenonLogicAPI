@@ -26,21 +26,27 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestOmitPrimitivesWithoutOmitToString()
     {
-      OmitPrimitivesWithoutOmitClass omitPrimitivesClass = OmitPrimitivesWithoutOmitClassImpl;
+      var omitPrimitivesClass = OmitPrimitivesWithoutOmitClassImpl;
       omitPrimitivesClass.NullInteger = null;
 
-      string result = omitPrimitivesClass.ExportAsString();
+      var result = omitPrimitivesClass.ExportAsString();
       Assert.Equal(ComparisonValues.OmitPrimitivesWithoutOmit, result);
+
+      var deserialized = OmitPrimitivesWithoutOmitClass.Import(XElement.Parse(result));
+      Assert.True(omitPrimitivesClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
     [Fact]
     public void TestOmitPrimitivesWithoutOmitToXElement()
     {
-      OmitPrimitivesWithoutOmitClass omitPrimitivesClass = OmitPrimitivesWithoutOmitClassImpl;
+      var omitPrimitivesClass = OmitPrimitivesWithoutOmitClassImpl;
       omitPrimitivesClass.NullInteger = null;
 
-      XElement result = omitPrimitivesClass.ExportAsXElement();
+      var result = omitPrimitivesClass.ExportAsXElement();
       Assert.True(XNode.DeepEquals(XElement.Parse(ComparisonValues.OmitPrimitivesWithoutOmit), result));
+
+      var deserialized = OmitPrimitivesWithoutOmitClass.Import(result);
+      Assert.True(omitPrimitivesClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
 
@@ -65,21 +71,27 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestOmitPrimitivesWithOmitToString()
     {
-      OmitPrimitivesWithOmitClass omitPrimitivesClass = OmitPrimitivesWithOmitClassImpl;
+      var omitPrimitivesClass = OmitPrimitivesWithOmitClassImpl;
       omitPrimitivesClass.NullInteger = null;
 
-      string result = omitPrimitivesClass.ExportAsString();
+      var result = omitPrimitivesClass.ExportAsString();
       Assert.Equal(ComparisonValues.OmitPrimitivesWithOmit, result);
+
+      var deserialized = OmitPrimitivesWithOmitClass.Import(XElement.Parse(result));
+      Assert.True(omitPrimitivesClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
     [Fact]
     public void TestOmitPrimitivesWithOmitToXElement()
     {
-      OmitPrimitivesWithOmitClass omitPrimitivesClass = OmitPrimitivesWithOmitClassImpl;
+      var omitPrimitivesClass = OmitPrimitivesWithOmitClassImpl;
       omitPrimitivesClass.NullInteger = null;
 
-      XElement result = omitPrimitivesClass.ExportAsXElement();
+      var result = omitPrimitivesClass.ExportAsXElement();
       Assert.True(XNode.DeepEquals(XElement.Parse(ComparisonValues.OmitPrimitivesWithOmit), result));
+
+      var deserialized = OmitPrimitivesWithOmitClass.Import(result);
+      Assert.True(omitPrimitivesClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
 
@@ -103,21 +115,39 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestOmitComplexWithoutOmitToString()
     {
-      OmitComplexWithoutOmitClass omitComplexWithoutOmitClass = OmitComplexWithoutOmitClassImpl;
+      var omitComplexWithoutOmitClass = OmitComplexWithoutOmitClassImpl;
       omitComplexWithoutOmitClass.NullSimpleSingleSerializationClass = null;
 
-      string result = omitComplexWithoutOmitClass.ExportAsString();
+      var result = omitComplexWithoutOmitClass.ExportAsString();
       Assert.Equal(ComparisonValues.OmitComplexWithoutOmit, result);
+
+      var deserialized = OmitComplexWithoutOmitClass.Import(XElement.Parse(result));
+      // Those cannot be the same, since if a type is not omitted when being null, then it is added to the XML.
+      // Example: MyType { MyNestedType = null } --> <MyType><MyNestedType/></MyType>
+      // Reading it back: MyNestedType will not be null, but an unmodified default instance of MyNestedType
+      Assert.False(omitComplexWithoutOmitClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
+      
+      // Here, the NullSimpleSingleSerializationClass entry is also ignored, therefore the contents should match again.
+      Assert.True(omitComplexWithoutOmitClass.DeepEquals(
+        deserialized, 
+        nameof(IZenonSerializable.ObjectStatus), 
+        nameof(OmitComplexWithoutOmitClass.NullSimpleSingleSerializationClass)));
     }
 
     [Fact]
     public void TestOmitComplexWithoutOmitToXElement()
     {
-      OmitComplexWithoutOmitClass omitComplexWithoutOmitClass = OmitComplexWithoutOmitClassImpl;
+      var omitComplexWithoutOmitClass = OmitComplexWithoutOmitClassImpl;
       omitComplexWithoutOmitClass.NullSimpleSingleSerializationClass = null;
 
-      XElement result = omitComplexWithoutOmitClass.ExportAsXElement();
+      var result = omitComplexWithoutOmitClass.ExportAsXElement();
       Assert.True(XNode.DeepEquals(XElement.Parse(ComparisonValues.OmitComplexWithoutOmit), result));
+
+      var deserialized = OmitComplexWithoutOmitClass.Import(result);
+      // We know, that there is a default instance of the NullSimpleSingleSerializationClass, since it was not omitted
+      // (see comment in the test case above). By explicitely setting it back to null, it should equal.
+      deserialized.NullSimpleSingleSerializationClass = null;
+      Assert.True(omitComplexWithoutOmitClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
 
@@ -141,21 +171,27 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestOmitComplexWithOmitToString()
     {
-      OmitComplexWithOmitClass omitComplexWithoutOmitClass = OmitComplexWithOmitClassImpl;
-      omitComplexWithoutOmitClass.NullSimpleSingleSerializationClass = null;
+      var omitComplexWithOmitClass = OmitComplexWithOmitClassImpl;
+      omitComplexWithOmitClass.NullSimpleSingleSerializationClass = null;
 
-      string result = omitComplexWithoutOmitClass.ExportAsString();
+      var result = omitComplexWithOmitClass.ExportAsString();
       Assert.Equal(ComparisonValues.OmitComplexWithOmit, result);
+
+      var deserialized = OmitComplexWithOmitClass.Import(XElement.Parse(result));
+      Assert.True(omitComplexWithOmitClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
     [Fact]
     public void TestOmitComplexWithOmitToXElement()
     {
-      OmitComplexWithOmitClass omitComplexWithoutOmitClass = OmitComplexWithOmitClassImpl;
-      omitComplexWithoutOmitClass.NullSimpleSingleSerializationClass = null;
+      var omitComplexWithOmitClass = OmitComplexWithOmitClassImpl;
+      omitComplexWithOmitClass.NullSimpleSingleSerializationClass = null;
 
-      XElement result = omitComplexWithoutOmitClass.ExportAsXElement();
+      var result = omitComplexWithOmitClass.ExportAsXElement();
       Assert.True(XNode.DeepEquals(XElement.Parse(ComparisonValues.OmitComplexWithOmit), result));
+
+      var deserialized = OmitComplexWithOmitClass.Import(result);
+      Assert.True(omitComplexWithOmitClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
   }

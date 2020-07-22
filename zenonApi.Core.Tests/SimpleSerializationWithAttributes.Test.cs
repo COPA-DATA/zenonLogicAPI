@@ -43,12 +43,15 @@ namespace zenonApi.Core.Tests
 
     public void TestSimpleSerializationWithAttributesToString()
     {
-      SimpleSerializationWithAttributesClass simpleSerializationWithAttributes = SimpleSerializationWithAttributesImpl;
+      var simpleSerializationWithAttributes = SimpleSerializationWithAttributesImpl;
 
-      string result = simpleSerializationWithAttributes.ExportAsString();
+      var result = simpleSerializationWithAttributes.ExportAsString();
 
       Assert.NotNull(result);
       Assert.Equal(result, ComparisonValues.SimpleSerializationWithAttributesToString);
+
+      var deserialized = SimpleSerializationWithAttributesClass.Import(XElement.Parse(result));
+      Assert.True(simpleSerializationWithAttributes.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
 
@@ -57,11 +60,14 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestSimpleSerializationWithAttributesToXDocument()
     {
-      SimpleSerializationWithAttributesClass simpleSerializationWithAttributes = SimpleSerializationWithAttributesImpl;
-      XElement result = simpleSerializationWithAttributes.ExportAsXElement();
+      var simpleSerializationWithAttributes = SimpleSerializationWithAttributesImpl;
+      var result = simpleSerializationWithAttributes.ExportAsXElement();
 
       Assert.NotNull(result);
       Assert.True(XNode.DeepEquals(result, XElement.Parse(ComparisonValues.SimpleSerializationWithAttributesToString)));
+
+      var deserialized = SimpleSerializationWithAttributesClass.Import(result);
+      Assert.True(simpleSerializationWithAttributes.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
   }

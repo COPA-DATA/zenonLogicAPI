@@ -40,8 +40,9 @@ namespace zenonApi.Serialization
     ///   an index.
     ///   If the given node name is unknown, then null should be returned.
     /// </summary>
+    /// <param name="targetProperty">The target property, for which a possible candidate is searched.</param>
     /// <param name="nodeName">The name of a found node.</param>
     /// <param name="index">An optional index within the source file.</param>
-    Type GetTypeForDeserialization(string nodeName, int index);
+    Type GetTypeForDeserialization(PropertyInfo targetProperty, string nodeName, int index);
   }
 }

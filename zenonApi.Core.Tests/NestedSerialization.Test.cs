@@ -34,11 +34,14 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestNestedSerializationNodes()
     {
-      NestedSerializationNodes nestedSerializationNodes = NestedSerializationNodesImpl;
+      var nestedSerializationNodes = NestedSerializationNodesImpl;
 
-      string result = nestedSerializationNodes.ExportAsString();
+      var result = nestedSerializationNodes.ExportAsString();
       Assert.NotNull(result);
       Assert.Equal(result, ComparisonValues.TestNestedSerializationNodes);
+
+      var deserialized = NestedSerializationNodes.Import(XElement.Parse(result));
+      Assert.True(nestedSerializationNodes.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
 
@@ -71,13 +74,13 @@ namespace zenonApi.Core.Tests
     public static NestedSerializationWithAttributes NestedSerializationWithAttributesImpl =
       new NestedSerializationWithAttributes()
       {
-        SimpleSerializationWithAttributes = SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
-        SimpleInteger = 5,
-        SimpleDouble = 5.3,
-        SimpleString = "TestString",
         SimpleAttrInteger = 8,
         SimpleAttrDouble = 8.88,
-        SimpleAttrString = "HelloWorld"
+        SimpleAttrString = "HelloWorld",
+        SimpleInteger = 5,
+        SimpleSerializationWithAttributes = SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
+        SimpleDouble = 5.3,
+        SimpleString = "TestString"
       };
 
 
@@ -85,10 +88,13 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestNestedSerializationWithAttributesToString()
     {
-      NestedSerializationWithAttributes nestedSerializationWithAttributes = NestedSerializationWithAttributesImpl;
+      var nestedSerializationWithAttributes = NestedSerializationWithAttributesImpl;
 
-      string result = nestedSerializationWithAttributes.ExportAsString();
+      var result = nestedSerializationWithAttributes.ExportAsString();
       Assert.Equal(result, ComparisonValues.NestedSerializationWithAttributes);
+
+      var deserialized = NestedSerializationWithAttributes.Import(XElement.Parse(result));
+      Assert.True(nestedSerializationWithAttributes.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
 
@@ -96,11 +102,14 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestNestedSerializationWithAttributesXDocument()
     {
-      NestedSerializationWithAttributes nestedSerializationWithAttributes = NestedSerializationWithAttributesImpl;
+      var nestedSerializationWithAttributes = NestedSerializationWithAttributesImpl;
 
-      XElement result = nestedSerializationWithAttributes.ExportAsXElement();
+      var result = nestedSerializationWithAttributes.ExportAsXElement();
       Assert.NotNull(result);
       Assert.True(XNode.DeepEquals(result, XElement.Parse(ComparisonValues.NestedSerializationWithAttributes)));
+
+      var deserialized = NestedSerializationWithAttributes.Import(result);
+      Assert.True(nestedSerializationWithAttributes.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
     #endregion
@@ -135,7 +144,7 @@ namespace zenonApi.Core.Tests
     public void TestNestedSerializationNestedXmlAsAttribute()
     {
       // Should fail as a nested Serialzation should not be in an Attribute
-      NestedSerializationNestedXmlAsAttribute nestedSerializationNestedXmlAsAttribute = NestedSerializationNestedXmlAsAttributeImpl;
+      var nestedSerializationNestedXmlAsAttribute = NestedSerializationNestedXmlAsAttributeImpl;
       Assert.ThrowsAny<Exception>(() => nestedSerializationNestedXmlAsAttribute.ExportAsString());
     }
     #endregion

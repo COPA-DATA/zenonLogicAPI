@@ -41,43 +41,27 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void StatusStatusEnumNew()
     {
-      StatusEnumClass statusEnumClass = new StatusEnumClass();
+      var statusEnumClass = new StatusEnumClass();
       Assert.Equal(zenonSerializableStatusEnum.New, statusEnumClass.ObjectStatus);
     }
     #endregion
 
 
-    #region Loaded
     [Fact]
     public void StatusStatusEnumLoaded()
     {
-      StatusEnumClass statusEnumClass = StatusEnumClass.Import(XElement.Parse(ComparisonValues.StatusEnum));
+      var statusEnumClass = StatusEnumClass.Import(XElement.Parse(ComparisonValues.StatusEnum));
       Assert.Equal(zenonSerializableStatusEnum.Loaded, statusEnumClass.ObjectStatus);
-    }
-    #endregion
-
-
-    #region Modified
-    [Fact]
-    public void StatusStatusEnumModified()
-    {
-      StatusEnumClass statusEnumClass = StatusEnumClassImpl;
 
       statusEnumClass.SimpleInteger = 1503;
       Assert.Equal(zenonSerializableStatusEnum.Modified, statusEnumClass.ObjectStatus);
-    }
-    #endregion
 
-
-    #region Deserialized
-    [Fact]
-    public void StatusStatusEnumDeserialized()
-    {
-      StatusEnumClass statusEnumClass = StatusEnumClassImpl;
-      statusEnumClass.ExportAsString();
+      var exported = statusEnumClass.ExportAsString();
 
       Assert.Equal(zenonSerializableStatusEnum.Deserialized, statusEnumClass.ObjectStatus);
+
+      var imported = StatusEnumClass.Import(XElement.Parse(exported));
+      Assert.True(statusEnumClass.DeepEquals(imported, "ObjectStatus"));
     }
-    #endregion
   }
 }

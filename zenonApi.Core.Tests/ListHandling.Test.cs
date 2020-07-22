@@ -28,21 +28,27 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void ListHandlingStringPrimitiveListEncapsulateChildsIfListFalseToString()
     {
-      ListHandlingStringPrimitiveListEncapsulateChildsIfListFalse listHandlingStringPrimitiveListEncapsulateChildsIfListFalse
+      var listHandlingStringPrimitiveListEncapsulateChildsIfListFalse
         = _listHandlingStringPrimitiveListEncapsulateChildsIfListFalseImpl;
 
-      string result = listHandlingStringPrimitiveListEncapsulateChildsIfListFalse.ExportAsString();
+      var result = listHandlingStringPrimitiveListEncapsulateChildsIfListFalse.ExportAsString();
       Assert.Equal(ComparisonValues.ListHandlingStringPrimitiveListEncapsulateChildsIfListFalse, result);
+
+      var deserialized = ListHandlingStringPrimitiveListEncapsulateChildsIfListFalse.Import(XElement.Parse(result));
+      Assert.True(listHandlingStringPrimitiveListEncapsulateChildsIfListFalse.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
     [Fact]
     public void ListHandlingSimplePrimitiveListEncapsulateChildsIfListFalseToXElement()
     {
-      ListHandlingStringPrimitiveListEncapsulateChildsIfListFalse listHandlingStringPrimitiveListEncapsulateChildsIfListFalse
+      var listHandlingStringPrimitiveListEncapsulateChildsIfListFalse
         = _listHandlingStringPrimitiveListEncapsulateChildsIfListFalseImpl;
 
-      XElement result = listHandlingStringPrimitiveListEncapsulateChildsIfListFalse.ExportAsXElement();
+      var result = listHandlingStringPrimitiveListEncapsulateChildsIfListFalse.ExportAsXElement();
       Assert.True(XNode.DeepEquals(result, XElement.Parse(ComparisonValues.ListHandlingStringPrimitiveListEncapsulateChildsIfListFalse)));
+
+      var deserialized = ListHandlingStringPrimitiveListEncapsulateChildsIfListFalse.Import(result);
+      Assert.True(listHandlingStringPrimitiveListEncapsulateChildsIfListFalse.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
 
@@ -54,7 +60,7 @@ namespace zenonApi.Core.Tests
       public List<int> PrimitiveList { get; set; }
     }
 
-    private static ListHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse
+    private static readonly ListHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse
       ListHandlingIntegerPrimitiveListEncapsulateChildsIfListFalseImpl =
         new ListHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse
         {
@@ -67,21 +73,27 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestListHandlingIntegerPrimitiveListEncapsulateChildsIfListFalseToString()
     {
-      ListHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse listHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse
+      var listHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse
         = ListHandlingIntegerPrimitiveListEncapsulateChildsIfListFalseImpl;
 
-      string result = listHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse.ExportAsString();
+      var result = listHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse.ExportAsString();
       Assert.Equal(ComparisonValues.ListHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse, result);
+
+      var deserialized = ListHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse.Import(XElement.Parse(result));
+      Assert.True(listHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
     [Fact]
     public void TestListHandlingIntegerPrimitiveListEncapsulateChildsIfListFalseToXElement()
     {
-      ListHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse listHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse
+      var listHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse
         = ListHandlingIntegerPrimitiveListEncapsulateChildsIfListFalseImpl;
 
-      XElement result = listHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse.ExportAsXElement();
+      var result = listHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse.ExportAsXElement();
       Assert.True(XNode.DeepEquals(result, XElement.Parse(ComparisonValues.ListHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse)));
+
+      var deserialized = ListHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse.Import(result);
+      Assert.True(listHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
 
@@ -93,7 +105,7 @@ namespace zenonApi.Core.Tests
       public List<double> PrimitiveList { get; set; }
     }
 
-    private static ListHandlingDoublePrimitiveListEncapsulateChildsIfListFalse
+    private static readonly ListHandlingDoublePrimitiveListEncapsulateChildsIfListFalse
       ListHandlingDoublePrimitiveListEncapsulateChildsIfListFalseImpl =
         new ListHandlingDoublePrimitiveListEncapsulateChildsIfListFalse
         {
@@ -106,21 +118,27 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestListHandlingDoublePrimitiveListEncapsulateChildsIfListFalseToString()
     {
-      ListHandlingDoublePrimitiveListEncapsulateChildsIfListFalse listHandlingDoublePrimitiveListEncapsulateChildsIfListFalse
+      var listHandlingDoublePrimitiveListEncapsulateChildsIfListFalse
         = ListHandlingDoublePrimitiveListEncapsulateChildsIfListFalseImpl;
 
-      string result = listHandlingDoublePrimitiveListEncapsulateChildsIfListFalse.ExportAsString();
+      var result = listHandlingDoublePrimitiveListEncapsulateChildsIfListFalse.ExportAsString();
       Assert.Equal(ComparisonValues.ListHandlingDoublePrimitiveListEncapsulateChildsIfListFalse, result);
+
+      var deserialized = ListHandlingDoublePrimitiveListEncapsulateChildsIfListFalse.Import(XElement.Parse(result));
+      Assert.True(listHandlingDoublePrimitiveListEncapsulateChildsIfListFalse.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
     [Fact]
     public void TestListHandlingDoublePrimitiveListEncapsulateChildsIfListFalseToXElement()
     {
-      ListHandlingDoublePrimitiveListEncapsulateChildsIfListFalse listHandlingDoublePrimitiveListEncapsulateChildsIfListFalse
+      var listHandlingDoublePrimitiveListEncapsulateChildsIfListFalse
         = ListHandlingDoublePrimitiveListEncapsulateChildsIfListFalseImpl;
 
-      XElement result = listHandlingDoublePrimitiveListEncapsulateChildsIfListFalse.ExportAsXElement();
+      var result = listHandlingDoublePrimitiveListEncapsulateChildsIfListFalse.ExportAsXElement();
       Assert.True(XNode.DeepEquals(result, XElement.Parse(ComparisonValues.ListHandlingDoublePrimitiveListEncapsulateChildsIfListFalse)));
+
+      var deserialized = ListHandlingDoublePrimitiveListEncapsulateChildsIfListFalse.Import(result);
+      Assert.True(listHandlingDoublePrimitiveListEncapsulateChildsIfListFalse.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
 
@@ -132,8 +150,8 @@ namespace zenonApi.Core.Tests
       public List<string> PrimitiveList { get; set; }
     }
 
-    private ListHandlingStringPrimitiveListEncapsulateChildsIfListTrue
-      ListHandlingStringPrimitiveListEncapsulateChildsIfListTrueImpl =
+    private readonly ListHandlingStringPrimitiveListEncapsulateChildsIfListTrue
+      _listHandlingStringPrimitiveListEncapsulateChildsIfListTrueImpl =
         new ListHandlingStringPrimitiveListEncapsulateChildsIfListTrue
         {
           PrimitiveList = new List<string>
@@ -145,23 +163,32 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestListHandlingStringPrimitiveListEncapsulateChildsIfListTrueToString()
     {
-      ListHandlingStringPrimitiveListEncapsulateChildsIfListTrue listHandlingStringPrimitiveListEncapsulateChildsIfListTrue = ListHandlingStringPrimitiveListEncapsulateChildsIfListTrueImpl;
-      string result = listHandlingStringPrimitiveListEncapsulateChildsIfListTrue.ExportAsString();
+      var listHandlingStringPrimitiveListEncapsulateChildsIfListTrue
+        = _listHandlingStringPrimitiveListEncapsulateChildsIfListTrueImpl;
+      var result = listHandlingStringPrimitiveListEncapsulateChildsIfListTrue.ExportAsString();
       Assert.Equal(ComparisonValues.ListHandlingStringPrimitiveListEncapsulateChildsIfListTrue, result);
+
+      var deserialized = ListHandlingStringPrimitiveListEncapsulateChildsIfListTrue.Import(XElement.Parse(result));
+      Assert.True(listHandlingStringPrimitiveListEncapsulateChildsIfListTrue.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
     [Fact]
     public void TestListHandlingSimplePrimitiveListEncapsulateChildsIfListTrueToXElement()
     {
-      ListHandlingStringPrimitiveListEncapsulateChildsIfListTrue listHandlingStringPrimitiveListEncapsulateChildsIfListTrue = ListHandlingStringPrimitiveListEncapsulateChildsIfListTrueImpl;
-      XElement result = listHandlingStringPrimitiveListEncapsulateChildsIfListTrue.ExportAsXElement();
+      var listHandlingStringPrimitiveListEncapsulateChildsIfListTrue 
+        = _listHandlingStringPrimitiveListEncapsulateChildsIfListTrueImpl;
+      var result = listHandlingStringPrimitiveListEncapsulateChildsIfListTrue.ExportAsXElement();
       Assert.True(XNode.DeepEquals(result, XElement.Parse(ComparisonValues.ListHandlingStringPrimitiveListEncapsulateChildsIfListTrue)));
+
+      var deserialized = ListHandlingStringPrimitiveListEncapsulateChildsIfListTrue.Import(result);
+      Assert.True(listHandlingStringPrimitiveListEncapsulateChildsIfListTrue.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
 
 
     #region ListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue
-    public class ListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue : zenonSerializable<ListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue>
+    public class ListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue
+      : zenonSerializable<ListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue>
     {
       [zenonSerializableNode(nameof(PrimitiveList), EncapsulateChildsIfList = true)]
       public List<int> PrimitiveList { get; set; }
@@ -180,21 +207,27 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrueToString()
     {
-      ListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue listHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue
+      var listHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue
         = ListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrueImpl;
 
-      string result = listHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue.ExportAsString();
+      var result = listHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue.ExportAsString();
       Assert.Equal(ComparisonValues.ListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue, result);
+
+      var deserialized = ListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue.Import(XElement.Parse(result));
+      Assert.True(listHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
     [Fact]
     public void TestListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrueToXElement()
     {
-      ListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue listHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue
+      var listHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue
         = ListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrueImpl;
 
-      XElement result = listHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue.ExportAsXElement();
+      var result = listHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue.ExportAsXElement();
       Assert.True(XNode.DeepEquals(result, XElement.Parse(ComparisonValues.ListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue)));
+
+      var deserialized = ListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue.Import(result);
+      Assert.True(listHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
 
@@ -219,20 +252,26 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestListHandlingDoublePrimitiveListEncapsulateChildsIfListTrueToString()
     {
-      ListHandlingDoublePrimitiveListEncapsulateChildsIfListTrue listHandlingDoublePrimitiveListEncapsulateChildsIfListTrue
+      var listHandlingDoublePrimitiveListEncapsulateChildsIfListTrue
         = ListHandlingDoublePrimitiveListEncapsulateChildsIfListTrueImpl;
-      string result = listHandlingDoublePrimitiveListEncapsulateChildsIfListTrue.ExportAsString();
+      var result = listHandlingDoublePrimitiveListEncapsulateChildsIfListTrue.ExportAsString();
       Assert.Equal(ComparisonValues.ListHandlingDoublePrimitiveListEncapsulateChildsIfListTrue, result);
+
+      var deserialized = ListHandlingDoublePrimitiveListEncapsulateChildsIfListTrue.Import(XElement.Parse(result));
+      Assert.True(listHandlingDoublePrimitiveListEncapsulateChildsIfListTrue.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
     [Fact]
     public void TestListHandlingDoublePrimitiveListEncapsulateChildsIfListTrueToXElement()
     {
-      ListHandlingDoublePrimitiveListEncapsulateChildsIfListTrue listHandlingDoublePrimitiveListEncapsulateChildsIfListTrue
+      var listHandlingDoublePrimitiveListEncapsulateChildsIfListTrue
         = ListHandlingDoublePrimitiveListEncapsulateChildsIfListTrueImpl;
 
-      XElement result = listHandlingDoublePrimitiveListEncapsulateChildsIfListTrue.ExportAsXElement();
+      var result = listHandlingDoublePrimitiveListEncapsulateChildsIfListTrue.ExportAsXElement();
       Assert.True(XNode.DeepEquals(result, XElement.Parse(ComparisonValues.ListHandlingDoublePrimitiveListEncapsulateChildsIfListTrue)));
+
+      var deserialized = ListHandlingDoublePrimitiveListEncapsulateChildsIfListTrue.Import(result);
+      Assert.True(listHandlingDoublePrimitiveListEncapsulateChildsIfListTrue.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
 
@@ -286,21 +325,27 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestListHandlingComplexListEncapsulateChildsIfListFalseToString()
     {
-      ListHandlingComplexListEncapsulateChildsIfListFalse listHandlingComplexListEncapsulateChildsIfListFalseImpl
+      var listHandlingComplexListEncapsulateChildsIfListFalseImpl
         = ListHandlingComplexListEncapsulateChildsIfListFalseImpl;
 
-      string result = listHandlingComplexListEncapsulateChildsIfListFalseImpl.ExportAsString();
+      var result = listHandlingComplexListEncapsulateChildsIfListFalseImpl.ExportAsString();
       Assert.Equal(ComparisonValues.ListHandlingComplexListEncapsulateChildsIfListFalse, result);
+
+      var deserialized = ListHandlingComplexListEncapsulateChildsIfListFalse.Import(XElement.Parse(result));
+      Assert.True(listHandlingComplexListEncapsulateChildsIfListFalseImpl.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
     [Fact]
     public void TestListHandlingComplexListEncapsulateChildsIfListFalseToXDocument()
     {
-      ListHandlingComplexListEncapsulateChildsIfListFalse listHandlingComplexListEncapsulateChildsIfListFalseImpl
+      var listHandlingComplexListEncapsulateChildsIfListFalseImpl
         = ListHandlingComplexListEncapsulateChildsIfListFalseImpl;
 
-      XElement result = listHandlingComplexListEncapsulateChildsIfListFalseImpl.ExportAsXElement();
+      var result = listHandlingComplexListEncapsulateChildsIfListFalseImpl.ExportAsXElement();
       Assert.True(XNode.DeepEquals(result, XElement.Parse(ComparisonValues.ListHandlingComplexListEncapsulateChildsIfListFalse)));
+
+      var deserialized = ListHandlingComplexListEncapsulateChildsIfListFalse.Import(result);
+      Assert.True(listHandlingComplexListEncapsulateChildsIfListFalseImpl.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
 
@@ -354,19 +399,25 @@ namespace zenonApi.Core.Tests
     [Fact]
     public void TestListHandlingComplexListEncapsulateChildsIfListTrueToString()
     {
-      ListHandlingComplexListEncapsulateChildsIfListTrue listHandlingComplexListEncapsulateChildsIfListTrueImpl = ListHandlingComplexListEncapsulateChildsIfListTrueImpl;
+      var listHandlingComplexListEncapsulateChildsIfListTrueImpl = ListHandlingComplexListEncapsulateChildsIfListTrueImpl;
 
-      string result = listHandlingComplexListEncapsulateChildsIfListTrueImpl.ExportAsString();
+      var result = listHandlingComplexListEncapsulateChildsIfListTrueImpl.ExportAsString();
       Assert.Equal(ComparisonValues.ListHandlingComplexListEncapsulateChildsIfListTrue, result);
+
+      var deserialized = ListHandlingComplexListEncapsulateChildsIfListTrue.Import(XElement.Parse(result));
+      Assert.True(listHandlingComplexListEncapsulateChildsIfListTrueImpl.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
     [Fact]
     public void TestListHandlingComplexListEncapsulateChildsIfListTrueToXDocument()
     {
-      ListHandlingComplexListEncapsulateChildsIfListTrue listHandlingComplexListEncapsulateChildsIfListTrueImpl = ListHandlingComplexListEncapsulateChildsIfListTrueImpl;
+      var listHandlingComplexListEncapsulateChildsIfListTrueImpl = ListHandlingComplexListEncapsulateChildsIfListTrueImpl;
 
-      XElement result = listHandlingComplexListEncapsulateChildsIfListTrueImpl.ExportAsXElement();
+      var result = listHandlingComplexListEncapsulateChildsIfListTrueImpl.ExportAsXElement();
       Assert.True(XNode.DeepEquals(result, XElement.Parse(ComparisonValues.ListHandlingComplexListEncapsulateChildsIfListTrue)));
+
+      var deserialized = ListHandlingComplexListEncapsulateChildsIfListTrue.Import(result);
+      Assert.True(listHandlingComplexListEncapsulateChildsIfListTrueImpl.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
 
@@ -389,7 +440,7 @@ namespace zenonApi.Core.Tests
     {
       // If we have a single node, then it shall be fine to use the EncapsulateChildsIfList parameter.
       // It shall be simply ignored then.
-      string result = ListHandlingOnSingleNodesClassImpl.ExportAsString();
+      var result = ListHandlingOnSingleNodesClassImpl.ExportAsString();
       Assert.Equal(ComparisonValues.EncapsulateChildsOnNonListEntity, result);
     }
     #endregion
