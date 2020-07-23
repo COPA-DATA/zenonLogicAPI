@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Xml.Linq;
 using Xunit;
+using zenonApi.Extensions;
 using zenonApi.Serialization;
 
 namespace zenonApi.Core.Tests
@@ -17,7 +18,7 @@ namespace zenonApi.Core.Tests
         return targetProperty.Name + "_" + index;
       }
 
-      public Type GetTypeForDeserialization(PropertyInfo targetProperty, string nodeName, int index)
+      public Type GetTypeForDeserialization(PropertyInfo targetProperty, string nodeName, XElement node, int index)
       {
         var name = nodeName.Substring(0, nodeName.IndexOf("_", StringComparison.InvariantCulture));
         // ReSharper disable once PossibleNullReferenceException : Property exists, will not be null.
@@ -32,7 +33,7 @@ namespace zenonApi.Core.Tests
         return targetProperty.Name + "_" + index;
       }
 
-      public Type GetTypeForDeserialization(PropertyInfo targetProperty, string nodeName, int index)
+      public Type GetTypeForDeserialization(PropertyInfo targetProperty, string nodeName, XElement node, int index)
       {
         var removeFrom = nodeName.IndexOf("_", StringComparison.InvariantCulture);
         if (removeFrom == -1)
@@ -103,7 +104,7 @@ namespace zenonApi.Core.Tests
       Assert.Equal(result, ComparisonValues.ResolverOnNodesThatAreNotLists);
 
       Assert.ThrowsAny<Exception>(() => ResolverOnNodesThatAreNotListsClassWrongUsage.Import(XElement.Parse(result)));
-      
+
       var deserialized = ResolverOnNodesThatAreNotListsClassCorrectUsage.Import(XElement.Parse(result));
 
       var resolverOnNodesThatAreNotListsClassCorrectUsage
@@ -173,7 +174,7 @@ namespace zenonApi.Core.Tests
         return targetProperty.Name + "_" + index;
       }
 
-      public Type GetTypeForDeserialization(PropertyInfo targetProperty, string nodeName, int index)
+      public Type GetTypeForDeserialization(PropertyInfo targetProperty, string nodeName, XElement node, int index)
       {
         var name = nodeName.Substring(0, nodeName.IndexOf("_", StringComparison.InvariantCulture));
         // ReSharper disable once PossibleNullReferenceException : Will not be null, property exists.
@@ -220,7 +221,7 @@ namespace zenonApi.Core.Tests
         return targetProperty.Name + "_" + index;
       }
 
-      public Type GetTypeForDeserialization(PropertyInfo targetProperty, string nodeName, int index)
+      public Type GetTypeForDeserialization(PropertyInfo targetProperty, string nodeName, XElement node, int index)
       {
         var name = nodeName.Substring(0, nodeName.IndexOf("_", StringComparison.InvariantCulture));
         // ReSharper disable once PossibleNullReferenceException : Property exists in our cases, will not be null.
@@ -242,6 +243,83 @@ namespace zenonApi.Core.Tests
       var resolverThatReturnsPropertyWrongTypeClass = ResolverThatReturnsPropertyWrongTypeClassImpl;
       var result = resolverThatReturnsPropertyWrongTypeClass.ExportAsString();
       Assert.ThrowsAny<Exception>(() => ResolverThatReturnsPropertyWrongTypeClass.Import(XElement.Parse(result)));
+    }
+    #endregion
+
+
+    #region ResolverWithIndexCheck
+    public class ResolverWithIndexCheck : zenonSerializable<ResolverWithIndexCheck>
+    {
+      [zenonSerializableNode(nameof(SimpleList), typeof(ResolverWithIndexCheckResolver), NodeOrder = 0)]
+      public List<string> SimpleList { get; set; }
+
+      [zenonSerializableNode(nameof(SimpleStringA), typeof(ResolverWithIndexCheckResolver), NodeOrder = 1)]
+      public string SimpleStringA { get; set; }
+
+      [zenonSerializableNode(nameof(SimpleStringB), typeof(ResolverWithIndexCheckResolver), NodeOrder = 2)]
+      public string SimpleStringB { get; set; }
+    }
+
+    private class ResolverWithIndexCheckResolver : IZenonSerializableResolver
+    {
+      public string GetNodeNameForSerialization(PropertyInfo targetProperty, Type targetType, object value, int index)
+      {
+        var attribute = targetProperty.GetCustomAttribute<zenonSerializableNodeAttribute>();
+        if (targetProperty.Name == attribute.NodeName)
+        {
+          // Each test object stores the expected index
+          if (!(value is IEnumerable<string>))
+          {
+            Assert.Equal(value, index.ToString());
+          }
+          return attribute.NodeName;
+        }
+
+        return null;
+      }
+
+      public Type GetTypeForDeserialization(PropertyInfo targetProperty, string nodeName, XElement node, int index)
+      {
+        if (nodeName != targetProperty.Name)
+        {
+          // This is a different property
+          return null;
+        }
+
+        var genericTypeArgs = targetProperty.PropertyType.GenericTypeArguments;
+        if (genericTypeArgs.Length > 0)
+        {
+          // In our test, the list elements contain the index of the node itself, which makes it easy to check them
+          Assert.Equal(node.Value, index.ToString());
+          return genericTypeArgs[0];
+        }
+
+        // Index must be 0 at this point
+        Assert.Equal(0, index);
+        return targetProperty.PropertyType;
+      }
+    }
+
+    private static ResolverWithIndexCheck ResolverWithIndexCheckImpl => new ResolverWithIndexCheck()
+    {
+      SimpleList = new List<string>
+      {
+        "0",
+        "1",
+        "2"
+      },
+      SimpleStringA = "0",
+      SimpleStringB = "0"
+    };
+
+    [Fact]
+    public void TestResolverWithIndexCheck()
+    {
+      var resolverWithIndexCheck = ResolverWithIndexCheckImpl;
+
+      // Asserts are done in the resolver
+      string result = resolverWithIndexCheck.ExportAsString();
+      ResolverWithIndexCheck.Import(XElement.Parse(result));
     }
     #endregion
   }

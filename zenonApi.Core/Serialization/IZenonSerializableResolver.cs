@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using System.Xml.Linq;
 
 namespace zenonApi.Serialization
 {
@@ -30,6 +31,9 @@ namespace zenonApi.Serialization
     ///   (if the <paramref name="targetProperty"/> is a supported collection type), or the type of the
     ///   <paramref name="targetProperty"/> itself.
     /// </param>
+    /// <param name="value">
+    ///   The value of the node to transform.
+    /// </param>
     /// <param name="index">
     ///   An optional index may be passed, if the <paramref name="targetProperty"/> is a collection type.
     /// </param>
@@ -42,7 +46,12 @@ namespace zenonApi.Serialization
     /// </summary>
     /// <param name="targetProperty">The target property, for which a possible candidate is searched.</param>
     /// <param name="nodeName">The name of a found node.</param>
-    /// <param name="index">An optional index within the source file.</param>
-    Type GetTypeForDeserialization(PropertyInfo targetProperty, string nodeName, int index);
+    /// <param name="node">The node, which is currently processed.</param>
+    /// <param name="index">
+    ///   An optional index within the source file.
+    ///   For single properties, this index will always be null.
+    ///   For lists, this index will be the node index.
+    /// </param>
+    Type GetTypeForDeserialization(PropertyInfo targetProperty, string nodeName, XElement node, int index);
   }
 }

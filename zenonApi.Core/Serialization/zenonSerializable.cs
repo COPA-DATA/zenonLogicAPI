@@ -511,13 +511,9 @@ namespace zenonApi.Serialization
 
         target.Add(child);
       }
-      else if (property.IsEnumerableOf<object>() && !typeof(string).IsAssignableFrom(property.PropertyType))
+      else if (property.IsEnumerableOf<object>(out Type listItemType) && !typeof(string).IsAssignableFrom(property.PropertyType))
       {
         IEnumerable list = (IEnumerable)sourceValue;
-
-        // ReSharper disable once PossibleNullReferenceException : x will never be null.
-        Type baseInterface = property.PropertyType.GetInterfaces().FirstOrDefault(x => x.FullName.StartsWith(typeof(IEnumerable<>).FullName));
-        Type genericParameterType = baseInterface?.GenericTypeArguments[0];
 
         if (nodeAttribute.InternalEncapsulateChildsIfList)
         {
@@ -531,7 +527,7 @@ namespace zenonApi.Serialization
           XElement listWithChildren = new XElement(nodeAttribute.InternalName);
 
           int index = 0;
-          if (property.IsEnumerableOf<IZenonSerializable>())
+          if (typeof(IZenonSerializable).IsAssignableFrom(listItemType))
           {
             foreach (IZenonSerializable listItem in list)
             {
@@ -541,10 +537,10 @@ namespace zenonApi.Serialization
               }
 
               // ReSharper disable once PossibleNullReferenceException : "genericParameterType" cannot be null at this point.
-              MethodInfo exportMethod = genericParameterType.GetMethod(nameof(ExportAsXElement), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+              MethodInfo exportMethod = listItemType.GetMethod(nameof(ExportAsXElement), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
               // ReSharper disable once PossibleNullReferenceException : "exportMethod" cannot be null at this point.
               XElement child = (XElement)exportMethod.Invoke(listItem, null);
-              child.Name = TryResolveName(property, nodeAttribute, listItem.GetType(), listItem, index++, child.Name.LocalName);
+              child.Name = TryResolveName(property, nodeAttribute, listItemType, listItem, index++, child.Name.LocalName);
 
               listWithChildren.Add(child);
             }
@@ -561,7 +557,7 @@ namespace zenonApi.Serialization
                 continue;
               }
 
-              var name = TryResolveName(property, nodeAttribute, property.PropertyType, sourceValue, 0, nodeAttribute.InternalName);
+              var name = TryResolveName(property, nodeAttribute, listItemType, sourceValue, 0, nodeAttribute.InternalName);
               XElement child = new XElement(name);
 
               string value;
@@ -585,7 +581,7 @@ namespace zenonApi.Serialization
 
           target.Add(listWithChildren);
         }
-        else if (property.IsEnumerableOf<IZenonSerializable>())
+        else if (property.CanBeAssignedTo(typeof(IZenonSerializable)))
         {
           int index = 0;
           foreach (IZenonSerializable listItem in list)
@@ -596,7 +592,7 @@ namespace zenonApi.Serialization
             }
 
             // ReSharper disable once PossibleNullReferenceException : "genericParameterType" cannot be null at this point.
-            MethodInfo exportMethod = genericParameterType.GetMethod(nameof(ExportAsXElement), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+            MethodInfo exportMethod = listItemType.GetMethod(nameof(ExportAsXElement), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
             // ReSharper disable once PossibleNullReferenceException : "exportMethod" cannot be null at this point.
             XElement child = (XElement)exportMethod.Invoke(listItem, null);
             child.Name = TryResolveName(property, nodeAttribute, listItem.GetType(), listItem, index++, nodeAttribute.InternalName);
@@ -614,16 +610,25 @@ namespace zenonApi.Serialization
               continue;
             }
 
-            var name = TryResolveName(property, nodeAttribute, property.PropertyType, sourceValue, index++, nodeAttribute.InternalName);
-            XElement child = new XElement(name);
+            var name = TryResolveName(property, nodeAttribute, listItemType, listItem, index++, nodeAttribute.InternalName);
+            XElement child;
 
             string value;
             if (listItem is IConvertible convertible)
             {
+              child = new XElement(name);
               value = Convert.ToString(convertible, CultureInfo.InvariantCulture);
+            }
+            else if (listItem is IZenonSerializable zenSerializable)
+            {
+              child = zenSerializable.ExportAsXElement();
+              child.Name = name;
+              target.Add(child);
+              continue;
             }
             else
             {
+              child = new XElement(name);
               value = listItem.ToString();
             }
 
@@ -1231,7 +1236,7 @@ namespace zenonApi.Serialization
       IEnumerable<XElement> consideredChildren = sourceXml.Elements().OfType<XNode>().Cast<XElement>();
       IEnumerable<XElement> listElementContainers = null;
 
-      bool isEnumerable = property.IsEnumerableOf<object>() && !typeof(string).IsAssignableFrom(property.PropertyType);
+      bool isEnumerable = property.IsEnumerableOf<object>(out var genericType) && !typeof(string).IsAssignableFrom(property.PropertyType);
       bool isZenonSerializable = property.CanBeAssignedTo<IZenonSerializable>();
 
       if (isEnumerable && attribute.EncapsulateChildsIfList)
@@ -1253,7 +1258,7 @@ namespace zenonApi.Serialization
         {
           try
           {
-            var type = resolver.GetTypeForDeserialization(property, element.Name.LocalName, index++);
+            var type = resolver.GetTypeForDeserialization(property, element.Name.LocalName, element, index++);
             if (type == null)
             {
               // Unknown type for this resolver, all fine. We ignore this value for now.
@@ -1273,18 +1278,16 @@ namespace zenonApi.Serialization
       else if (isEnumerable)
       {
         // This is a list, array or similar. Let's find the generic type parameter, so that we can store the correct types.
-        var genericTypeProperty = GetIEnumerableGenericTypeArgument(property);
-
         if (listElementContainers != null)
         {
           // There is a parent element, which may have a specific name.
           // For the children, we need to assume that they are all of the correct type, independent of the node name.
-          nodes.AddRange(consideredChildren.Select(x => (genericTypeProperty, x)));
+          nodes.AddRange(consideredChildren.Select(x => (genericType, x)));
         }
         else
         {
           // Only use the nodes with the correct name
-          nodes.AddRange(consideredChildren.Where(x => x.Name.LocalName == attribute.InternalName).Select(x => (genericTypeProperty, x)));
+          nodes.AddRange(consideredChildren.Where(x => x.Name.LocalName == attribute.InternalName).Select(x => (genericType, x)));
         }
       }
       else
@@ -1293,7 +1296,7 @@ namespace zenonApi.Serialization
         nodes.AddRange(sourceXml.Elements().Where(x => x.Name.LocalName == attribute.NodeName).Select(x => (property.PropertyType, x)));
       }
 
-      if (typeof(IZenonSerializable).IsAssignableFrom(property.PropertyType))
+      if (isZenonSerializable)
       {
         if (nodes.Count > 1)
         {
@@ -1319,7 +1322,7 @@ namespace zenonApi.Serialization
         // Remove the successfully deserialized value from the source node.
         node.Element.Remove();
       }
-      else if (isEnumerable && !isZenonSerializable)
+      else if (isEnumerable)
       {
         // Create the list which will hold the instances
         ImportChilds(property, target, nodes);

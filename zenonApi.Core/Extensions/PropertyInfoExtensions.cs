@@ -1,38 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 namespace zenonApi.Extensions
 {
   public static class PropertyInfoExtensions
   {
-    public static bool IsEnumerableOf(this PropertyInfo propertyInfo, Type genericTypeParameter)
+    public static bool IsEnumerableOf(this PropertyInfo propertyInfo, Type definedGenericTypeParameter)
+      => IsEnumerableOf(propertyInfo, definedGenericTypeParameter, out _);
+
+    public static bool IsEnumerableOf(this PropertyInfo propertyInfo, Type expectedGenericTypeParameter, out Type definedGenericTypeParameter)
     {
       if (propertyInfo == null)
       {
         throw new NullReferenceException();
       }
 
-      if (genericTypeParameter == null)
+      if (expectedGenericTypeParameter == null)
       {
+        definedGenericTypeParameter = null;
         return false;
       }
 
       var enumerableType = propertyInfo.PropertyType.GetInterface(typeof(IEnumerable<>).FullName);
       if (enumerableType == null)
       {
+        definedGenericTypeParameter = null;
         return false;
       }
 
-      var ownGenericType = enumerableType.GenericTypeArguments[0];
+      definedGenericTypeParameter = enumerableType.GenericTypeArguments[0];
 
-      return genericTypeParameter.IsAssignableFrom(ownGenericType);
+      return expectedGenericTypeParameter.IsAssignableFrom(definedGenericTypeParameter);
     }
 
     public static bool IsEnumerableOf<T>(this PropertyInfo propertyInfo)
     {
       return IsEnumerableOf(propertyInfo, typeof(T));
+    }
+
+    public static bool IsEnumerableOf<T>(this PropertyInfo propertyInfo, out Type definedGenericTypeParameter)
+    {
+      return IsEnumerableOf(propertyInfo, typeof(T), out definedGenericTypeParameter);
     }
 
     public static bool CanBeAssignedTo(this PropertyInfo propertyInfo, Type targetType)

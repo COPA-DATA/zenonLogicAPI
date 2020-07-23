@@ -43,7 +43,7 @@ namespace zenonApi.Core.Tests
         return targetProperty.Name + "_" + index;
       }
 
-      public Type GetTypeForDeserialization(PropertyInfo targetProperty, string nodeName, int index)
+      public Type GetTypeForDeserialization(PropertyInfo targetProperty, string nodeName, XElement node, int index)
       {
         var removeFrom = nodeName.IndexOf("_", StringComparison.InvariantCulture);
         if (removeFrom == -1)
@@ -68,7 +68,7 @@ namespace zenonApi.Core.Tests
         return targetProperty.Name + "_" + index;
       }
 
-      public Type GetTypeForDeserialization(PropertyInfo targetProperty, string nodeName, int index)
+      public Type GetTypeForDeserialization(PropertyInfo targetProperty, string nodeName, XElement node, int index)
       {
         var removeFrom = nodeName.IndexOf("_", StringComparison.InvariantCulture);
         if (removeFrom == -1)
