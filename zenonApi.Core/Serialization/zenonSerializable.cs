@@ -442,9 +442,14 @@ namespace zenonApi.Serialization
       {
         var valueType = sourceValue.GetType();
 
-        if (valueType.IsEnum)
+        if (property.IsEnumOrNullableEnum(out bool isNullable))
         {
           // Try to find a zenonSerializable attribute to write the correct value
+          if (isNullable)
+          {
+            valueType = valueType.GenericTypeArguments[0];
+          }
+
           var attribute = valueType.GetField(sourceValue.ToString()).GetCustomAttribute<zenonSerializableEnumAttribute>();
           if (attribute != null)
           {
@@ -452,7 +457,7 @@ namespace zenonApi.Serialization
             target.SetAttributeValue(attributeAttribute.InternalName, attribute.Name);
           }
         }
-        else if (sourceValue is IConvertible convertible)
+        else if (sourceValue is IConvertible)
         {
           string stringValue = Convert.ToString(sourceValue, CultureInfo.InvariantCulture);
           target.SetAttributeValue(attributeAttribute.InternalName, stringValue);
@@ -641,11 +646,17 @@ namespace zenonApi.Serialization
           }
         }
       }
-      else if (property.PropertyType.IsEnum)
+      else if (property.IsEnumOrNullableEnum(out bool isNullableEnum))
       {
         // Try to find a zenonSerializable attribute to write the correct value
         string value = sourceValue.ToString();
-        var attribute = property.PropertyType.GetField(value).GetCustomAttribute<zenonSerializableEnumAttribute>();
+        var enumType = property.PropertyType;
+        if (isNullableEnum)
+        {
+          enumType = enumType.GenericTypeArguments[0];
+        }
+
+        var attribute = enumType.GetField(value).GetCustomAttribute<zenonSerializableEnumAttribute>();
         if (attribute != null)
         {
           value = attribute.Name;

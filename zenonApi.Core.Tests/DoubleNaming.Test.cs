@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Linq;
 using Xunit;
 using zenonApi.Serialization;
 
@@ -28,7 +29,6 @@ namespace zenonApi.Core.Tests
       var doubleZenonSerializableNode = DoubleZenonSerializableNodeImpl; 
       Assert.ThrowsAny<Exception>(() => doubleZenonSerializableNode.ExportAsString());
     }
-
     #endregion
 
 
@@ -58,6 +58,42 @@ namespace zenonApi.Core.Tests
     {
       var doubleZenonSerializableAttribute = DoubleZenonSerializableAttributeImpl;
       Assert.ThrowsAny<Exception>(() => doubleZenonSerializableAttribute.ExportAsString());
+    }
+    #endregion
+
+
+    #region DoubleZenonSerializableNode 
+    public class ValidDoubleNamingClass : zenonSerializable<ValidDoubleNamingClass>
+    {
+      [zenonSerializableNode("A")]
+      public int A1 { get; set; }
+
+      [zenonSerializableNode("B")]
+      public double B1 { get; set; }
+
+      [zenonSerializableAttribute("A")]
+      public int A2 { get; set; }
+
+      [zenonSerializableAttribute("B")]
+      public double B2 { get; set; }
+    }
+
+    public static ValidDoubleNamingClass ValidDoubleNamingImpl => new ValidDoubleNamingClass()
+    {
+      A1 = 5,
+      B1 = 12.25,
+      A2 = 6,
+      B2 = 13.25
+    };
+
+    [Fact]
+    public void TestValidDoubleNamingImpl()
+    {
+      var impl = ValidDoubleNamingImpl;
+      var result = impl.ExportAsString();
+      var deserialized = ValidDoubleNamingClass.Import(XElement.Parse(result));
+
+      Assert.True(impl.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
   }

@@ -297,6 +297,21 @@ namespace zenonApi.Core.Tests {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;Test&gt;
+        ///   &lt;NodeNotNull&gt;5&lt;/NodeNotNull&gt;
+        ///   &lt;AttributeNotNull&gt;5&lt;/AttributeNotNull&gt;
+        ///   &lt;NodeEnumNotNull&gt;value_b&lt;/NodeEnumNotNull&gt;
+        ///   &lt;AttributeEnumNotNull&gt;value_b&lt;/AttributeEnumNotNull&gt;
+        ///&lt;/Test&gt;.
+        /// </summary>
+        internal static string NullablePrimitives {
+            get {
+                return ResourceManager.GetString("NullablePrimitives", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
         ///&lt;OmitComplexWithOmitClass&gt;
         ///   &lt;SimpleSingleSerializationClass&gt;
         ///      &lt;SimpleInteger&gt;5&lt;/SimpleInteger&gt;

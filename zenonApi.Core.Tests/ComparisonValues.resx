@@ -353,6 +353,15 @@
    &lt;/SimpleSerializationWithAttributes&gt;
 &lt;/NestedSerializationWithAttributes&gt;</value>
   </data>
+  <data name="NullablePrimitives" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
+&lt;Test&gt;
+   &lt;NodeNotNull&gt;5&lt;/NodeNotNull&gt;
+   &lt;AttributeNotNull&gt;5&lt;/AttributeNotNull&gt;
+   &lt;NodeEnumNotNull&gt;value_b&lt;/NodeEnumNotNull&gt;
+   &lt;AttributeEnumNotNull&gt;value_b&lt;/AttributeEnumNotNull&gt;
+&lt;/Test&gt;</value>
+  </data>
   <data name="OmitComplexWithOmit" xml:space="preserve">
     <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
 &lt;OmitComplexWithOmitClass&gt;
