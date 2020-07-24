@@ -14,7 +14,7 @@ namespace zenonApi.Core.Tests
     {
       [zenonSerializableNode(nameof(SimpleSingleSerializationClass), typeof(MixedResolver), NodeOrder = 40)]
       public SimpleSerializationWithAttributes.SimpleSerializationWithAttributesClass SimpleSingleSerializationClass { get; set; }
-
+      
       [zenonSerializableNode(
         nameof(SimpleSingleSerializationEncapsulateFalseClasses),
         typeof(MixedListResolver),

@@ -54,12 +54,16 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Interop.zenOn.760">
-      <HintPath>..\Binaries\Interop.zenOn.760.dll</HintPath>
+    <Reference Include="Interop.zenOn.800">
+      <HintPath>..\Binaries\Interop.zenOn.800.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Scada.AddIn.Contracts">
-      <HintPath>C:\Program Files (x86)\COPA-DATA\zenon 8.00 SP0\AddInFramework\Scada.AddIn.Contracts.dll</HintPath>
+    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Binaries\Mono.Addins.dll</HintPath>
+    </Reference>
+    <Reference Include="Scada.AddIn.Contracts.800">
+      <HintPath>..\Binaries\Scada.AddIn.Contracts.800.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

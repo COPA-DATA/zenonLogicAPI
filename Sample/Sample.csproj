@@ -33,9 +33,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Interop.zenOn.760">
-      <HintPath>..\Binaries\Interop.zenOn.760.dll</HintPath>
+    <Reference Include="Interop.zenOn.800">
+      <HintPath>..\Binaries\Interop.zenOn.800.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Scada.AddIn.Contracts.800">
+      <HintPath>..\Binaries\Scada.AddIn.Contracts.800.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
