@@ -27,7 +27,7 @@ namespace zenonApi.Core.Tests
       SimpleString = "HelloWorld"
     };
 
-    [Fact]
+    [Fact(DisplayName = "Throw on null converter")]
     public void TestNullConverterException()
     {
       var converterSerializationImpl = ConverterSerializationConverterNullImpl;
@@ -39,7 +39,7 @@ namespace zenonApi.Core.Tests
     #region WrongConverter
     public class ConverterSerializationConverterWrong : zenonSerializable<ConverterSerializationConverterWrong>
     {
-      [zenonSerializableAttribute(nameof(SimpleInteger), Converter = null)]
+      [zenonSerializableAttribute(nameof(SimpleInteger), Converter = typeof(int))]
       public int SimpleInteger { get; set; }
 
       [zenonSerializableNode(nameof(SimpleDouble))]
@@ -56,7 +56,7 @@ namespace zenonApi.Core.Tests
       SimpleString = "HelloWorld"
     };
 
-    [Fact]
+    [Fact(DisplayName = "Throw on invalid converter type")]
     public void TestWrongConverterException()
     {
       var converterSerializationConverterWrongImpl = ConverterSerializationConverterWrongImpl;
@@ -101,7 +101,7 @@ namespace zenonApi.Core.Tests
         SimpleString = "HelloWorld"
       };
 
-    [Fact]
+    [Fact(DisplayName = "Basic value conversion")]
     public void TestConverterFunctionality()
     {
       var testConverterSerializationConverterUsageImpl
@@ -113,7 +113,7 @@ namespace zenonApi.Core.Tests
       Assert.True(testConverterSerializationConverterUsageImpl.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
-    [Fact]
+    [Fact(DisplayName = "Basic value reverse conversion")]
     public void TestConverterFunctionalityBack()
     {
       var testConverterSerializationConverterUsageImpl = TestConverterSerializationConverterUsageImpl;

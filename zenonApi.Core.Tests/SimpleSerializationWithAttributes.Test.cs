@@ -38,26 +38,7 @@ namespace zenonApi.Core.Tests
         SimpleAttrString = "HelloWorld"
       };
 
-    #region ToString
-    [Fact]
-
-    public void TestSimpleSerializationWithAttributesToString()
-    {
-      var simpleSerializationWithAttributes = SimpleSerializationWithAttributesImpl;
-
-      var result = simpleSerializationWithAttributes.ExportAsString();
-
-      Assert.NotNull(result);
-      Assert.Equal(result, ComparisonValues.SimpleSerializationWithAttributesToString);
-
-      var deserialized = SimpleSerializationWithAttributesClass.Import(XElement.Parse(result));
-      Assert.True(simpleSerializationWithAttributes.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-    }
-    #endregion
-
-
-    #region ToXElement
-    [Fact]
+    [Fact(DisplayName = "Multiple primitive types, mixed nodes and attributes")]
     public void TestSimpleSerializationWithAttributesToXDocument()
     {
       var simpleSerializationWithAttributes = SimpleSerializationWithAttributesImpl;
@@ -69,6 +50,5 @@ namespace zenonApi.Core.Tests
       var deserialized = SimpleSerializationWithAttributesClass.Import(result);
       Assert.True(simpleSerializationWithAttributes.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
-    #endregion
   }
 }

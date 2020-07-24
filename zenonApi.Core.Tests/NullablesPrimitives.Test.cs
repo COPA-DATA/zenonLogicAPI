@@ -4,7 +4,7 @@ using zenonApi.Serialization;
 
 namespace zenonApi.Core.Tests
 {
-  public class Nullables
+  public partial class Nullables
   {
     // ReSharper disable UnusedAutoPropertyAccessor.Local : Getters are used during tests, cannot be removed dear ReSharper.
     private class NullablePrimitivesClass : zenonSerializable<NullablePrimitivesClass>
@@ -59,19 +59,16 @@ namespace zenonApi.Core.Tests
       ValueC
     }
 
-    public class NullablePrimitives
+    [Fact(DisplayName = "Nullable nodes and attributes")]
+    public void TestNullablePrimitives()
     {
-      [Fact]
-      public void TestNullablePrimitives()
-      {
-        var impl = NullablePrimitivesImpl;
-        var result = impl.ExportAsString();
+      var impl = NullablePrimitivesImpl;
+      var result = impl.ExportAsString();
 
-        Assert.Equal(ComparisonValues.NullablePrimitives, result);
+      Assert.Equal(ComparisonValues.NullablePrimitives, result);
 
-        var deserialized = NullablePrimitivesClass.Import(XElement.Parse(result));
-        Assert.True(impl.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-      }
+      var deserialized = NullablePrimitivesClass.Import(XElement.Parse(result));
+      Assert.True(impl.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
   }
 }

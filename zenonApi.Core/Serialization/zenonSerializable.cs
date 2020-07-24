@@ -565,8 +565,22 @@ namespace zenonApi.Serialization
               var name = TryResolveName(property, nodeAttribute, listItemType, sourceValue, 0, nodeAttribute.InternalName);
               XElement child = new XElement(name);
 
+              if (listItemType.IsGenericType && listItemType.GetGenericTypeDefinition() == typeof(Nullable<>))
+              {
+                listItemType = listItemType.GenericTypeArguments[0];
+              }
+
               string value;
-              if (listItem is IConvertible convertible)
+              if (listItemType.IsEnum)
+              {
+                value = listItem.ToString();
+                var attribute = listItemType.GetField(listItem.ToString()).GetCustomAttribute<zenonSerializableEnumAttribute>();
+                if (attribute != null)
+                {
+                  value = attribute.Name;
+                }
+              }
+              else if (listItem is IConvertible convertible)
               {
                 value = Convert.ToString(convertible, CultureInfo.InvariantCulture);
               }
@@ -618,8 +632,24 @@ namespace zenonApi.Serialization
             var name = TryResolveName(property, nodeAttribute, listItemType, listItem, index++, nodeAttribute.InternalName);
             XElement child;
 
+            if (listItemType.IsGenericType && listItemType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+              listItemType = listItemType.GenericTypeArguments[0];
+            }
+
             string value;
-            if (listItem is IConvertible convertible)
+            if (listItemType.IsEnum)
+            {
+              child = new XElement(name);
+              value = listItem.ToString();
+
+              var attribute = listItemType.GetField(listItem.ToString()).GetCustomAttribute<zenonSerializableEnumAttribute>();
+              if (attribute != null)
+              {
+                value = attribute.Name;
+              }
+            }
+            else if (listItem is IConvertible convertible)
             {
               child = new XElement(name);
               value = Convert.ToString(convertible, CultureInfo.InvariantCulture);
@@ -754,8 +784,13 @@ namespace zenonApi.Serialization
       else
       {
         var valueType = sourceValue.GetType();
-        if (valueType.IsEnum)
+        if (property.IsEnumOrNullableEnum(out bool isNullableEnum))
         {
+          if (isNullableEnum)
+          {
+            valueType = valueType.GenericTypeArguments[0];
+          }
+
           // Try to find a zenonSerializable attribute to write the correct value
           var attribute = valueType.GetField(sourceValue.ToString()).GetCustomAttribute<zenonSerializableEnumAttribute>();
           if (attribute != null)
@@ -946,6 +981,8 @@ namespace zenonApi.Serialization
 
       if (baseInterface == null)
       {
+        // TODO HERE: Check if it is an ienumerable on its own
+
         throw new Exception(
           $"Property {targetListProperty.Name} in class {targetListProperty.DeclaringType.Name} is not a type, which "
           + "implements IEnumerable<> and thus cannot be deserialized.");
@@ -965,8 +1002,8 @@ namespace zenonApi.Serialization
         return;
       }
 
-      Type genericParameterType = GetIEnumerableGenericTypeArgument(targetListProperty);
-
+      targetListProperty.IsEnumerableOf<object>(out var genericParameterType);
+      
       IList asList = null;
       Array asArray = null;
 
@@ -1201,9 +1238,14 @@ namespace zenonApi.Serialization
 
     private static bool ImportPrimitive(Type targetType, string stringValue, out object result)
     {
+      if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
+      {
+        targetType = targetType.GenericTypeArguments[0];
+      }
+
       if (targetType.IsEnum)
       {
-        // If no converter is registered, try to convert it manually
+        // If no converter is registered, try to convert it manually (otherwise this method would not have been called)
         foreach (var value in Enum.GetValues(targetType))
         {
           var field = targetType.GetField(value.ToString());
@@ -1226,6 +1268,11 @@ namespace zenonApi.Serialization
 
       if (typeof(IConvertible).IsAssignableFrom(targetType))
       {
+        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
+        {
+          targetType = targetType.GenericTypeArguments[0];
+        }
+
         var converted = Convert.ChangeType(stringValue, targetType, CultureInfo.InvariantCulture);
         result = converted;
         return true;
@@ -1436,12 +1483,18 @@ namespace zenonApi.Serialization
         property.SetValue(target, converterInstance.Convert(sourceXml.Value));
         sourceXml.Value = "";
       }
-      else if (property.PropertyType.IsEnum)
+      else if (property.IsEnumOrNullableEnum(out bool isNullableEnum))
       {
-        // If no converter is registered, try to convert it manually
-        foreach (var value in Enum.GetValues(property.PropertyType))
+        var type = property.PropertyType;
+        if (isNullableEnum)
         {
-          var field = property.PropertyType.GetField(value.ToString());
+          type = type.GenericTypeArguments[0];
+        }
+
+        // If no converter is registered, try to convert it manually
+        foreach (var value in Enum.GetValues(type))
+        {
+          var field = type.GetField(value.ToString());
 
           // Try to match the enum value either by the attribute or the string name
           var attribute = field.GetCustomAttribute<zenonSerializableEnumAttribute>();
@@ -1492,7 +1545,8 @@ namespace zenonApi.Serialization
         {
           return;
         }
-        else if (xmlNodes.Count > 1)
+
+        if (xmlNodes.Count > 1)
         {
           throw new Exception($"{nameof(zenonSerializableRawFormatAttribute)} can currently not be used if more than one entry "
             + $"exists. Failing for node {prop.NodeName} on property {property.Name}.");
@@ -1532,13 +1586,18 @@ namespace zenonApi.Serialization
         }
         else
         {
+          Debug.WriteLine($"zenonSerializable - Import Warning: Unknown sub-node \"{nodeName}\" found in node \"{target.NodeName}\".");
           list = new List<XElement>();
           target.UnknownNodes[nodeName] = list;
         }
 
         list.Add(node);
-        list.Remove();
-        Debug.WriteLine($"zenonSerializable - Import Warning: Unknown sub-node \"{nodeName}\" found in node \"{target.NodeName}\".");
+      }
+
+      // Remove the nodes afterwards from the XML
+      foreach (var entry in target.UnknownNodes.SelectMany(x => x.Value))
+      {
+        entry.Remove();
       }
     }
 

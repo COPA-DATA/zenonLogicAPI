@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace zenonApi.Extensions
@@ -22,7 +23,27 @@ namespace zenonApi.Extensions
         return false;
       }
 
-      var enumerableType = propertyInfo.PropertyType.GetInterface(typeof(IEnumerable<>).FullName);
+      if (propertyInfo.PropertyType.IsGenericType)
+      {
+        var genericType = propertyInfo.PropertyType.GetGenericTypeDefinition();
+        if (genericType == typeof(IEnumerable<>))
+        {
+          // This is already an IEnumerable
+          definedGenericTypeParameter = propertyInfo.PropertyType.GenericTypeArguments[0];
+          if (expectedGenericTypeParameter.IsAssignableFrom(definedGenericTypeParameter))
+          {
+            return true;
+          }
+
+          return false;
+        }
+      }
+
+      var enumerableType
+        = propertyInfo.PropertyType
+          .GetInterfaces()
+          .FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+
       if (enumerableType == null)
       {
         definedGenericTypeParameter = null;

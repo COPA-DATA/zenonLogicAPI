@@ -117,9 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AllInOneClass" xml:space="preserve">
+  <data name="Mixed" xml:space="preserve">
     <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
-&lt;AllInOneClass EnumSerializationEnum="AbcTest"&gt;
+&lt;MixedClass EnumSerializationEnum="AbcTest"&gt;
    &lt;EnumSerializationAttrEnum&gt;AbcTest&lt;/EnumSerializationAttrEnum&gt;
    &lt;SimpleSingleSerializationEncapsulateTrueClasses&gt;
       &lt;SimpleSingleSerializationEncapsulateTrueClasses_0 SimpleAttrInteger="8" SimpleAttrDouble="8.88" SimpleAttrString="HelloWorld"&gt;
@@ -178,7 +178,7 @@
       &lt;SimpleDouble&gt;5.3&lt;/SimpleDouble&gt;
       &lt;SimpleString&gt;TestString&lt;/SimpleString&gt;
    &lt;/SimpleSingleSerializationClass_0&gt;
-&lt;/AllInOneClass&gt;</value>
+&lt;/MixedClass&gt;</value>
   </data>
   <data name="ConverterFunctionalityTest" xml:space="preserve">
     <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
@@ -480,5 +480,65 @@
       &lt;SimpleString&gt;TestString&lt;/SimpleString&gt;
    &lt;/SimpleSingleSerialization&gt;
 &lt;/NestedSerializationNodes&gt;</value>
+  </data>
+  <data name="UnknownAttributes" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
+&lt;Test UnknownTopLevel="123"&gt;
+   &lt;KnownEntity Unknown1="Hello" KnownValue="5" Unknown2="World" /&gt;
+   &lt;KnownEntity KnownValue="5" Unknown1="Hello" Unknown2="World" /&gt;
+   &lt;KnownEntity Unknown1="Hello" Unknown2="World" KnownValue="5" /&gt;
+   &lt;KnownEntity KnownValue="5" /&gt;
+&lt;/Test&gt;</value>
+  </data>
+  <data name="UnknownNodes" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
+&lt;Test&gt;
+   &lt;KnownEntity&gt;5&lt;/KnownEntity&gt;
+   &lt;UnknownSingle&gt;5.3&lt;/UnknownSingle&gt;
+   &lt;UnknownMultiple&gt;TestString1&lt;/UnknownMultiple&gt;
+   &lt;UnknownMultiple&gt;TestString2&lt;/UnknownMultiple&gt;
+   &lt;UnknownNested&gt;
+      &lt;SimpleInteger&gt;5&lt;/SimpleInteger&gt;
+      &lt;SimpleDouble&gt;5.3&lt;/SimpleDouble&gt;
+      &lt;SimpleString&gt;TestString&lt;/SimpleString&gt;
+   &lt;/UnknownNested&gt;
+&lt;/Test&gt;</value>
+  </data>
+  <data name="NullablesInList" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
+&lt;Test&gt;
+   &lt;DefaultList1&gt;1&lt;/DefaultList1&gt;
+   &lt;DefaultList1&gt;2&lt;/DefaultList1&gt;
+   &lt;DefaultList1&gt;3&lt;/DefaultList1&gt;
+   &lt;NestedList1&gt;
+      &lt;NestedList1&gt;1&lt;/NestedList1&gt;
+      &lt;NestedList1&gt;2&lt;/NestedList1&gt;
+      &lt;NestedList1&gt;3&lt;/NestedList1&gt;
+   &lt;/NestedList1&gt;
+   &lt;DefaultList2&gt;value_a&lt;/DefaultList2&gt;
+   &lt;DefaultList2&gt;value_b&lt;/DefaultList2&gt;
+   &lt;DefaultList2&gt;value_c&lt;/DefaultList2&gt;
+   &lt;NestedList2&gt;
+      &lt;NestedList2&gt;value_a&lt;/NestedList2&gt;
+      &lt;NestedList2&gt;value_b&lt;/NestedList2&gt;
+      &lt;NestedList2&gt;value_c&lt;/NestedList2&gt;
+   &lt;/NestedList2&gt;
+&lt;/Test&gt;</value>
+  </data>
+  <data name="UnknownContent" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="utf-8" standalone="yes"?&gt;
+&lt;Test&gt;
+   &lt;KnownEntity KnownAttribute="18"&gt;
+      &lt;KnownNode&gt;17&lt;/KnownNode&gt;
+   &lt;/KnownEntity&gt;
+   &lt;KnownEntity KnownAttribute="20"&gt;
+      &lt;KnownNode&gt;19&lt;/KnownNode&gt;
+	  UnknownContent2
+   &lt;/KnownEntity&gt;
+   &lt;OtherKnownEntity KnownAttribute="22" UnknownAttribute1="1"&gt;
+      &lt;KnownNode UnknownAttribute2="2"&gt;21&lt;/KnownNode&gt;
+   &lt;/OtherKnownEntity&gt;
+   UnknownContent1
+&lt;/Test&gt;</value>
   </data>
 </root>

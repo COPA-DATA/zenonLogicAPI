@@ -7,24 +7,24 @@ using zenonApi.Serialization;
 
 namespace zenonApi.Core.Tests
 {
-  public class AllInOne
+  public class Mixed
   {
     #region AllInOne
-    public class AllInOneClass : zenonSerializable<AllInOneClass>
+    public class MixedClass : zenonSerializable<MixedClass>
     {
-      [zenonSerializableNode(nameof(SimpleSingleSerializationClass), typeof(AllInOneResolver), NodeOrder = 40)]
+      [zenonSerializableNode(nameof(SimpleSingleSerializationClass), typeof(MixedResolver), NodeOrder = 40)]
       public SimpleSerializationWithAttributes.SimpleSerializationWithAttributesClass SimpleSingleSerializationClass { get; set; }
 
       [zenonSerializableNode(
         nameof(SimpleSingleSerializationEncapsulateFalseClasses),
-        typeof(AllInOneListResolver),
+        typeof(MixedListResolver),
         EncapsulateChildsIfList = false,
         NodeOrder = 20)]
       public List<SimpleSerializationWithAttributes.SimpleSerializationWithAttributesClass> SimpleSingleSerializationEncapsulateFalseClasses { get; set; }
 
       [zenonSerializableNode(
         nameof(SimpleSingleSerializationEncapsulateTrueClasses),
-        typeof(AllInOneListResolver),
+        typeof(MixedListResolver),
         EncapsulateChildsIfList = true,
         NodeOrder = 10)]
       public List<SimpleSerializationWithAttributes.SimpleSerializationWithAttributesClass> SimpleSingleSerializationEncapsulateTrueClasses { get; set; }
@@ -36,7 +36,7 @@ namespace zenonApi.Core.Tests
       public EnumSerialization.EnumSerializationEnum EnumSerializationEnum { get; set; }
     }
 
-    public class AllInOneListResolver : IZenonSerializableResolver
+    public class MixedListResolver : IZenonSerializableResolver
     {
       public string GetNodeNameForSerialization(PropertyInfo targetProperty, Type targetType, object value, int index)
       {
@@ -61,7 +61,7 @@ namespace zenonApi.Core.Tests
       }
     }
 
-    public class AllInOneResolver : IZenonSerializableResolver
+    public class MixedResolver : IZenonSerializableResolver
     {
       public string GetNodeNameForSerialization(PropertyInfo targetProperty, Type targetType, object value, int index)
       {
@@ -86,7 +86,7 @@ namespace zenonApi.Core.Tests
       }
     }
 
-    public AllInOneClass AllInOneClassImpl => new AllInOneClass
+    public MixedClass MixedClassImpl => new MixedClass
     {
       SimpleSingleSerializationClass = SimpleSerializationWithAttributes.SimpleSerializationWithAttributesImpl,
       SimpleSingleSerializationEncapsulateFalseClasses
@@ -110,24 +110,24 @@ namespace zenonApi.Core.Tests
       EnumSerializationEnum = EnumSerialization.EnumSerializationEnum.Abc
     };
 
-    [Fact]
-    public void TestAllInOneClassToString()
+    [Fact(DisplayName = "Combination of various test cases (with string de-/serialization)")]
+    public void TestMixedClassToString()
     {
-      var allInOneClass = AllInOneClassImpl;
-      var result = allInOneClass.ExportAsString();
-      Assert.Equal(ComparisonValues.AllInOneClass, result);
+      var impl = MixedClassImpl;
+      var result = impl.ExportAsString();
+      Assert.Equal(ComparisonValues.Mixed, result);
     }
 
-    [Fact]
-    public void TestAllInOneClassToXElement()
+    [Fact(DisplayName = "Combination of various test cases (with XElement de-/serialization)")]
+    public void TestMixedClassToXElement()
     {
-      var allInOneClass = AllInOneClassImpl;
+      var allInOneClass = MixedClassImpl;
       var result = allInOneClass.ExportAsXElement();
 
-      var withoutXmlHeader = XDocument.Parse(ComparisonValues.AllInOneClass).Root;
+      var withoutXmlHeader = XDocument.Parse(ComparisonValues.Mixed).Root;
       Assert.True(XNode.DeepEquals(withoutXmlHeader, result));
 
-      var deserialized = AllInOneClass.Import(result);
+      var deserialized = MixedClass.Import(result);
 
       Assert.True(allInOneClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }

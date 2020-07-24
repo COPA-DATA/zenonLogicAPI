@@ -38,7 +38,7 @@ namespace zenonApi.Core.Tests
 
 
     #region New
-    [Fact]
+    [Fact(DisplayName = nameof(IZenonSerializable.ObjectStatus) + " after creation")]
     public void StatusStatusEnumNew()
     {
       var statusEnumClass = new StatusEnumClass();
@@ -47,7 +47,7 @@ namespace zenonApi.Core.Tests
     #endregion
 
 
-    [Fact]
+    [Fact(DisplayName = nameof(IZenonSerializable.ObjectStatus) + " after load, modify, export")]
     public void StatusStatusEnumLoaded()
     {
       var statusEnumClass = StatusEnumClass.Import(XElement.Parse(ComparisonValues.StatusEnum));

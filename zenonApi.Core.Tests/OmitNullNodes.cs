@@ -23,7 +23,7 @@ namespace zenonApi.Core.Tests
       NullInteger = 15
     };
 
-    [Fact]
+    [Fact(DisplayName = "Omit nullable number without explicit " + nameof(zenonSerializableNodeAttribute.OmitIfNull) + " flag")]
     public void TestOmitPrimitivesWithoutOmitToString()
     {
       var omitPrimitivesClass = OmitPrimitivesWithoutOmitClassImpl;
@@ -36,12 +36,12 @@ namespace zenonApi.Core.Tests
       Assert.True(omitPrimitivesClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
-    [Fact]
+    [Fact(DisplayName = "Omit nullable number with explicit " + nameof(zenonSerializableNodeAttribute.OmitIfNull) + " flag")]
     public void TestOmitPrimitivesWithoutOmitToXElement()
     {
       var omitPrimitivesClass = OmitPrimitivesWithoutOmitClassImpl;
       omitPrimitivesClass.NullInteger = null;
-
+      
       var result = omitPrimitivesClass.ExportAsXElement();
       Assert.True(XNode.DeepEquals(XElement.Parse(ComparisonValues.OmitPrimitivesWithoutOmit), result));
 
@@ -68,20 +68,7 @@ namespace zenonApi.Core.Tests
       NullInteger = 15
     };
 
-    [Fact]
-    public void TestOmitPrimitivesWithOmitToString()
-    {
-      var omitPrimitivesClass = OmitPrimitivesWithOmitClassImpl;
-      omitPrimitivesClass.NullInteger = null;
-
-      var result = omitPrimitivesClass.ExportAsString();
-      Assert.Equal(ComparisonValues.OmitPrimitivesWithOmit, result);
-
-      var deserialized = OmitPrimitivesWithOmitClass.Import(XElement.Parse(result));
-      Assert.True(omitPrimitivesClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-    }
-
-    [Fact]
+    [Fact(DisplayName = "Omit primitives with explicit " + nameof(zenonSerializableNodeAttribute.OmitIfNull) + " flag")]
     public void TestOmitPrimitivesWithOmitToXElement()
     {
       var omitPrimitivesClass = OmitPrimitivesWithOmitClassImpl;
@@ -112,7 +99,7 @@ namespace zenonApi.Core.Tests
       NullSimpleSingleSerializationClass = SimpleSingleSerialization.SimpleSingleSerializationImpl
     };
 
-    [Fact]
+    [Fact(DisplayName = "Omit complex without explicit " + nameof(zenonSerializableNodeAttribute.OmitIfNull) + " flag (string)")]
     public void TestOmitComplexWithoutOmitToString()
     {
       var omitComplexWithoutOmitClass = OmitComplexWithoutOmitClassImpl;
@@ -134,7 +121,7 @@ namespace zenonApi.Core.Tests
         nameof(OmitComplexWithoutOmitClass.NullSimpleSingleSerializationClass)));
     }
 
-    [Fact]
+    [Fact(DisplayName = "Omit complex without explicit " + nameof(zenonSerializableNodeAttribute.OmitIfNull) + " flag (XElement)")]
     public void TestOmitComplexWithoutOmitToXElement()
     {
       var omitComplexWithoutOmitClass = OmitComplexWithoutOmitClassImpl;
@@ -168,20 +155,7 @@ namespace zenonApi.Core.Tests
       NullSimpleSingleSerializationClass = SimpleSingleSerialization.SimpleSingleSerializationImpl
     };
 
-    [Fact]
-    public void TestOmitComplexWithOmitToString()
-    {
-      var omitComplexWithOmitClass = OmitComplexWithOmitClassImpl;
-      omitComplexWithOmitClass.NullSimpleSingleSerializationClass = null;
-
-      var result = omitComplexWithOmitClass.ExportAsString();
-      Assert.Equal(ComparisonValues.OmitComplexWithOmit, result);
-
-      var deserialized = OmitComplexWithOmitClass.Import(XElement.Parse(result));
-      Assert.True(omitComplexWithOmitClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-    }
-
-    [Fact]
+    [Fact(DisplayName = "Omit complex with " + nameof(zenonSerializableNodeAttribute.OmitIfNull) + " flag explicitly set")]
     public void TestOmitComplexWithOmitToXElement()
     {
       var omitComplexWithOmitClass = OmitComplexWithOmitClassImpl;

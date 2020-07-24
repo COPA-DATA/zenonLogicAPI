@@ -62,23 +62,6 @@ namespace zenonApi.Core.Tests {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
-        ///&lt;AllInOneClass EnumSerializationEnum=&quot;AbcTest&quot;&gt;
-        ///   &lt;EnumSerializationAttrEnum&gt;AbcTest&lt;/EnumSerializationAttrEnum&gt;
-        ///   &lt;SimpleSingleSerializationEncapsulateTrueClasses&gt;
-        ///      &lt;SimpleSingleSerializationEncapsulateTrueClasses_0 SimpleAttrInteger=&quot;8&quot; SimpleAttrDouble=&quot;8.88&quot; SimpleAttrString=&quot;HelloWorld&quot;&gt;
-        ///         &lt;SimpleInteger&gt;5&lt;/SimpleInteger&gt;
-        ///         &lt;SimpleDouble&gt;5.3&lt;/SimpleDouble&gt;
-        ///         &lt;SimpleString&gt;TestString&lt;/SimpleString&gt;
-        ///      &lt;/Simple [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string AllInOneClass {
-            get {
-                return ResourceManager.GetString("AllInOneClass", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
         ///&lt;TestConverterSerializationConverterUsage SimpleInteger=&quot;Test + 5&quot;&gt;
         ///   &lt;SimpleDouble&gt;5.25&lt;/SimpleDouble&gt;
         ///   &lt;SimpleString&gt;HelloWorld&lt;/SimpleString&gt;
@@ -280,6 +263,23 @@ namespace zenonApi.Core.Tests {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;MixedClass EnumSerializationEnum=&quot;AbcTest&quot;&gt;
+        ///   &lt;EnumSerializationAttrEnum&gt;AbcTest&lt;/EnumSerializationAttrEnum&gt;
+        ///   &lt;SimpleSingleSerializationEncapsulateTrueClasses&gt;
+        ///      &lt;SimpleSingleSerializationEncapsulateTrueClasses_0 SimpleAttrInteger=&quot;8&quot; SimpleAttrDouble=&quot;8.88&quot; SimpleAttrString=&quot;HelloWorld&quot;&gt;
+        ///         &lt;SimpleInteger&gt;5&lt;/SimpleInteger&gt;
+        ///         &lt;SimpleDouble&gt;5.3&lt;/SimpleDouble&gt;
+        ///         &lt;SimpleString&gt;TestString&lt;/SimpleString&gt;
+        ///      &lt;/SimpleSin [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Mixed {
+            get {
+                return ResourceManager.GetString("Mixed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
         ///&lt;NestedSerializationWithAttributes SimpleAttrInteger=&quot;8&quot; SimpleAttrDouble=&quot;8.88&quot; SimpleAttrString=&quot;HelloWorld&quot;&gt;
         ///   &lt;SimpleInteger&gt;5&lt;/SimpleInteger&gt;
         ///   &lt;SimpleDouble&gt;5.3&lt;/SimpleDouble&gt;
@@ -307,6 +307,30 @@ namespace zenonApi.Core.Tests {
         internal static string NullablePrimitives {
             get {
                 return ResourceManager.GetString("NullablePrimitives", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;Test&gt;
+        ///   &lt;DefaultList1&gt;1&lt;/DefaultList1&gt;
+        ///   &lt;DefaultList1&gt;2&lt;/DefaultList1&gt;
+        ///   &lt;DefaultList1&gt;3&lt;/DefaultList1&gt;
+        ///   &lt;NestedList1&gt;
+        ///      &lt;NestedList1&gt;1&lt;/NestedList1&gt;
+        ///      &lt;NestedList1&gt;2&lt;/NestedList1&gt;
+        ///      &lt;NestedList1&gt;3&lt;/NestedList1&gt;
+        ///   &lt;/NestedList1&gt;
+        ///   &lt;DefaultList2&gt;value_a&lt;/DefaultList2&gt;
+        ///   &lt;DefaultList2&gt;value_b&lt;/DefaultList2&gt;
+        ///   &lt;DefaultList2&gt;value_c&lt;/DefaultList2&gt;
+        ///   &lt;NestedList2&gt;
+        ///      &lt;NestedList2&gt;value_a&lt;/NestedList2&gt;
+        ///      &lt;NestedL [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string NullablesInList {
+            get {
+                return ResourceManager.GetString("NullablesInList", resourceCulture);
             }
         }
         
@@ -510,6 +534,63 @@ namespace zenonApi.Core.Tests {
         internal static string TestNestedSerializationNodes {
             get {
                 return ResourceManager.GetString("TestNestedSerializationNodes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;Test UnknownTopLevel=&quot;123&quot;&gt;
+        ///   &lt;KnownEntity Unknown1=&quot;Hello&quot; KnownValue=&quot;5&quot; Unknown2=&quot;World&quot; /&gt;
+        ///   &lt;KnownEntity KnownValue=&quot;5&quot; Unknown1=&quot;Hello&quot; Unknown2=&quot;World&quot; /&gt;
+        ///   &lt;KnownEntity Unknown1=&quot;Hello&quot; Unknown2=&quot;World&quot; KnownValue=&quot;5&quot; /&gt;
+        ///   &lt;KnownEntity KnownValue=&quot;5&quot; /&gt;
+        ///&lt;/Test&gt;.
+        /// </summary>
+        internal static string UnknownAttributes {
+            get {
+                return ResourceManager.GetString("UnknownAttributes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;Test&gt;
+        ///   &lt;KnownEntity KnownAttribute=&quot;18&quot;&gt;
+        ///      &lt;KnownNode&gt;17&lt;/KnownNode&gt;
+        ///   &lt;/KnownEntity&gt;
+        ///   &lt;KnownEntity KnownAttribute=&quot;20&quot;&gt;
+        ///      &lt;KnownNode&gt;19&lt;/KnownNode&gt;
+        ///	  UnknownContent2
+        ///   &lt;/KnownEntity&gt;
+        ///   &lt;OtherKnownEntity KnownAttribute=&quot;22&quot; UnknownAttribute1=&quot;1&quot;&gt;
+        ///      &lt;KnownNode UnknownAttribute2=&quot;2&quot;&gt;21&lt;/KnownNode&gt;
+        ///   &lt;/OtherKnownEntity&gt;
+        ///   UnknownContent1
+        ///&lt;/Test&gt;.
+        /// </summary>
+        internal static string UnknownContent {
+            get {
+                return ResourceManager.GetString("UnknownContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; standalone=&quot;yes&quot;?&gt;
+        ///&lt;Test&gt;
+        ///   &lt;KnownEntity&gt;5&lt;/KnownEntity&gt;
+        ///   &lt;UnknownSingle&gt;5.3&lt;/UnknownSingle&gt;
+        ///   &lt;UnknownMultiple&gt;TestString1&lt;/UnknownMultiple&gt;
+        ///   &lt;UnknownMultiple&gt;TestString2&lt;/UnknownMultiple&gt;
+        ///   &lt;UnknownNested&gt;
+        ///      &lt;SimpleInteger&gt;5&lt;/SimpleInteger&gt;
+        ///      &lt;SimpleDouble&gt;5.3&lt;/SimpleDouble&gt;
+        ///      &lt;SimpleString&gt;TestString&lt;/SimpleString&gt;
+        ///   &lt;/UnknownNested&gt;
+        ///&lt;/Test&gt;.
+        /// </summary>
+        internal static string UnknownNodes {
+            get {
+                return ResourceManager.GetString("UnknownNodes", resourceCulture);
             }
         }
     }

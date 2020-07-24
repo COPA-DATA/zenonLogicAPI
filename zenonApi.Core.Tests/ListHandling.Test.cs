@@ -25,20 +25,7 @@ namespace zenonApi.Core.Tests
           }
         };
 
-    [Fact]
-    public void ListHandlingStringPrimitiveListEncapsulateChildsIfListFalseToString()
-    {
-      var listHandlingStringPrimitiveListEncapsulateChildsIfListFalse
-        = _listHandlingStringPrimitiveListEncapsulateChildsIfListFalseImpl;
-
-      var result = listHandlingStringPrimitiveListEncapsulateChildsIfListFalse.ExportAsString();
-      Assert.Equal(ComparisonValues.ListHandlingStringPrimitiveListEncapsulateChildsIfListFalse, result);
-
-      var deserialized = ListHandlingStringPrimitiveListEncapsulateChildsIfListFalse.Import(XElement.Parse(result));
-      Assert.True(listHandlingStringPrimitiveListEncapsulateChildsIfListFalse.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-    }
-
-    [Fact]
+    [Fact(DisplayName = "Check " + nameof(zenonSerializableNodeAttribute.EncapsulateChildsIfList) + "=false on string lists")]
     public void ListHandlingSimplePrimitiveListEncapsulateChildsIfListFalseToXElement()
     {
       var listHandlingStringPrimitiveListEncapsulateChildsIfListFalse
@@ -70,20 +57,7 @@ namespace zenonApi.Core.Tests
           }
         };
 
-    [Fact]
-    public void TestListHandlingIntegerPrimitiveListEncapsulateChildsIfListFalseToString()
-    {
-      var listHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse
-        = ListHandlingIntegerPrimitiveListEncapsulateChildsIfListFalseImpl;
-
-      var result = listHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse.ExportAsString();
-      Assert.Equal(ComparisonValues.ListHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse, result);
-
-      var deserialized = ListHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse.Import(XElement.Parse(result));
-      Assert.True(listHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-    }
-
-    [Fact]
+    [Fact(DisplayName = "Check " + nameof(zenonSerializableNodeAttribute.EncapsulateChildsIfList) + "=false on primitive integer lists")]
     public void TestListHandlingIntegerPrimitiveListEncapsulateChildsIfListFalseToXElement()
     {
       var listHandlingIntegerPrimitiveListEncapsulateChildsIfListFalse
@@ -115,20 +89,7 @@ namespace zenonApi.Core.Tests
           }
         };
 
-    [Fact]
-    public void TestListHandlingDoublePrimitiveListEncapsulateChildsIfListFalseToString()
-    {
-      var listHandlingDoublePrimitiveListEncapsulateChildsIfListFalse
-        = ListHandlingDoublePrimitiveListEncapsulateChildsIfListFalseImpl;
-
-      var result = listHandlingDoublePrimitiveListEncapsulateChildsIfListFalse.ExportAsString();
-      Assert.Equal(ComparisonValues.ListHandlingDoublePrimitiveListEncapsulateChildsIfListFalse, result);
-
-      var deserialized = ListHandlingDoublePrimitiveListEncapsulateChildsIfListFalse.Import(XElement.Parse(result));
-      Assert.True(listHandlingDoublePrimitiveListEncapsulateChildsIfListFalse.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-    }
-
-    [Fact]
+    [Fact(DisplayName = "Check " + nameof(zenonSerializableNodeAttribute.EncapsulateChildsIfList) + "=true on primitive floating point lists")]
     public void TestListHandlingDoublePrimitiveListEncapsulateChildsIfListFalseToXElement()
     {
       var listHandlingDoublePrimitiveListEncapsulateChildsIfListFalse
@@ -160,22 +121,10 @@ namespace zenonApi.Core.Tests
           }
         };
 
-    [Fact]
-    public void TestListHandlingStringPrimitiveListEncapsulateChildsIfListTrueToString()
-    {
-      var listHandlingStringPrimitiveListEncapsulateChildsIfListTrue
-        = _listHandlingStringPrimitiveListEncapsulateChildsIfListTrueImpl;
-      var result = listHandlingStringPrimitiveListEncapsulateChildsIfListTrue.ExportAsString();
-      Assert.Equal(ComparisonValues.ListHandlingStringPrimitiveListEncapsulateChildsIfListTrue, result);
-
-      var deserialized = ListHandlingStringPrimitiveListEncapsulateChildsIfListTrue.Import(XElement.Parse(result));
-      Assert.True(listHandlingStringPrimitiveListEncapsulateChildsIfListTrue.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-    }
-
-    [Fact]
+    [Fact(DisplayName = "Check " + nameof(zenonSerializableNodeAttribute.EncapsulateChildsIfList) + "=true on string lists")]
     public void TestListHandlingSimplePrimitiveListEncapsulateChildsIfListTrueToXElement()
     {
-      var listHandlingStringPrimitiveListEncapsulateChildsIfListTrue 
+      var listHandlingStringPrimitiveListEncapsulateChildsIfListTrue
         = _listHandlingStringPrimitiveListEncapsulateChildsIfListTrueImpl;
       var result = listHandlingStringPrimitiveListEncapsulateChildsIfListTrue.ExportAsXElement();
       Assert.True(XNode.DeepEquals(result, XElement.Parse(ComparisonValues.ListHandlingStringPrimitiveListEncapsulateChildsIfListTrue)));
@@ -204,20 +153,7 @@ namespace zenonApi.Core.Tests
           }
         };
 
-    [Fact]
-    public void TestListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrueToString()
-    {
-      var listHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue
-        = ListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrueImpl;
-
-      var result = listHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue.ExportAsString();
-      Assert.Equal(ComparisonValues.ListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue, result);
-
-      var deserialized = ListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue.Import(XElement.Parse(result));
-      Assert.True(listHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-    }
-
-    [Fact]
+    [Fact(DisplayName = "Check " + nameof(zenonSerializableNodeAttribute.EncapsulateChildsIfList) + "=true on primitive integer lists")]
     public void TestListHandlingIntegerPrimitiveListEncapsulateChildsIfListTrueToXElement()
     {
       var listHandlingIntegerPrimitiveListEncapsulateChildsIfListTrue
@@ -249,19 +185,7 @@ namespace zenonApi.Core.Tests
           }
         };
 
-    [Fact]
-    public void TestListHandlingDoublePrimitiveListEncapsulateChildsIfListTrueToString()
-    {
-      var listHandlingDoublePrimitiveListEncapsulateChildsIfListTrue
-        = ListHandlingDoublePrimitiveListEncapsulateChildsIfListTrueImpl;
-      var result = listHandlingDoublePrimitiveListEncapsulateChildsIfListTrue.ExportAsString();
-      Assert.Equal(ComparisonValues.ListHandlingDoublePrimitiveListEncapsulateChildsIfListTrue, result);
-
-      var deserialized = ListHandlingDoublePrimitiveListEncapsulateChildsIfListTrue.Import(XElement.Parse(result));
-      Assert.True(listHandlingDoublePrimitiveListEncapsulateChildsIfListTrue.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-    }
-
-    [Fact]
+    [Fact(DisplayName = "Check " + nameof(zenonSerializableNodeAttribute.EncapsulateChildsIfList) + "=true on primitive floating point list")]
     public void TestListHandlingDoublePrimitiveListEncapsulateChildsIfListTrueToXElement()
     {
       var listHandlingDoublePrimitiveListEncapsulateChildsIfListTrue
@@ -322,20 +246,8 @@ namespace zenonApi.Core.Tests
           }
         };
 
-    [Fact]
-    public void TestListHandlingComplexListEncapsulateChildsIfListFalseToString()
-    {
-      var listHandlingComplexListEncapsulateChildsIfListFalseImpl
-        = ListHandlingComplexListEncapsulateChildsIfListFalseImpl;
 
-      var result = listHandlingComplexListEncapsulateChildsIfListFalseImpl.ExportAsString();
-      Assert.Equal(ComparisonValues.ListHandlingComplexListEncapsulateChildsIfListFalse, result);
-
-      var deserialized = ListHandlingComplexListEncapsulateChildsIfListFalse.Import(XElement.Parse(result));
-      Assert.True(listHandlingComplexListEncapsulateChildsIfListFalseImpl.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-    }
-
-    [Fact]
+    [Fact(DisplayName = "Check " + nameof(zenonSerializableNodeAttribute.EncapsulateChildsIfList) + "=false on complex lists")]
     public void TestListHandlingComplexListEncapsulateChildsIfListFalseToXDocument()
     {
       var listHandlingComplexListEncapsulateChildsIfListFalseImpl
@@ -396,19 +308,7 @@ namespace zenonApi.Core.Tests
           }
         };
 
-    [Fact]
-    public void TestListHandlingComplexListEncapsulateChildsIfListTrueToString()
-    {
-      var listHandlingComplexListEncapsulateChildsIfListTrueImpl = ListHandlingComplexListEncapsulateChildsIfListTrueImpl;
-
-      var result = listHandlingComplexListEncapsulateChildsIfListTrueImpl.ExportAsString();
-      Assert.Equal(ComparisonValues.ListHandlingComplexListEncapsulateChildsIfListTrue, result);
-
-      var deserialized = ListHandlingComplexListEncapsulateChildsIfListTrue.Import(XElement.Parse(result));
-      Assert.True(listHandlingComplexListEncapsulateChildsIfListTrueImpl.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-    }
-
-    [Fact]
+    [Fact(DisplayName = "Check " + nameof(zenonSerializableNodeAttribute.EncapsulateChildsIfList) + "=true on complex lists")]
     public void TestListHandlingComplexListEncapsulateChildsIfListTrueToXDocument()
     {
       var listHandlingComplexListEncapsulateChildsIfListTrueImpl = ListHandlingComplexListEncapsulateChildsIfListTrueImpl;
@@ -435,7 +335,7 @@ namespace zenonApi.Core.Tests
         SimpleInteger = 123
       };
 
-    [Fact]
+    [Fact(DisplayName = "Ignore " + nameof(zenonSerializableNodeAttribute.EncapsulateChildsIfList) + " on non-enumerable primitive elements")]
     public void ListHandlingOnSingleNodesClassTest()
     {
       // If we have a single node, then it shall be fine to use the EncapsulateChildsIfList parameter.

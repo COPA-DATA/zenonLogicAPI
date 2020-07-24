@@ -95,7 +95,7 @@ namespace zenonApi.Core.Tests
         SimpleDouble = "hij"
       };
 
-    [Fact]
+    [Fact(DisplayName = "Resolver on multiple primitive values")]
     public void TestResolverOnNodesThatAreNotListsResolver()
     {
       var resolverOnNodesThatAreNotListsClassWrongUsage = ResolverOnNodesThatAreNotListsClassWrongUsageUsageImpl;
@@ -113,7 +113,7 @@ namespace zenonApi.Core.Tests
       Assert.True(resolverOnNodesThatAreNotListsClassCorrectUsage.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
 
-    [Fact]
+    [Fact(DisplayName = "Resolver deserialization")]
     public void TestResolverOnNodesThatAreNotListsResolverDeserialized()
     {
       var resolverOnNodesThatAreNotListsClassWrongUsage = ResolverOnNodesThatAreNotListsClassWrongUsageUsageImpl;
@@ -142,7 +142,7 @@ namespace zenonApi.Core.Tests
       SimpleInteger = "abc"
     };
 
-    [Fact]
+    [Fact(DisplayName = "Resolver on primitive value")]
     public void TestResolverOnNodeThatIsNotLists()
     {
       var resolverOnNodesThatAreNotListsClass = ResolverOnNodeThatIsNotListsClassImpl;
@@ -190,7 +190,7 @@ namespace zenonApi.Core.Tests
       }
     };
 
-    [Fact]
+    [Fact(DisplayName = "Resolver returning invalid type on deserialization")]
     public void TestResolverThatReturnsPropertyInfoType()
     {
       var resolverThatReturnsPropertyInfoTypeClass = ResolverThatReturnsPropertyInfoTypeClassImpl;
@@ -237,7 +237,7 @@ namespace zenonApi.Core.Tests
       }
     };
 
-    [Fact]
+    [Fact(DisplayName = "Resolver on list returning invalid type on deserialization")]
     public void TestResolverThatReturnsPropertyWrongType()
     {
       var resolverThatReturnsPropertyWrongTypeClass = ResolverThatReturnsPropertyWrongTypeClassImpl;
@@ -312,7 +312,7 @@ namespace zenonApi.Core.Tests
       SimpleStringB = "0"
     };
 
-    [Fact]
+    [Fact(DisplayName = "Resolver de-/serialization index valid")]
     public void TestResolverWithIndexCheck()
     {
       var resolverWithIndexCheck = ResolverWithIndexCheckImpl;

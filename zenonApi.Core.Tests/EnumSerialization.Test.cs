@@ -32,7 +32,7 @@ namespace zenonApi.Core.Tests
       SimpleEnumSerializationEnum = EnumSerializationEnum.Abc
     };
 
-    [Fact]
+    [Fact(DisplayName = "Consider enum attributes for nodes")]
     public void TestEnumSerializationAsNodeToString()
     {
       var enumSerializationAsNodeClass = EnumSerializationAsNodeClassImpl;
@@ -40,17 +40,6 @@ namespace zenonApi.Core.Tests
       Assert.Equal(ComparisonValues.EnumSerializationAsNode, result);
 
       var deserialized = EnumSerializationAsNodeClass.Import(XElement.Parse(result));
-      Assert.True(enumSerializationAsNodeClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-    }
-
-    [Fact]
-    public void TestEnumSerializationAsNodeToXElement()
-    {
-      var enumSerializationAsNodeClass = EnumSerializationAsNodeClassImpl;
-      var result = enumSerializationAsNodeClass.ExportAsXElement();
-      Assert.True(XNode.DeepEquals(XElement.Parse(ComparisonValues.EnumSerializationAsNode), result));
-
-      var deserialized = EnumSerializationAsNodeClass.Import(result);
       Assert.True(enumSerializationAsNodeClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
     #endregion
@@ -73,18 +62,7 @@ namespace zenonApi.Core.Tests
       SimpleEnumSerializationEnum = EnumSerializationEnum.Abc
     };
 
-    [Fact]
-    public void TestEnumSerializationAsParameterToString()
-    {
-      var enumSerializationAsParameterClass = EnumSerializationAsParameterClassImpl;
-      var result = enumSerializationAsParameterClass.ExportAsString();
-      Assert.Equal(ComparisonValues.EnumSerializationAsParameter, result);
-
-      var deserialized = EnumSerializationAsParameterClass.Import(XElement.Parse(result));
-      Assert.True(enumSerializationAsParameterClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-    }
-
-    [Fact]
+    [Fact(DisplayName = "Consider enum attributes for attributes")]
     public void TestEnumSerializationAsParameterToXElement()
     {
       var enumSerializationAsParameterClass = EnumSerializationAsParameterClassImpl;

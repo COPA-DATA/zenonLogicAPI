@@ -23,7 +23,7 @@ namespace zenonApi.Core.Tests
       SimpleDouble = 12.25
     };
 
-    [Fact]
+    [Fact(DisplayName = "Throw on duplicate node names")]
     public void TestDoubleZenonSerializableNode()
     {
       var doubleZenonSerializableNode = DoubleZenonSerializableNodeImpl; 
@@ -53,7 +53,7 @@ namespace zenonApi.Core.Tests
         SimpleString = "Abc"
       };
 
-    [Fact]
+    [Fact(DisplayName = "Throw on duplicate attribute names")]
     public void TestDoubleZenonSerializableAttribute()
     {
       var doubleZenonSerializableAttribute = DoubleZenonSerializableAttributeImpl;
@@ -86,7 +86,7 @@ namespace zenonApi.Core.Tests
       B2 = 13.25
     };
 
-    [Fact]
+    [Fact(DisplayName = "Allows same attribute and node name")]
     public void TestValidDoubleNamingImpl()
     {
       var impl = ValidDoubleNamingImpl;

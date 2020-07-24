@@ -27,25 +27,7 @@ namespace zenonApi.Core.Tests
       };
 
 
-    #region ToString
-    [Fact]
-    public void TestSimpleSingleSerializationToString()
-    {
-      var simpleSingleSerialization = SimpleSingleSerializationImpl;
-
-      var result = simpleSingleSerialization.ExportAsString();
-
-      Assert.NotNull(result);
-      Assert.Equal(result, ComparisonValues.SimpleSingleSerializationToString);
-
-      var deserialized = SimpleSingleSerializationClass.Import(XElement.Parse(result));
-      Assert.True(simpleSingleSerialization.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-    }
-    #endregion
-
-
-    #region ToXElement
-    [Fact]
+    [Fact(DisplayName = "De-/Serialization of Primitives with different types")]
     public void TestSimpleSingleSerializationToXDocument()
     {
       var simpleSingleSerialization = SimpleSingleSerializationImpl;
@@ -58,6 +40,5 @@ namespace zenonApi.Core.Tests
       var deserialized = SimpleSingleSerializationClass.Import(result);
       Assert.True(simpleSingleSerialization.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
-    #endregion
   }
 }

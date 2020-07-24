@@ -31,7 +31,7 @@ namespace zenonApi.Core.Tests
       SimpleString = "TestString"
     };
 
-    [Fact]
+    [Fact(DisplayName = "De-/Serialize nested complex items")]
     public void TestNestedSerializationNodes()
     {
       var nestedSerializationNodes = NestedSerializationNodesImpl;
@@ -83,23 +83,7 @@ namespace zenonApi.Core.Tests
         SimpleString = "TestString"
       };
 
-
-    #region ToString
-    [Fact]
-    public void TestNestedSerializationWithAttributesToString()
-    {
-      var nestedSerializationWithAttributes = NestedSerializationWithAttributesImpl;
-
-      var result = nestedSerializationWithAttributes.ExportAsString();
-      Assert.Equal(result, ComparisonValues.NestedSerializationWithAttributes);
-
-      var deserialized = NestedSerializationWithAttributes.Import(XElement.Parse(result));
-      Assert.True(nestedSerializationWithAttributes.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-    }
-    #endregion
-
-    #region ToXElement
-    [Fact]
+    [Fact(DisplayName = "De-/Serialize nested complex items with attributes")]
     public void TestNestedSerializationWithAttributesXDocument()
     {
       var nestedSerializationWithAttributes = NestedSerializationWithAttributesImpl;
@@ -111,7 +95,6 @@ namespace zenonApi.Core.Tests
       var deserialized = NestedSerializationWithAttributes.Import(result);
       Assert.True(nestedSerializationWithAttributes.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
     }
-    #endregion
     #endregion
 
 
@@ -140,7 +123,7 @@ namespace zenonApi.Core.Tests
         SimpleString = "TestString"
       };
 
-    [Fact]
+    [Fact(DisplayName = "Throw on complex item as attribute without converter")]
     public void TestNestedSerializationNestedXmlAsAttribute()
     {
       // Should fail as a nested Serialzation should not be in an Attribute

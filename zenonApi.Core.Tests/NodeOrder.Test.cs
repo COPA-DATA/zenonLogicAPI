@@ -26,19 +26,7 @@ namespace zenonApi.Core.Tests
       SimpleString = "Abc"
     };
 
-    [Fact]
-    public void TestSimpleNodeOrderingToString()
-    {
-      var nodeOrderingClass = SimpleNodeOrderingImpl;
-
-      var result = nodeOrderingClass.ExportAsString();
-      Assert.Equal(ComparisonValues.SimpleNodeOrdering, result);
-
-      var deserialized = SimpleNodeOrderingClass.Import(XElement.Parse(result));
-      Assert.True(nodeOrderingClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-    }
-
-    [Fact]
+    [Fact(DisplayName = "Node ordering (all with order)")]
     public void TestSimpleNodeOrderingToXElement()
     {
       var nodeOrderingClass = SimpleNodeOrderingImpl;
@@ -71,19 +59,7 @@ namespace zenonApi.Core.Tests
         SimpleString = "Abc"
       };
 
-    [Fact]
-    public void TestSimpleNodeOrderingDuplicateOrderNumbersToString()
-    {
-      var nodeOrderingClass = SimpleNodeOrderingDuplicateOrderNumbersImpl;
-
-      var result = nodeOrderingClass.ExportAsString();
-      Assert.Equal(ComparisonValues.SimpleNodeOrderingDuplicateOrderNumbers, result);
-
-      var deserialized = SimpleNodeOrderingDuplicateOrderNumbersClass.Import(XElement.Parse(result));
-      Assert.True(nodeOrderingClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-    }
-
-    [Fact]
+    [Fact(DisplayName = "NodeOrdering with same order index")]
     public void TestSimpleNodeOrderingDuplicateOrderNumbersToXElement()
     {
       var nodeOrderingClass = SimpleNodeOrderingDuplicateOrderNumbersImpl;
@@ -129,19 +105,7 @@ namespace zenonApi.Core.Tests
       SimpleAttrString = "Abc"
     };
 
-    [Fact]
-    public void TestSimpleAttributeOrderingToString()
-    {
-      var simpleAttributeOrderingClass = SimpleAttributeOrderingClassImpl;
-
-      var result = simpleAttributeOrderingClass.ExportAsString();
-      Assert.Equal(ComparisonValues.SimpleAttributeOrdering, result);
-
-      var deserialized = SimpleAttributeOrderingClass.Import(XElement.Parse(result));
-      Assert.True(simpleAttributeOrderingClass.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-    }
-
-    [Fact]
+    [Fact(DisplayName = "Attribute ordering (all with order)")]
     public void TestSimpleAttributeOrderingToXElement()
     {
       var simpleAttributeOrderingClass = SimpleAttributeOrderingClassImpl;
@@ -175,18 +139,7 @@ namespace zenonApi.Core.Tests
       SimpleString = "Abc"
     };
 
-    [Fact]
-    public void TestSelectiveNodeOrderingToString()
-    {
-      var selectiveNodeOrdering = SelectiveNodeOrderingImpl;
-      var result = selectiveNodeOrdering.ExportAsString();
-      Assert.Equal(ComparisonValues.SelectiveNodeOrdering, result);
-
-      var deserialized = SelectiveNodeOrderingClass.Import(XElement.Parse(result));
-      Assert.True(selectiveNodeOrdering.DeepEquals(deserialized, nameof(IZenonSerializable.ObjectStatus)));
-    }
-
-    [Fact]
+    [Fact(DisplayName = "Node ordering with/without order")]
     public void TestSelectiveNodeOrderingToXElement()
     {
       var selectiveNodeOrdering = SelectiveNodeOrderingImpl;
