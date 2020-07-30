@@ -447,7 +447,7 @@ namespace zenonApi.Serialization
           // Try to find a zenonSerializable attribute to write the correct value
           if (isNullable)
           {
-            valueType = valueType.GenericTypeArguments[0];
+            valueType = property.PropertyType.GenericTypeArguments[0];
           }
 
           var attribute = valueType.GetField(sourceValue.ToString()).GetCustomAttribute<zenonSerializableEnumAttribute>();
