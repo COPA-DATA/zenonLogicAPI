@@ -15,7 +15,8 @@
     <copyright>Ing. Punzenberger COPA-DATA GmbH</copyright>
     <dependencies>
       <group targetFramework=".NETStandard2.0">
-        <dependency id="zenonApi.Logic" version="1.0.0" exclude="Build,Analyzers" />
+        <dependency id="zenonApi.Core" version="1.0.0.4538" exclude="Build,Analyzers" />
+        <dependency id="zenonApi.Logic" version="1.0.0.4539" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>
