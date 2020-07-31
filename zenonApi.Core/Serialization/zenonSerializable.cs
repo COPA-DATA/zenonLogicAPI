@@ -233,7 +233,7 @@ namespace zenonApi.Serialization
               Type declaringType = property.PropertyType.DeclaringType;
               // ReSharper disable once PossibleNullReferenceException : DeclaringType will not be null.
               throw new Exception(
-                $"Class '{declaringType.FullName}' defines multiple properties with "
+                $"Class '{declaringType?.FullName}' defines multiple properties with "
                 + $"{nameof(zenonSerializableNodeAttribute)}s with the same name '{attribute.InternalName}'.");
             }
 

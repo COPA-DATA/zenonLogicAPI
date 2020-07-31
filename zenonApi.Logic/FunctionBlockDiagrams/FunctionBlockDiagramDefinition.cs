@@ -116,7 +116,7 @@ namespace zenonApi.Logic.FunctionBlockDiagrams
     /// <summary>
     /// Contains the connection lines in a FBD diagram.
     /// </summary>
-    [zenonSerializableNode("FBDcorner", NodeOrder = 8)]
+    [zenonSerializableNode("FBDline", NodeOrder = 8)]
     public ExtendedObservableCollection<FunctionBlockDiagramLine> Lines { get; protected set; }
       = new ExtendedObservableCollection<FunctionBlockDiagramLine>();
     #endregion
