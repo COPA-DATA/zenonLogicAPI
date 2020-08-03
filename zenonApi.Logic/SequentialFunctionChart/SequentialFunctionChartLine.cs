@@ -43,7 +43,7 @@ namespace zenonApi.Logic.SequentialFunctionChart
     /// <summary>
     /// Set this value to true to draw a horizontal line to the right.
     /// </summary>
-    [zenonSerializableAttribute("hleft", AttributeOrder = 5, Converter = typeof(NumericalBooleanConverter))]
+    [zenonSerializableAttribute("hright", AttributeOrder = 5, Converter = typeof(NumericalBooleanConverter))]
     public bool DrawRightLine { get; set; }
 
 
