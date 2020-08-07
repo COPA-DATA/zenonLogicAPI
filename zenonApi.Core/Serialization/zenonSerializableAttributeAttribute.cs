@@ -30,11 +30,6 @@ namespace zenonApi.Serialization
     public byte AttributeOrder { get; set; }
 
     /// <summary>
-    /// Specifies if an attribute shall be omitted if it is null (default = true).
-    /// </summary>
-    public bool OmitIfNull { get; set; } = true; // TODO: this does not seem to work properly on attributes!
-
-    /// <summary>
     /// The type of an <see cref="IZenonSerializationConverter"/> to use for serialization and deserialization.
     /// </summary>
     private Type _converter;
@@ -65,7 +60,7 @@ namespace zenonApi.Serialization
     
     internal override string InternalName => this.AttributeName;
 
-    internal override bool InternalOmitIfNull => this.OmitIfNull;
+    internal override bool InternalOmitIfNull => true; // Attributes with a null value are not legal XML, we must omit the attribute then.
 
     internal override bool InternalEncapsulateChildsIfList => false;
 

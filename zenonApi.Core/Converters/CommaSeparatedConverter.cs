@@ -13,7 +13,6 @@ namespace zenonApi.Converters
   /// </summary>
   public class CommaSeparatedConverter : IZenonSerializationConverter
   {
-    // TODO Later: Since this is a quite useful converter: Move it to the core API
     private static readonly Regex ValuesRegex = new Regex(@"
       (?:
         # Match recursive braces = {}

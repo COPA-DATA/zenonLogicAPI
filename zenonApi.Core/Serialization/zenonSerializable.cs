@@ -971,27 +971,6 @@ namespace zenonApi.Serialization
       return ImportWithoutClone(typeof(TSelf), source, parent, root) as TSelf;
     }
 
-    private static Type GetIEnumerableGenericTypeArgument(PropertyInfo targetListProperty)
-    {
-      Type baseInterface
-        = targetListProperty
-          .PropertyType
-          .GetInterfaces()
-          .FirstOrDefault(x => x.FullName.StartsWith(typeof(IEnumerable<>).FullName));
-
-      if (baseInterface == null)
-      {
-        // TODO HERE: Check if it is an ienumerable on its own
-
-        throw new Exception(
-          $"Property {targetListProperty.Name} in class {targetListProperty.DeclaringType.Name} is not a type, which "
-          + "implements IEnumerable<> and thus cannot be deserialized.");
-      }
-
-      Type genericParameterType = baseInterface.GenericTypeArguments[0];
-      return genericParameterType;
-    }
-
     private static void ImportChilds(
       PropertyInfo targetListProperty,
       IZenonSerializable parentContainer,
@@ -1017,7 +996,7 @@ namespace zenonApi.Serialization
         if (!targetListProperty.PropertyType.IsAssignableFrom(listType))
         {
           throw new Exception(
-            $"Property {targetListProperty.Name} in class {targetListProperty.DeclaringType.Name} cannot be deserialized, since "
+            $"Property {targetListProperty.Name} in class {targetListProperty.DeclaringType?.Name} cannot be deserialized, since "
             + $"its type is an interface or abstract and is not assignable by an array or List<{genericParameterType.Name}>."
             + $"Use concrete types or known framework interfaces (e.g. IEnumerable<{genericParameterType}>, "
             + $"IList<{genericParameterType}>, or similar) instead.");

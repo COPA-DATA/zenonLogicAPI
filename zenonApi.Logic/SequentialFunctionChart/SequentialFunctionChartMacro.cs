@@ -30,7 +30,7 @@ namespace zenonApi.Logic.SequentialFunctionChart
     /// <summary>
     /// The name of the macro beginning step (e.g. "GS1", mandatory).
     /// </summary>
-    [zenonSerializableAttribute("name", AttributeOrder = 3, OmitIfNull = false)]
-    public string Name { get; set; }
+    [zenonSerializableAttribute("name", AttributeOrder = 3)]
+    public string Name { get; set; } = "Unknown";
   }
 }

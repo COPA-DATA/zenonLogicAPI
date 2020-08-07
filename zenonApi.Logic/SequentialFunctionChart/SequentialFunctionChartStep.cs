@@ -37,8 +37,8 @@ namespace zenonApi.Logic.SequentialFunctionChart
     /// <summary>
     /// The name of the step (e.g. "GS1", mandatory).
     /// </summary>
-    [zenonSerializableAttribute("name", AttributeOrder = 4, OmitIfNull = false)]
-    public string Name { get; set; }
+    [zenonSerializableAttribute("name", AttributeOrder = 4)]
+    public string Name { get; set; } = "Unknown";
 
     /// <summary>
     /// A list of following transitions (mandatory).

@@ -80,7 +80,9 @@ See the provided demo application in this repository on how this is done.
 
 ## Bugs
 
-- [ ] zenonApi.Core
-  - [ ] On hold: Up to current version: OmitIfNull in zenonSerializableAttributes does not seem to be considered.
+- zenonApi.Core
+  - [x] Minor: Up to current version: OmitIfNull in zenonSerializableAttributes does not seem to be considered.  
+    This attribute property was removed, since the XML spec does not allow null attributes (attributes without a value
+    assignment).
   - [x] Major: zenonSerializableNodeContent may override the full node if present (fixed in v1.2)
   - [x] Version 1.2 introduced a lot more features, but also bugs. Resolved now.
