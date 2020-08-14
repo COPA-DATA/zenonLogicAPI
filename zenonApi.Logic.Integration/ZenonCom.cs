@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management.Instrumentation;
-using System.Xml.Linq;
 using zenOn;
 using zenonApi.Logic;
 using zenonApi.Logic.Ini;
@@ -34,9 +33,18 @@ namespace zenonApi.Zenon
     public string ZenonLogicDirectory => Path.Combine(ZenonProjectDirectory, "straton");
 
     /// <summary>
+    /// Sequence of lazy loaded zenon Logic projects.
+    /// </summary>
+    public ObservableCollection<LazyLogicProject> LazyLogicProjects { get; private set; } = new ObservableCollection<LazyLogicProject>();
+
+    /// <summary>
     /// Sequence of loaded zenon Logic projects.
     /// </summary>
-    public ObservableCollection<LogicProject> LogicProjects { get; private set; } = new ObservableCollection<LogicProject>();
+    public IReadOnlyList<LogicProject> LogicProjects
+    {
+      get => LazyLogicProjects.Select(x => x.Value).ToList();
+    }
+
     public static HashSet<uint> AllUsedPorts { get; private set; } = new HashSet<uint>();
 
     public ZenonCom(IProject zenonProject)
@@ -49,11 +57,7 @@ namespace zenonApi.Zenon
       // if this folder path does not exist there can not be a zenon Logic project to load
       if (Directory.Exists(ZenonLogicDirectory))
       {
-        LogicProjects = new ObservableCollection<LogicProject>(LoadZenonLogicProjects());
-        foreach (LogicProject logicProject in LogicProjects.Where(project => File.Exists(project.K5DbxsIniFilePath)))
-        {
-          AllUsedPorts.Add(logicProject.MainPort);
-        }
+        LazyLogicProjects = new ObservableCollection<LazyLogicProject>(LoadZenonLogicProjects());
       }
       else
       {
@@ -61,7 +65,7 @@ namespace zenonApi.Zenon
         Directory.CreateDirectory(ZenonLogicDirectory);
       }
 
-      LogicProjects.CollectionChanged += UpdateStratonDirectoryOfPathOnItemAdded;
+      LazyLogicProjects.CollectionChanged += UpdateStratonDirectoryOfPathOnItemAdded;
     }
 
     /// <summary>
@@ -76,8 +80,8 @@ namespace zenonApi.Zenon
           nameof(zenonLogicProjectName), nameof(ImportLogicProjectIntoZenonByName)));
       }
 
-      IEnumerable<LogicProject> logicProjectsWithSearchedNames = LogicProjects.Where(logicProject =>
-        logicProject.ProjectName.Equals(zenonLogicProjectName));
+      IEnumerable<LogicProject> logicProjectsWithSearchedNames = LazyLogicProjects.Where(logicProject =>
+        logicProject.Value.ProjectName.Equals(zenonLogicProjectName)).Select(project => project.Value);
 
       if (!logicProjectsWithSearchedNames.Any())
       {
@@ -93,7 +97,7 @@ namespace zenonApi.Zenon
     /// </summary>
     public void ImportLogicProjectsIntoZenon(bool reloadZenonProject = true)
     {
-      ImportLogicProjectsIntoZenon(LogicProjects, reloadZenonProject);
+      ImportLogicProjectsIntoZenon(LazyLogicProjects.Select(project => project.Value), reloadZenonProject);
     }
 
     /// <summary>
@@ -109,7 +113,7 @@ namespace zenonApi.Zenon
           nameof(zenonLogicProjectName)));
       }
 
-      IEnumerable<LogicProject> foundLogicProjectsByName = LogicProjects.Where(project => string.Equals(project.ProjectName,
+      IEnumerable<LazyLogicProject> foundLogicProjectsByName = LazyLogicProjects.Where(project => string.Equals(project.LogicProjectName,
         zenonLogicProjectName));
 
       if (!foundLogicProjectsByName.Any())
@@ -122,7 +126,7 @@ namespace zenonApi.Zenon
         throw new InvalidDataException(string.Format(Strings.ErrorDuplicateLogicProjectFoundForName, zenonLogicProjectName));
       }
 
-      return foundLogicProjectsByName.First();
+      return foundLogicProjectsByName.First().Value;
     }
 
     /// <summary>
@@ -238,20 +242,20 @@ namespace zenonApi.Zenon
       return nextFreePortNumber.ToString();
     }
 
-    private IEnumerable<LogicProject> LoadZenonLogicProjects()
+    /// <summary>
+    /// Gets a lazy loaded list of all logic projects.
+    /// </summary>
+    /// <returns>List of lazy loaded logic projects</returns>
+    private IEnumerable<LazyLogicProject> LoadZenonLogicProjects()
     {
+      List<LazyLogicProject> projects = new List<LazyLogicProject>();
       foreach (var zenonLogicProjectDirectory in StratonFolderPath.GetZenonLogicProjectFolderPaths(this.ZenonLogicDirectory))
       {
-        K5ToolSet k5ToolSet = new K5ToolSet(zenonLogicProjectDirectory);
-        string randomXmlFilePath = TemporaryFileCreator.GetRandomTemporaryFilePathWithExtension("xml");
-        k5ToolSet.ExportZenonLogicProjectAsXml(randomXmlFilePath);
-
-        XDocument logicProjectXmlExport = XDocument.Load(randomXmlFilePath);
-        // initialization of the zenon logic project data model
-        LogicProject logicProject = LogicProject.Import(logicProjectXmlExport.Element(Strings.K5XmlExportRootNodeName)); //TODO: hide .Element call
-
-        yield return logicProject;
+        LazyLogicProject lazyProject = new LazyLogicProject(StratonFolderPath.GetZenonLogicProjectFolderName(zenonLogicProjectDirectory), zenonLogicProjectDirectory);
+        projects.Add(lazyProject);
       }
+
+      return projects;
     }
 
     private void GetZenonProjectInformation(IProject zenonProject)
@@ -308,9 +312,9 @@ namespace zenonApi.Zenon
       // delete temporary files which were created during lifetime
       TemporaryFileCreator.CleanupTemporaryFiles();
       // detach event handler
-      if (LogicProjects != null)
+      if (LazyLogicProjects != null)
       {
-        LogicProjects.CollectionChanged -= UpdateStratonDirectoryOfPathOnItemAdded;
+        LazyLogicProjects.CollectionChanged -= UpdateStratonDirectoryOfPathOnItemAdded;
       }
     }
   }

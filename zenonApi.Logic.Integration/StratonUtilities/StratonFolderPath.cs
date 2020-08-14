@@ -31,5 +31,22 @@ namespace zenonApi.Zenon.StratonUtilities
         yield return subDirectories.FullName;
       }
     }
+
+    /// <summary>
+    /// Gets the folder name of a zenon logic project directory
+    /// </summary>
+    /// <param name="logicProjectDirectory"> Example value: C:\ProgramData\COPA-DATA\SQL2012\"zenon Project GUID"\FILES\straton\TestProject" </param>
+    /// <returns> Example return value of the sequence: TestProject </returns>
+    internal static string GetZenonLogicProjectFolderName(string logicProjectDirectory)
+    {
+      if (!Directory.Exists(logicProjectDirectory))
+      {
+        throw new DirectoryNotFoundException(string.Format(Strings.DirectoryNotFoundInGetZenonLogicProjectFolderPaths,
+          logicProjectDirectory));
+      }
+
+      DirectoryInfo stratonDirectoryInfo = new DirectoryInfo(logicProjectDirectory);
+      return stratonDirectoryInfo.Name;
+    }
   }
 }
