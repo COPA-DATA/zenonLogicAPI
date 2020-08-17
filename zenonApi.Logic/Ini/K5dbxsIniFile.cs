@@ -25,9 +25,13 @@ namespace zenonApi.Logic.Ini
     /// <param name="driverId">ID of the driver which should be used by the zenon Logic project for the
     /// communication with zenon.</param>
     /// <returns></returns>
-    public static K5DbxsIniFile CreateK5DbxsIniFile(string zenonProjectGuid, string k5DbxsFilePath,
-      string mainPortNumber, string driverId)
+    public static K5DbxsIniFile CreateK5DbxsIniFile(
+      string zenonProjectGuid,
+      string k5DbxsFilePath,
+      string mainPortNumber,
+      string driverId)
     {
+      File.Create(k5DbxsFilePath).Close();
       K5DbxsIniFile iniFile = new K5DbxsIniFile(k5DbxsFilePath);
 
       iniFile.WriteDefaultSettingsToK5DbxsIniFile(iniFile, zenonProjectGuid, mainPortNumber, driverId);
@@ -36,20 +40,21 @@ namespace zenonApi.Logic.Ini
     }
 
     /// <summary>
-    /// Constructor for internal configuration purposes of the K5dbxs.ini file
+    ///   Constructor for internal configuration purposes of the K5dbxs.ini file.
     /// </summary>
     /// <param name="k5DbxsIniFilePath"></param>
-    internal K5DbxsIniFile(string k5DbxsIniFilePath) : base(k5DbxsIniFilePath)
+    public K5DbxsIniFile(string k5DbxsIniFilePath) : base(k5DbxsIniFilePath)
     {
       // ReSharper disable once PossibleNullReferenceException : check is done in base constrcutor
       if (!System.IO.Path.GetFileName(k5DbxsIniFilePath)
         .Equals(K5DbxsIniFileName, StringComparison.CurrentCultureIgnoreCase))
       {
-        throw new InvalidDataException(String.Format(Strings.K5DbxsIniFileConstructorInvalidDataException,
+        throw new InvalidDataException(
+          String.Format(Strings.K5DbxsIniFileConstructorInvalidDataException,
           nameof(K5DbxsIniFile)));
       }
     }
-   
+
     private const string CmdSection = "CMD";
     private const string MainPortPropertyKey = "MAINPORT";
 
@@ -58,7 +63,7 @@ namespace zenonApi.Logic.Ini
     /// Mainport which is used by the zenon Logic project to communicate with zenon.
     /// Mainport configuration has to be distinct for each zenon Logic project within a zenon project.
     /// </summary>
-    internal uint MainPort
+    public uint MainPort
     {
       get
       {
@@ -70,7 +75,7 @@ namespace zenonApi.Logic.Ini
         _mainPort = ReadMainPortValueFromIniFile();
         return _mainPort;
       }
-      set
+      internal set
       {
         _mainPort = value;
         this.WriteValueToFile(CmdSection, MainPortPropertyKey, _mainPort.ToString());

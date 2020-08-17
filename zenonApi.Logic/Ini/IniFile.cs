@@ -1,8 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using zenonApi.Logic.Resources;
 
 // TODO: @Mike Thomas: Remove this whole class, it destroys the platform independence! Also "Helper" is not a good name.
 
@@ -34,7 +32,7 @@ namespace zenonApi.Logic.Ini
     {
       if (!File.Exists(iniFilePath))
       {
-        throw new ArgumentNullException(string.Format(Strings.IniFileNotFoundException, iniFilePath));
+        File.Create(iniFilePath).Close();
       }
 
       Path = iniFilePath;

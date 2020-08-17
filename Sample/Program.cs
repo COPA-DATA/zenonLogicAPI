@@ -62,15 +62,15 @@ namespace Sample
       var wrapper = new zenonApi.Zenon.ZenonCom(zenonProject);
 
       // We want to modify or create a Logic project named "Sample":
-      var logicProjects = wrapper.LogicProjects;
-      var sampleProjectToBeEdited = logicProjects.FirstOrDefault(x => x.ProjectName == "Sample");
+      var lazyLogicProjects = wrapper.LazyLogicProjects;
+      var sampleProjectToBeEdited = lazyLogicProjects.FirstOrDefault(x => x.ProjectName == "Sample")?.Value;
       if (sampleProjectToBeEdited == null)
       {
         // "Sample" does not exist, we need to create it with the following.
         // All changes you make in the API will only take affect, after you call ImportLogicProjectsIntoZenon
         // (see the end of this file)
         sampleProjectToBeEdited = new LogicProject("Sample");
-        logicProjects.Add(sampleProjectToBeEdited);
+        lazyLogicProjects.Add(new LazyLogicProject(sampleProjectToBeEdited));
       }
 
       // Access the logic options etc. via a object model. The following shows some examples.

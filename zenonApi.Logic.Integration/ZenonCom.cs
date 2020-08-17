@@ -22,42 +22,45 @@ namespace zenonApi.Zenon
     public string ZenonProjectName { get; private set; }
     public string ZenonProjectGuid { get; private set; }
     /// <summary>
-    /// Directory of the zenon editor project.
+    ///   Directory of the zenon editor project.
     /// </summary>
     /// <example> C:\ProgramData\COPA-DATA\SQL2012\83fe2bc7-6182-4652-9e48-3b71257b9851\FILES </example>
     public string ZenonProjectDirectory { get; private set; }
     /// <summary>
-    /// Directory of the zenon Logic projects which belong to the zenon project.
+    ///   Directory of the zenon Logic projects which belong to the zenon project.
     /// </summary>
     /// <example> C:\ProgramData\COPA-DATA\SQL2012\83fe2bc7-6182-4652-9e48-3b71257b9851\FILES\straton </example>
     public string ZenonLogicDirectory => Path.Combine(ZenonProjectDirectory, "straton");
 
     /// <summary>
-    /// Sequence of lazy loaded zenon Logic projects.
+    ///   Sequence of lazy loaded zenon Logic projects.
     /// </summary>
     public ObservableCollection<LazyLogicProject> LazyLogicProjects { get; private set; } = new ObservableCollection<LazyLogicProject>();
 
     /// <summary>
-    /// Sequence of loaded zenon Logic projects.
+    ///   Sequence of loaded zenon Logic projects.
     /// </summary>
-    public IReadOnlyList<LogicProject> LogicProjects
-    {
-      get => LazyLogicProjects.Select(x => x.Value).ToList();
-    }
+    public IReadOnlyList<LogicProject> LogicProjects => LazyLogicProjects.Select(x => x.Value).ToList();
 
     public static HashSet<uint> AllUsedPorts { get; private set; } = new HashSet<uint>();
 
     public ZenonCom(IProject zenonProject)
     {
-      ZenonProject = zenonProject ?? throw new ArgumentNullException(string.Format(Strings.ZenonProjectReferenceNull,
+      ZenonProject = zenonProject
+                     ?? throw new ArgumentNullException(
+                       string.Format(Strings.ZenonProjectReferenceNull,
                        nameof(zenonProject)));
 
       GetZenonProjectInformation(ZenonProject);
 
-      // if this folder path does not exist there can not be a zenon Logic project to load
+      // If this folder path does not exist there can not be a zenon Logic project to load
       if (Directory.Exists(ZenonLogicDirectory))
       {
         LazyLogicProjects = new ObservableCollection<LazyLogicProject>(LoadZenonLogicProjects());
+        foreach (var logicProject in LazyLogicProjects.Where(project => File.Exists(project.K5DbxsIniFilePath)))
+        {
+          AllUsedPorts.Add(logicProject.MainPort);
+        }
       }
       else
       {
@@ -69,9 +72,10 @@ namespace zenonApi.Zenon
     }
 
     /// <summary>
-    /// Imports the zenon Logic project with specified project name into zenon
+    ///   Imports the zenon Logic project with specified project name into zenon.
     /// </summary>
-    /// <param name="zenonLogicProjectName"></param>
+    /// <param name="zenonLogicProjectName">The name of the zenon Logic project.</param>
+    /// <param name="reloadZenonProject">Specifies if the current zenon project shall be reloaded after the import.</param>
     public void ImportLogicProjectIntoZenonByName(string zenonLogicProjectName, bool reloadZenonProject = true)
     {
       if (string.IsNullOrWhiteSpace(zenonLogicProjectName))
@@ -80,13 +84,15 @@ namespace zenonApi.Zenon
           nameof(zenonLogicProjectName), nameof(ImportLogicProjectIntoZenonByName)));
       }
 
-      IEnumerable<LogicProject> logicProjectsWithSearchedNames = LazyLogicProjects.Where(logicProject =>
-        logicProject.Value.ProjectName.Equals(zenonLogicProjectName)).Select(project => project.Value);
+      IEnumerable<LogicProject> logicProjectsWithSearchedNames 
+        = LazyLogicProjects
+          .Where(lazyLogicProject => lazyLogicProject.ProjectName?.Equals(zenonLogicProjectName) ?? false)
+          .Select(project => project.Value);
 
       if (!logicProjectsWithSearchedNames.Any())
       {
-        throw new InstanceNotFoundException(string.Format(Strings.LogicProjectWithSpecifiedProjectNameNotFound,
-          zenonLogicProjectName));
+        throw new InstanceNotFoundException(
+          string.Format(Strings.LogicProjectWithSpecifiedProjectNameNotFound, zenonLogicProjectName));
       }
 
       ImportLogicProjectsIntoZenon(logicProjectsWithSearchedNames, reloadZenonProject);
@@ -97,7 +103,7 @@ namespace zenonApi.Zenon
     /// </summary>
     public void ImportLogicProjectsIntoZenon(bool reloadZenonProject = true)
     {
-      ImportLogicProjectsIntoZenon(LazyLogicProjects.Select(project => project.Value), reloadZenonProject);
+      ImportLogicProjectsIntoZenon(LogicProjects, reloadZenonProject);
     }
 
     /// <summary>
@@ -109,12 +115,12 @@ namespace zenonApi.Zenon
     {
       if (string.IsNullOrEmpty(zenonLogicProjectName))
       {
-        throw new ArgumentNullException(string.Format(Strings.ErrorGettingZenonProjektByNameArgumentNull,
-          nameof(zenonLogicProjectName)));
+        throw new ArgumentNullException(
+          string.Format(Strings.ErrorGettingZenonProjektByNameArgumentNull, nameof(zenonLogicProjectName)));
       }
 
-      IEnumerable<LazyLogicProject> foundLogicProjectsByName = LazyLogicProjects.Where(project => string.Equals(project.LogicProjectName,
-        zenonLogicProjectName));
+      IEnumerable<LazyLogicProject> foundLogicProjectsByName = LazyLogicProjects.Where(
+        project => string.Equals(project.ProjectName, zenonLogicProjectName));
 
       if (!foundLogicProjectsByName.Any())
       {
@@ -150,19 +156,20 @@ namespace zenonApi.Zenon
 
     /// <summary>
     /// Imports the stated zenon Logic projects into zenon Logic.
-    /// As an import requires an existing project it trys to create a default project first.
+    /// As an import requires an existing project it tries to create a default project first.
     /// </summary>
     /// <param name="zenonLogicProjectsToImport"></param>
     private void ImportLogicProjectsIntoZenon(IEnumerable<LogicProject> zenonLogicProjectsToImport, bool reloadZenonProject = true)
     {
       foreach (LogicProject logicProject in zenonLogicProjectsToImport)
       {
-        K5ToolSet k5ToolSet = new K5ToolSet(logicProject.Path);
-
         if (!logicProject.Path.Contains(this.ZenonProjectGuid))
         {
-          logicProject.ModifyStratonDirectoryPartOfPath(Path.Combine(this.ZenonLogicDirectory, logicProject.ProjectName));
+          logicProject.ModifyStratonDirectoryPartOfPath(this.ZenonLogicDirectory);
         }
+
+        K5ToolSet k5ToolSet = new K5ToolSet(logicProject.Path);
+
         // as there is no built in solution to check if a project exists this check is used to determine if a 
         // certain project already exists in zenon Logic
         if (!Directory.Exists(logicProject.Path))
