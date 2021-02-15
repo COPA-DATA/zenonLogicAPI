@@ -779,7 +779,7 @@ namespace zenonApi.Serialization
       if (contentAttribute.InternalConverter != null)
       {
         IZenonSerializationConverter converterInstance = GetConverter(contentAttribute.InternalConverter);
-        target.Add(new XText(converterInstance.Convert(sourceValue)));
+        target.AddInnerXml(converterInstance.Convert(sourceValue));
       }
       else
       {
@@ -813,7 +813,7 @@ namespace zenonApi.Serialization
           return;
         }
 
-        target.Add(new XText(sourceValue.ToString()));
+        target.AddInnerXml(sourceValue.ToString());
       }
     }
 
