@@ -1088,7 +1088,7 @@ namespace zenonApi.Serialization
           var entry = nodes[i];
           EnsureCompatibleEnumerableEntryType(entry.Type, genericType, targetArrayProperty);
 
-          if (ImportPrimitive(entry.Type, entry.Element.Value, out object value))
+          if (ImportPrimitive(entry.Type, entry.Element.GetInnerXml(), out object value))
           {
             targetArray.SetValue(value, i);
             entry.Element.Remove();
@@ -1145,7 +1145,7 @@ namespace zenonApi.Serialization
         foreach (var entry in nodes)
         {
           EnsureCompatibleEnumerableEntryType(entry.Type, genericType, targetListProperty);
-          if (ImportPrimitive(entry.Type, entry.Element.Value, out object value))
+          if (ImportPrimitive(entry.Type, entry.Element.GetInnerXml(), out object value))
           {
             targetList.Add(value);
             entry.Element.Remove();
@@ -1416,6 +1416,7 @@ namespace zenonApi.Serialization
 
         // Just try to deserialize the value directly
         var node = nodes[0].Element;
+        var nodeValue = node.GetInnerXml();
         if (type.IsEnum)
         {
           foreach (var value in Enum.GetValues(type))
@@ -1424,7 +1425,7 @@ namespace zenonApi.Serialization
 
             // Try to match the enum value either by the attribute or the string name
             var enumAttribute = field.GetCustomAttribute<zenonSerializableEnumAttribute>();
-            if ((enumAttribute != null && node.Value == enumAttribute.Name) || node.Value == field.Name)
+            if ((enumAttribute != null && nodeValue == enumAttribute.Name) || nodeValue == field.Name)
             {
               property.SetValue(target, value);
 
@@ -1435,21 +1436,21 @@ namespace zenonApi.Serialization
           }
 
           // If neither the attribute nor the string name matches, something went wrong
-          throw new Exception($"Cannot set value \"{node.Value}\" for {type.Name}, either a "
+          throw new Exception($"Cannot set value \"{nodeValue}\" for {type.Name}, either a "
                               + $"{nameof(zenonSerializableEnumAttribute)} must be set for the enum fields or "
                               + "the name must exactly match the XML value.");
         }
 
         if (typeof(IConvertible).IsAssignableFrom(type))
         {
-          if (node.Value == string.Empty)
+          if (nodeValue == string.Empty)
           {
             // No value, nothing to do here, leave the default value instead.
             node.Remove();
           }
           else
           {
-            var value = Convert.ChangeType(node.Value, type, CultureInfo.InvariantCulture);
+            var value = Convert.ChangeType(nodeValue, type, CultureInfo.InvariantCulture);
             property.SetValue(target, value);
 
             // Remove the successfully deserialized value from the source node.
@@ -1469,7 +1470,8 @@ namespace zenonApi.Serialization
     private static void ImportNodeContent(IZenonSerializable target, XElement sourceXml, PropertyInfo property)
     {
       var zenonAttribute = property.GetCustomAttribute<zenonSerializableNodeContentAttribute>();
-      if (zenonAttribute == null || string.IsNullOrEmpty(sourceXml.Value))
+      var nodeValue = sourceXml.GetInnerXml();
+      if (zenonAttribute == null || string.IsNullOrEmpty(nodeValue))
       {
         return;
       }
@@ -1478,7 +1480,7 @@ namespace zenonApi.Serialization
       if (zenonAttribute.Converter != null)
       {
         IZenonSerializationConverter converterInstance = GetConverter(zenonAttribute.Converter);
-        property.SetValue(target, converterInstance.Convert(sourceXml.Value));
+        property.SetValue(target, converterInstance.Convert(nodeValue));
         sourceXml.Value = "";
       }
       else if (property.IsEnumOrNullableEnum(out bool isNullableEnum))
@@ -1496,8 +1498,7 @@ namespace zenonApi.Serialization
 
           // Try to match the enum value either by the attribute or the string name
           var attribute = field.GetCustomAttribute<zenonSerializableEnumAttribute>();
-          if ((attribute != null && sourceXml.Value == attribute.Name)
-            || sourceXml.Value == field.Name)
+          if ((attribute != null && nodeValue == attribute.Name) || nodeValue == field.Name)
           {
             property.SetValue(target, value);
             sourceXml.Value = "";
@@ -1506,13 +1507,13 @@ namespace zenonApi.Serialization
         }
 
         // If neither the attribute nor the string name matches, something went wrong
-        throw new Exception($"Cannot set value \"{sourceXml.Value}\" for {property.PropertyType.Name}, either a "
+        throw new Exception($"Cannot set value \"{nodeValue}\" for {property.PropertyType.Name}, either a "
           + $"{nameof(zenonSerializableEnumAttribute)} must be set for the enum fields or "
           + "the name must exactly match the XML value.");
       }
       else if (typeof(IConvertible).IsAssignableFrom(property.PropertyType))
       {
-        var converted = Convert.ChangeType(sourceXml.Value, property.PropertyType, CultureInfo.InvariantCulture);
+        var converted = Convert.ChangeType(nodeValue, property.PropertyType, CultureInfo.InvariantCulture);
         property.SetValue(target, converted);
         sourceXml.Value = "";
       }
@@ -1601,12 +1602,13 @@ namespace zenonApi.Serialization
 
     private static void ImportUnknownContent(IZenonSerializable target, XElement sourceXml)
     {
-      if (string.IsNullOrEmpty(sourceXml.Value))
+      string nodeValue = sourceXml.GetInnerXml();
+      if (string.IsNullOrEmpty(nodeValue))
       {
         return;
       }
 
-      target.UnknownNodeContent = sourceXml.Value;
+      target.UnknownNodeContent = nodeValue;
       Debug.WriteLine($"zenonSerializable - Import Warning: Unknown content \"{target.UnknownNodeContent}\" found in node \"{target.NodeName}\".");
     }
     #endregion
