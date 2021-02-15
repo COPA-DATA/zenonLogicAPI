@@ -1053,6 +1053,7 @@ namespace zenonApi.Serialization
         }
       }
 
+      // ReSharper disable once SuspiciousTypeConversion.Global : This is fine.
       if (targetArray is IEnumerable<IZenonSerializable>)
       {
         for (int i = 0; i < nodes.Count; i++)
@@ -1068,6 +1069,16 @@ namespace zenonApi.Serialization
           targetArray.SetValue(child, i);
 
           entry.Element.Remove();
+        }
+      }
+      // ReSharper disable once SuspiciousTypeConversion.Global : This is fine.
+      else if (targetArray is IEnumerable<XElement>)
+      {
+        for (int i = 0; i < nodes.Count; i++)
+        {
+          var node = nodes[i];
+          targetArray.SetValue(node.Element, i);
+          node.Element.Remove();
         }
       }
       else
@@ -1118,6 +1129,14 @@ namespace zenonApi.Serialization
           var child = importMethod.Invoke(null, new[] { entry.Type, entry.Element, parentContainer, root });
           targetList.Add(child);
 
+          entry.Element.Remove();
+        }
+      }
+      else if (targetList is IEnumerable<XElement>)
+      {
+        foreach (var entry in nodes)
+        {
+          targetList.Add(entry.Element);
           entry.Element.Remove();
         }
       }
