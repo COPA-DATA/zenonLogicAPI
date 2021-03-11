@@ -22,6 +22,8 @@ namespace zenonApi.Logic
     public const string K5DbxsIniFileName = "K5DBXS.INI";
     private const string K5ProjectRootNodeName = "K5project";
 
+    private uint? _mainPort;
+
     private LogicProject()
     {
       // Initialize members which require the current object in their ctor-parameters:
@@ -199,7 +201,7 @@ namespace zenonApi.Logic
 
         if (File.Exists(K5DbxsIniFilePath))
         {
-          _k5DbxsIniFile = new K5DbxsIniFile(K5DbxsIniFilePath);
+          _k5DbxsIniFile = new K5DbxsIniFile(K5DbxsIniFilePath, this._mainPort);
         }
 
         return _k5DbxsIniFile;
@@ -213,8 +215,22 @@ namespace zenonApi.Logic
     /// </summary>
     public uint MainPort
     {
-      get => K5DbxsIniFile.MainPort;
-      set => K5DbxsIniFile.MainPort = value;
+      get
+      {
+        if (this.K5DbxsIniFile == null)
+        {
+          return this._mainPort ?? uint.MinValue;
+        }
+        return K5DbxsIniFile.MainPort;
+      }
+      set
+      {
+        if (this.K5DbxsIniFile != null)
+        {
+          K5DbxsIniFile.MainPort = value; 
+        }
+        this._mainPort = value;
+      }
     }
 
     #endregion

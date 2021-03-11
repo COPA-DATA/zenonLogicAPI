@@ -183,8 +183,14 @@ namespace zenonApi.Zenon
           string newStratonNgDriverId = CreateStratonNgDriverForZenonLogicProject(logicProject.ProjectName,
             nextFreeZenonLogicMainPort);
 
-          K5DbxsIniFile.CreateK5DbxsIniFile(this.ZenonProjectGuid, logicProject.K5DbxsIniFilePath, nextFreeZenonLogicMainPort,
-            newStratonNgDriverId);
+          uint mainPort = logicProject.MainPort;
+          K5DbxsIniFile.CreateK5DbxsIniFile
+          (
+            this.ZenonProjectGuid, 
+            logicProject.K5DbxsIniFilePath, 
+            mainPort != uint.MinValue ? mainPort.ToString() : nextFreeZenonLogicMainPort,
+            newStratonNgDriverId
+          );
         }
 
         k5ToolSet.ImportZenonLogicProject(logicProject);
