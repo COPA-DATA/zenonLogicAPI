@@ -32,19 +32,28 @@ namespace zenonApi.Logic.Ini
       string driverId)
     {
       File.Create(k5DbxsFilePath).Close();
-      K5DbxsIniFile iniFile = new K5DbxsIniFile(k5DbxsFilePath);
+      if (uint.TryParse(mainPortNumber, out uint mainPort))
+      {
+        K5DbxsIniFile iniFile = new K5DbxsIniFile(k5DbxsFilePath, mainPort);
 
-      iniFile.WriteDefaultSettingsToK5DbxsIniFile(iniFile, zenonProjectGuid, mainPortNumber, driverId);
+        iniFile.WriteDefaultSettingsToK5DbxsIniFile(iniFile, zenonProjectGuid, mainPortNumber, driverId);
 
-      return iniFile;
+        return iniFile;
+      }
+
+      throw new Exception("No valid Port was given to the 'K5DBXS.INI'!");
     }
 
     /// <summary>
     ///   Constructor for internal configuration purposes of the K5dbxs.ini file.
     /// </summary>
     /// <param name="k5DbxsIniFilePath"></param>
-    public K5DbxsIniFile(string k5DbxsIniFilePath) : base(k5DbxsIniFilePath)
+    public K5DbxsIniFile(string k5DbxsIniFilePath, uint? mainPort) : base(k5DbxsIniFilePath)
     {
+      if (mainPort != null)
+      {
+        this.MainPort = mainPort.Value;
+      }
       // ReSharper disable once PossibleNullReferenceException : check is done in base constrcutor
       if (!System.IO.Path.GetFileName(k5DbxsIniFilePath)
         .Equals(K5DbxsIniFileName, StringComparison.CurrentCultureIgnoreCase))
@@ -58,6 +67,10 @@ namespace zenonApi.Logic.Ini
     private const string CmdSection = "CMD";
     private const string MainPortPropertyKey = "MAINPORT";
 
+    private const string SettingsSection = "SETTINGS";
+    private const string SetOnlineKey = "SETONLINE";
+    private const string SetOnlineValueFormat = "localhost:{0}(10)";
+
     private uint _mainPort = UInt32.MinValue;
     /// <summary>
     /// Mainport which is used by the zenon Logic project to communicate with zenon.
@@ -67,7 +80,7 @@ namespace zenonApi.Logic.Ini
     {
       get
       {
-        if (_mainPort != UInt32.MinValue)
+        if (_mainPort != uint.MinValue)
         {
           return _mainPort;
         }
@@ -79,6 +92,7 @@ namespace zenonApi.Logic.Ini
       {
         _mainPort = value;
         this.WriteValueToFile(CmdSection, MainPortPropertyKey, _mainPort.ToString());
+        this.WriteValueToFile(SettingsSection, SetOnlineKey, string.Format(SetOnlineValueFormat, _mainPort));
       }
     }
 
@@ -105,8 +119,11 @@ namespace zenonApi.Logic.Ini
     /// <param name="zenonProjectGuid"></param>
     /// <param name="mainPortNumber"></param>
     /// <param name="driverId"></param>
-    private void WriteDefaultSettingsToK5DbxsIniFile(K5DbxsIniFile iniFileToConfigure, string zenonProjectGuid,
-  string mainPortNumber, string driverId)
+    private void WriteDefaultSettingsToK5DbxsIniFile(
+      K5DbxsIniFile iniFileToConfigure, 
+      string zenonProjectGuid, 
+      string mainPortNumber, 
+      string driverId)
     {
       // + 7800 because the default zenon logic primary port value is 1200
       // the default bindport value is 9000, the values typically get increased by 1 for each project 
@@ -124,8 +141,8 @@ namespace zenonApi.Logic.Ini
       iniFileToConfigure.WriteValueToFile(CmdSection, "VMFKTTO", "<No function linked>");
       iniFileToConfigure.WriteValueToFile(CmdSection, "RETAINBYNAME", "1");
 
-      iniFileToConfigure.WriteValueToFile("SETTINGS", "SETONLINE", $"localhost:{mainPortNumber}(10)");
-      iniFileToConfigure.WriteValueToFile("SETTINGS", "DRVONLINE", "K5NET5.DLL");
+      iniFileToConfigure.WriteValueToFile(SettingsSection, SetOnlineKey, string.Format(SetOnlineValueFormat, mainPortNumber));
+      iniFileToConfigure.WriteValueToFile(SettingsSection, "DRVONLINE", "K5NET5.DLL");
 
       iniFileToConfigure.WriteValueToFile("XS", "Active", "1");
       iniFileToConfigure.WriteValueToFile("XS", "Project", $"PROJECT={zenonProjectGuid};HOST=localhost;");

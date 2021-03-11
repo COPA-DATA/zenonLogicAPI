@@ -103,7 +103,7 @@ namespace zenonApi.Logic
 
         if (File.Exists(K5DbxsIniFilePath))
         {
-          _k5DbxsIniFile = new K5DbxsIniFile(K5DbxsIniFilePath);
+          _k5DbxsIniFile = new K5DbxsIniFile(K5DbxsIniFilePath, base.Value.MainPort);
         }
 
         return _k5DbxsIniFile;
