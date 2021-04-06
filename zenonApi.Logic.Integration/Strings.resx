@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CurrentProcessMainModuleFileNameNull" xml:space="preserve">
+    <value>Error while getting filename of current process. Unable to initialize environment variables.</value>
+  </data>
+  <data name="DirectoryNotFoundInGetZenonLogicProjectFolderPaths" xml:space="preserve">
+    <value>Error while getting zenon Logic project folder paths. Directory {0} does not exist.</value>
+    <comment>0 = straton directory of zenon project which does not exist</comment>
+  </data>
+  <data name="ErrorDuplicateLogicProjectFoundForName" xml:space="preserve">
+    <value>More than one entry found for zenon Logic project name {0}.</value>
+    <comment>0 = stated name of zenon Logic project</comment>
+  </data>
+  <data name="ErrorGettingZenonProjektByNameArgumentNull" xml:space="preserve">
+    <value>Error while retrieving zenon Logic project reference. Stated zenon Logic project name {0} must not be null or whitespace.</value>
+    <comment>0 = zenon Logic name as method parameter</comment>
+  </data>
+  <data name="ErrorNoZenonLogicProjectFoundForName" xml:space="preserve">
+    <value>No zenon Logic project with stated name {0} found.</value>
+    <comment>0 = stated name of zenon Logic project</comment>
+  </data>
+  <data name="ExternalK5PrpCallError" xml:space="preserve">
+    <value>Error while calling external K5Prp.dll. Initial exception message: {0}</value>
+    <comment>0 = initial exception message</comment>
+  </data>
+  <data name="GlobalDefineName" xml:space="preserve">
+    <value>(GLOBAL)</value>
+  </data>
+  <data name="K5BexeFileName" xml:space="preserve">
+    <value>K5B.exe</value>
+  </data>
+  <data name="K5BexeFileNoutFoundException" xml:space="preserve">
+    <value>K5B.exe file not found at {0}.</value>
+  </data>
+  <data name="K5BxmlExportFormatString" xml:space="preserve">
+    <value>K5XML</value>
+  </data>
+  <data name="K5BXmlImportFailedException" xml:space="preserve">
+    <value>Unable to start xml import process using K5B.exe - see inner exception for further details.</value>
+  </data>
+  <data name="K5XmlExportRootNodeName" xml:space="preserve">
+    <value>K5project</value>
+  </data>
+  <data name="LogicProjectWithSpecifiedProjectNameNotFound" xml:space="preserve">
+    <value>Error while retreiving zenon Logic project with name {0}. Unable to import zenon Logic project into zenon.</value>
+    <comment>0 = name of zenon Logic project to import</comment>
+  </data>
+  <data name="MethodArgumentNullException" xml:space="preserve">
+    <value>Parameter {0} of method {1} must not be null.</value>
+    <comment>0 = parameter name which is null, 1 = name of method</comment>
+  </data>
+  <data name="StratonNgDriverDescription" xml:space="preserve">
+    <value>StratonNG driver created by zenon Logic API.</value>
+  </data>
+  <data name="ZenonProjectReferenceNull" xml:space="preserve">
+    <value>Error while initializing zenon Logic integration object. Parameter {0} must not be null. </value>
+    <comment>0 = name of parameter that is null</comment>
+  </data>
+  <data name="ZenonRegistryCurrentProgramDir32Prefix" xml:space="preserve">
+    <value>ProgramDir32_</value>
+  </data>
+  <data name="ZenonRegistryCurrentProgramDir64Prefix" xml:space="preserve">
+    <value>ProgramDir64_</value>
+  </data>
+  <data name="ZenonRegistryCurrentRegisteredVersionKey" xml:space="preserve">
+    <value>ProgramDir_Current</value>
+  </data>
+  <data name="ZenonRegistryCurrentRegistredVersionEntryNotFound" xml:space="preserve">
+    <value>Registry value for current registered version not found. Ensure that a zenon version is registered on the current machine.</value>
+  </data>
+  <data name="ZenonRegistryCurrentVersionEntryNotFound" xml:space="preserve">
+    <value>Registry value for current registered zenon version not found. Ensure that a zenon version is registered on the current machine.</value>
+  </data>
+  <data name="ZenonRegistryCurrentVersionKey" xml:space="preserve">
+    <value>CurrentVersion</value>
+  </data>
+  <data name="ZenonRegistryPathNotFound" xml:space="preserve">
+    <value>Registry path for zenon not found at HKEY_LOCAL_MACHINE\SOFTWARE\COPA-DATA\DataDir.</value>
+  </data>
+  <data name="ZenonRegistrySoftwareDataDirPath" xml:space="preserve">
+    <value>SOFTWARE\COPA-DATA\DataDir</value>
+  </data>
+  <data name="AppliFileWriteException" xml:space="preserve">
+    <value>Unable to write appli.xml file at {0} - see innter exception for further details.</value>
+  </data>
+  <data name="AppliFileWriteIOException" xml:space="preserve">
+    <value>Unable to write appli.xml file at {0}. File is currently in use by another process.</value>
+    <comment>0 = path of the appli.xml file</comment>
+  </data>
+  <data name="K5BXmlExportFailedException" xml:space="preserve">
+    <value>Unable to start xml export process using K5B.exe - see inner exception for further details</value>
+  </data>
+  <data name="K5BCompileFailedException" xml:space="preserve">
+    <value>Unable to compile zenon Logic project {0} using K5B.exe - see inner exception for further details.</value>
+  </data>
+  <data name="ZenonLogicCompileLogFileReadException" xml:space="preserve">
+    <value>Error while reading compilation log file for zenon Logic project {0}. Please open the zenon Logic workbench and compile again manually for further details.</value>
+  </data>
+  <data name="ZenonLogicHintForMissingDirectory" xml:space="preserve">
+    <value>Make sure to import the zenon Logic project into zenon before compiling it.</value>
+  </data>
+  <data name="ZenonLogicProjectDirectoryNotFound" xml:space="preserve">
+    <value>Error while retrieving directory information of the zenon Logic project.</value>
+  </data>
+  <data name="TextFileExtension" xml:space="preserve">
+    <value>.txt</value>
+  </data>
+  <data name="ZenonStratonNgDriverConfigFilePrefix" xml:space="preserve">
+    <value>stratonNG_zenon Logic_</value>
+  </data>
+  <data name="K5PRPFileName" xml:space="preserve">
+    <value>K5Prp.dll</value>
+  </data>
+</root>
