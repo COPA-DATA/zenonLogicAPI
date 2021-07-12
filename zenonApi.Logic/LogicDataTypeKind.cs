@@ -36,6 +36,16 @@ namespace zenonApi.Logic
     /// data structure.
     /// </summary>
     [zenonSerializableEnum("STRUCT")]
-    DataStructure
+    DataStructure,
+    /// <summary>
+    /// Indicates that a used data type is a bitfield.
+    /// </summary>
+    [zenonSerializableEnum("BITFIELD")]
+    BitField,
+    /// <summary>
+    /// Indicates that a used data type is an enumeration.
+    /// </summary>
+    [zenonSerializableEnum("ENUM")]
+    Enumeration
   }
 }

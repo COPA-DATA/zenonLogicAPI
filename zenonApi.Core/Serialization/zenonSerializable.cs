@@ -1088,7 +1088,7 @@ namespace zenonApi.Serialization
           var entry = nodes[i];
           EnsureCompatibleEnumerableEntryType(entry.Type, genericType, targetArrayProperty);
 
-          if (ImportPrimitive(entry.Type, entry.Element.GetInnerXml(), out object value))
+          if (ImportPrimitive(entry.Type, entry.Element.Value, out object value))
           {
             targetArray.SetValue(value, i);
             entry.Element.Remove();
@@ -1145,7 +1145,7 @@ namespace zenonApi.Serialization
         foreach (var entry in nodes)
         {
           EnsureCompatibleEnumerableEntryType(entry.Type, genericType, targetListProperty);
-          if (ImportPrimitive(entry.Type, entry.Element.GetInnerXml(), out object value))
+          if (ImportPrimitive(entry.Type, entry.Element.Value, out object value))
           {
             targetList.Add(value);
             entry.Element.Remove();
@@ -1416,7 +1416,7 @@ namespace zenonApi.Serialization
 
         // Just try to deserialize the value directly
         var node = nodes[0].Element;
-        var nodeValue = node.GetInnerXml();
+        var nodeValue = node.Value;
         if (type.IsEnum)
         {
           foreach (var value in Enum.GetValues(type))
@@ -1470,7 +1470,7 @@ namespace zenonApi.Serialization
     private static void ImportNodeContent(IZenonSerializable target, XElement sourceXml, PropertyInfo property)
     {
       var zenonAttribute = property.GetCustomAttribute<zenonSerializableNodeContentAttribute>();
-      var nodeValue = sourceXml.GetInnerXml();
+      var nodeValue = sourceXml.Value;
       if (zenonAttribute == null || string.IsNullOrEmpty(nodeValue))
       {
         return;
@@ -1480,7 +1480,7 @@ namespace zenonApi.Serialization
       if (zenonAttribute.Converter != null)
       {
         IZenonSerializationConverter converterInstance = GetConverter(zenonAttribute.Converter);
-        property.SetValue(target, converterInstance.Convert(nodeValue));
+        property.SetValue(target, converterInstance.Convert(sourceXml.GetInnerXml()));
         sourceXml.Value = "";
       }
       else if (property.IsEnumOrNullableEnum(out bool isNullableEnum))

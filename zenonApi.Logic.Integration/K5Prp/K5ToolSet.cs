@@ -36,13 +36,18 @@ namespace zenonApi.Zenon.K5Prp
     /// </summary>
     private delegate IntPtr K5PRPCall(string szProject, string szCommand, ref uint dwOk, ref uint dwDataIn, ref uint dwDataOut);
 
-    static private K5PRPCall K5PCall;
+    private static readonly K5PRPCall K5PCall;
 
     /// <summary>
     /// Function to load a library and get the address of it
     /// </summary>
     [DllImport("Kernel32.dll", SetLastError = true)]
     private static extern IntPtr LoadLibraryEx(string path, IntPtr hFile, uint dwFlags);
+
+    private bool SetOption(string option, string value)
+    {
+      return ExecuteK5PrpCommand("SETOPTION " + option + " " + value, out _, out _);
+    }
 
     /// <summary>
     /// Function to get the address of the function which is defined in procName
@@ -87,7 +92,7 @@ namespace zenonApi.Zenon.K5Prp
       //https://docs.microsoft.com/de-de/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryexa
       IntPtr hModule = LoadLibraryEx(k5pPath, IntPtr.Zero, 0x000000008);
 
-      if (hModule == IntPtr.Zero) {return null; }
+      if (hModule == IntPtr.Zero) { return null; }
 
       IntPtr functionAddress = GetProcAddress(hModule, functionName);
 
@@ -214,18 +219,13 @@ namespace zenonApi.Zenon.K5Prp
     {
       string xmlFilePathToImport = SerializeZenonLogicProjectToXmlFile(zenonLogicProject);
 
-      // import via K5Prp.dll call
-      //bool commandSuccessful = ExecuteK5PrpCommand($"XmlImport {xmlFilePathToImport}", out string returnMessage, out _);
-      //if (!commandSuccessful)
-      //{
-      //  throw new Exception(returnMessage);
-      //}
-      //return true;
-
       // import via K5B.exe
-      ProcessStartInfo startInfo = new ProcessStartInfo(K5BexeFilePath,
-        $"XMLMERGE {this.ZenonLogicProjectDirectory} {xmlFilePathToImport}")
-      { CreateNoWindow = false, WindowStyle = ProcessWindowStyle.Hidden };
+      ProcessStartInfo startInfo
+        = new ProcessStartInfo(K5BexeFilePath, $"XMLMERGE {this.ZenonLogicProjectDirectory} {xmlFilePathToImport}")
+        {
+          CreateNoWindow = false,
+          WindowStyle = ProcessWindowStyle.Hidden
+        };
 
       using (Process stratonXmlImportProcess = new Process { StartInfo = startInfo })
       {
@@ -245,6 +245,57 @@ namespace zenonApi.Zenon.K5Prp
       WriteGlobalDefinesFile(zenonLogicProject);
 
       return true;
+    }
+
+    internal bool TryApplySettings(LogicProject zenonLogicProject)
+    {
+      if (zenonLogicProject?.Settings == null)
+      {
+        return false;
+      }
+
+      bool allSucceeded
+        = TryApplySettings(zenonLogicProject.Settings.CompilerSettings.CompilerOptions.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>());
+
+      allSucceeded
+        = TryApplySettings(zenonLogicProject.Settings.CompilerSettings.SimulationCodeOptions.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>())
+        && allSucceeded;
+
+      allSucceeded
+        = TryApplySettings(zenonLogicProject.Settings.CompilerSettings.TargetCodeOptions.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>())
+        && allSucceeded;
+
+      allSucceeded
+        = TryApplySettings(zenonLogicProject.Settings.OnlineChangeSettings.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>())
+        && allSucceeded;
+
+      uint cycleTime = zenonLogicProject.Settings.TriggerTime.CycleTime;
+      if (cycleTime == 0)
+      {
+        cycleTime = 10000; // 10 seconds as the default for invalid values
+      }
+
+      return SetOption("CycleTime", cycleTime.ToString()) && allSucceeded;
+    }
+
+    private bool TryApplySettings(IEnumerable<LogicOptionTuple> options)
+    {
+      bool allSucceeded = true;
+      foreach (var optionTuple in options)
+      {
+        if (optionTuple.Name == "comment" || optionTuple.Name == "target")
+        {
+          // Seems to never work
+          continue;
+        }
+
+        if (!string.IsNullOrWhiteSpace(optionTuple.Name) && !string.IsNullOrWhiteSpace(optionTuple.Value))
+        {
+          allSucceeded = SetOption(optionTuple.Name, optionTuple.Value) && allSucceeded;
+        }
+      }
+
+      return allSucceeded;
     }
 
     /// <summary>
@@ -439,9 +490,11 @@ namespace zenonApi.Zenon.K5Prp
     /// </param>
     internal void CompileZenonLogicProject(LogicProject zenonLogicProject, out IEnumerable<string> compilerOutputText)
     {
-      ProcessStartInfo startInfo = new ProcessStartInfo(K5BexeFilePath,
-          $"BUILD {this.ZenonLogicProjectDirectory}")
-        { CreateNoWindow = false, WindowStyle = ProcessWindowStyle.Hidden};
+      ProcessStartInfo startInfo = new ProcessStartInfo(K5BexeFilePath, $"BUILD {this.ZenonLogicProjectDirectory}")
+      {
+        CreateNoWindow = false,
+        WindowStyle = ProcessWindowStyle.Hidden
+      };
 
       using (Process stratonCompileProcess = new Process { StartInfo = startInfo })
       {
@@ -456,7 +509,7 @@ namespace zenonApi.Zenon.K5Prp
         {
           throw new InvalidOperationException(string.Format(Strings.K5BCompileFailedException, zenonLogicProject.Path), e);
         }
-      } 
+      }
     }
 
     /// <summary>
