@@ -257,17 +257,16 @@ namespace zenonApi.Zenon.K5Prp
       bool allSucceeded
         = TryApplySettings(zenonLogicProject.Settings.CompilerSettings.CompilerOptions.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>());
 
-      allSucceeded
-        = TryApplySettings(zenonLogicProject.Settings.CompilerSettings.SimulationCodeOptions.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>())
-        && allSucceeded;
-
-      allSucceeded
-        = TryApplySettings(zenonLogicProject.Settings.CompilerSettings.TargetCodeOptions.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>())
-        && allSucceeded;
-
-      allSucceeded
-        = TryApplySettings(zenonLogicProject.Settings.OnlineChangeSettings.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>())
-        && allSucceeded;
+      // According to CD-FR the following three setting sections shall never be set manually.
+      //allSucceeded
+      //  = TryApplySettings(zenonLogicProject.Settings.CompilerSettings.SimulationCodeOptions.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>())
+      //  && allSucceeded;
+      //allSucceeded
+      //  = TryApplySettings(zenonLogicProject.Settings.CompilerSettings.TargetCodeOptions.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>())
+      //  && allSucceeded;
+      //allSucceeded
+      //  = TryApplySettings(zenonLogicProject.Settings.OnlineChangeSettings.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>())
+      //  && allSucceeded;
 
       uint cycleTime = zenonLogicProject.Settings.TriggerTime.CycleTime;
       if (cycleTime == 0)
