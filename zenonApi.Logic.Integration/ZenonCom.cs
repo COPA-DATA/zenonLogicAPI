@@ -76,7 +76,11 @@ namespace zenonApi.Zenon
     /// </summary>
     /// <param name="zenonLogicProjectName">The name of the zenon Logic project.</param>
     /// <param name="reloadZenonProject">Specifies if the current zenon project shall be reloaded after the import.</param>
-    public void ImportLogicProjectIntoZenonByName(string zenonLogicProjectName, bool reloadZenonProject = true)
+    /// <param name="options">Specifies options on how to import the projects into zenon.</param>
+    public void ImportLogicProjectIntoZenonByName(
+      string zenonLogicProjectName,
+      bool reloadZenonProject = true,
+      ImportOptions options = ImportOptions.Default)
     {
       if (string.IsNullOrWhiteSpace(zenonLogicProjectName))
       {
@@ -95,22 +99,23 @@ namespace zenonApi.Zenon
           string.Format(Strings.LogicProjectWithSpecifiedProjectNameNotFound, zenonLogicProjectName));
       }
 
-      ImportLogicProjectsIntoZenon(logicProjectsWithSearchedNames, reloadZenonProject);
+      ImportLogicProjectsIntoZenon(logicProjectsWithSearchedNames, reloadZenonProject, options);
     }
 
     /// <summary>
-    /// Imports all zenon Logic projects which are stored in <see cref="LogicProjects"/> into zenon
+    /// Imports all zenon Logic projects which are stored in <see cref="LogicProjects"/> into zenon.
     /// </summary>
-    public void ImportLogicProjectsIntoZenon(bool reloadZenonProject = true)
+    /// <param name="reloadZenonProject">Specifies if the current zenon project shall be reloaded after the import.</param>
+    /// <param name="options">Specifies options on how to import the project into zenon.</param>
+    public void ImportLogicProjectsIntoZenon(bool reloadZenonProject = true, ImportOptions options = ImportOptions.Default)
     {
-      ImportLogicProjectsIntoZenon(LogicProjects, reloadZenonProject);
+      ImportLogicProjectsIntoZenon(LogicProjects, reloadZenonProject, options);
     }
 
     /// <summary>
     /// Returns zenon Logic project reference for the stated project name.
     /// </summary>
-    /// <param name="zenonLogicProjectName"></param>
-    /// <returns></returns>
+    /// <param name="zenonLogicProjectName">The zenon Logic project to load.</param>
     public LogicProject GetLogicProjectByName(string zenonLogicProjectName)
     {
       if (string.IsNullOrEmpty(zenonLogicProjectName))
@@ -158,9 +163,15 @@ namespace zenonApi.Zenon
     /// Imports the stated zenon Logic projects into zenon Logic.
     /// As an import requires an existing project it tries to create a default project first.
     /// </summary>
-    /// <param name="zenonLogicProjectsToImport"></param>
-    private void ImportLogicProjectsIntoZenon(IEnumerable<LogicProject> zenonLogicProjectsToImport, bool reloadZenonProject = true)
+    /// <param name="zenonLogicProjectsToImport">The zenon Logic projects to import.</param>
+    /// <param name="reloadZenonProject">Specifies if the current zenon project shall be reloaded after the import.</param>
+    /// <param name="options">Specifies options on how to import the <paramref name="zenonLogicProjectsToImport"/> into zenon.</param>
+    private void ImportLogicProjectsIntoZenon(
+      IEnumerable<LogicProject> zenonLogicProjectsToImport, 
+      bool reloadZenonProject,
+      ImportOptions options)
     {
+      EnsureSupportedVersion(options);
       foreach (LogicProject logicProject in zenonLogicProjectsToImport)
       {
         if (!logicProject.Path.Contains(this.ZenonProjectGuid))
@@ -195,7 +206,7 @@ namespace zenonApi.Zenon
 
         // Due to a change in zenon Logic 10, the compiler settings and further other options need to be set explicitly.
         k5ToolSet.TryApplySettings(logicProject);
-        k5ToolSet.ImportZenonLogicProject(logicProject);
+        k5ToolSet.ImportZenonLogicProject(logicProject, options);
       }
 
       if (reloadZenonProject)
@@ -205,6 +216,25 @@ namespace zenonApi.Zenon
         workspace.UnloadProject2(ZenonProjectGuid, true);
         workspace.LoadProject(ZenonProjectGuid);
       }
+    }
+
+    private void EnsureSupportedVersion(ImportOptions options)
+    {
+      if (options == ImportOptions.Default)
+      {
+        return;
+      }
+
+      var version = ZenonProject.Parent.Parent.VersionNumber;
+      if (version >= 10000)
+      {
+        return;
+      }
+
+      throw new ArgumentException(
+        $"The given import option requires zenon in version 10 or higher. "
+        + $"Use {nameof(ImportOptions)}.{nameof(ImportOptions.Default)} instead for lower versions.",
+        nameof(options));
     }
 
     /// <summary>

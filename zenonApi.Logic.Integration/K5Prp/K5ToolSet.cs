@@ -213,19 +213,30 @@ namespace zenonApi.Zenon.K5Prp
     /// <summary>
     /// Imports the stated <see cref="LogicProject"/> into zenon Logic.
     /// </summary>
-    /// <param name="zenonLogicProject"></param>
-    /// <returns></returns>
-    internal bool ImportZenonLogicProject(LogicProject zenonLogicProject)
+    /// <param name="zenonLogicProject">The project to import into zenon.</param>
+    /// <param name="options">Specifies options on how to import the <paramref name="zenonLogicProject"/> into zenon.</param>
+    internal bool ImportZenonLogicProject(LogicProject zenonLogicProject, ImportOptions options)
     {
       string xmlFilePathToImport = SerializeZenonLogicProjectToXmlFile(zenonLogicProject);
+      string option = "XMLMERGE";
+      if (options.HasFlag(ImportOptions.ReCreateVariables))
+      {
+        option += "-RV";
+      }
 
-      // import via K5B.exe
-      ProcessStartInfo startInfo
-        = new ProcessStartInfo(K5BexeFilePath, $"XMLMERGE {this.ZenonLogicProjectDirectory} {xmlFilePathToImport}")
-        {
-          CreateNoWindow = false,
-          WindowStyle = ProcessWindowStyle.Hidden
-        };
+      if (options.HasFlag(ImportOptions.DoNotMerge))
+      {
+        option += "-NM";
+      }
+
+      string arguments = $"{option} {this.ZenonLogicProjectDirectory} {xmlFilePathToImport}";
+
+      // Import via K5B.exe
+      ProcessStartInfo startInfo = new ProcessStartInfo(K5BexeFilePath, arguments)
+      {
+        CreateNoWindow = false,
+        WindowStyle = ProcessWindowStyle.Hidden
+      };
 
       using (Process stratonXmlImportProcess = new Process { StartInfo = startInfo })
       {

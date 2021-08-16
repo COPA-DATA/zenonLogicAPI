@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper\TemporaryFileCreator.cs" />
+    <Compile Include="ImportOptions.cs" />
     <Compile Include="LazyLogicProject.cs" />
     <Compile Include="StratonUtilities\StratonFolderPath.cs" />
     <Compile Include="K5Prp\K5ToolSet.cs" />

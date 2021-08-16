@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using zenonApi.Logic;
+using zenonApi.Zenon;
 
 namespace Sample
 {
@@ -176,7 +177,11 @@ namespace Sample
       }
 
       // Import and commit logic projects with the changes we made:
-      wrapper.ImportLogicProjectsIntoZenon();
+      wrapper.ImportLogicProjectsIntoZenon(true, ImportOptions.DoNotMerge);
+
+      // For zenon version 10 or higher, additional import options are available, e.g.:
+      // wrapper.ImportLogicProjectsIntoZenon(true, ImportOptions.ReCreateVariables);
+
       wrapper.Dispose();
     }
   }
