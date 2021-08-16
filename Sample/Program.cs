@@ -177,7 +177,7 @@ namespace Sample
       }
 
       // Import and commit logic projects with the changes we made:
-      wrapper.ImportLogicProjectsIntoZenon(true, ImportOptions.DoNotMerge);
+      wrapper.ImportLogicProjectsIntoZenon();
 
       // For zenon version 10 or higher, additional import options are available, e.g.:
       // wrapper.ImportLogicProjectsIntoZenon(true, ImportOptions.ReCreateVariables);
