@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using zenonApi.Logic;
 using zenonApi.Zenon.Helper;
+using zenonApi.Zenon.K5Srv;
 
 namespace zenonApi.Zenon.K5Prp
 {
@@ -29,6 +30,8 @@ namespace zenonApi.Zenon.K5Prp
     static K5ToolSet()
     {
       K5PCall = (K5PRPCall)LoadFunction<K5PRPCall>("K5PRPCall");
+      var zenonDirectory = GetActivatedZenonVersionPath();
+      SetDllDirectory(zenonDirectory);
     }
 
     /// <summary>
@@ -37,6 +40,13 @@ namespace zenonApi.Zenon.K5Prp
     private delegate IntPtr K5PRPCall(string szProject, string szCommand, ref uint dwOk, ref uint dwDataIn, ref uint dwDataOut);
 
     private static readonly K5PRPCall K5PCall;
+
+    /// <summary>
+    /// Function to set directory from where the dlls should get loaded
+    /// </summary>
+    [DllImport("Kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    static extern bool SetDllDirectory(string lpPathName);
+
 
     /// <summary>
     /// Function to load a library and get the address of it
@@ -59,6 +69,26 @@ namespace zenonApi.Zenon.K5Prp
     /// Gets the used zenon version over the registry and gets the delegate of the function which is defined in procName
     /// </summary>
     private static Delegate LoadFunction<T>(string functionName)
+    {
+      var zenonDir = GetActivatedZenonVersionPath();
+
+      if (zenonDir == null) { return null; }
+
+      string k5pPath = Path.Combine(zenonDir, "K5PRP.dll");
+
+      //0x00000008 stands for LOAD_WITH_ALTERED_SEARCH_PATH
+      //https://docs.microsoft.com/de-de/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryexa
+      IntPtr hModule = LoadLibraryEx(k5pPath, IntPtr.Zero, 0x000000008);
+
+      if (hModule == IntPtr.Zero) { return null; }
+
+      IntPtr functionAddress = GetProcAddress(hModule, functionName);
+
+      if (functionAddress == IntPtr.Zero) { return null; }
+      return Marshal.GetDelegateForFunctionPointer(functionAddress, typeof(T));
+    }
+
+    private static string GetActivatedZenonVersionPath()
     {
       RegistryKey registryDir;
       try
@@ -84,21 +114,7 @@ namespace zenonApi.Zenon.K5Prp
         zenonDir = (string)registryDir.GetValue(Strings.ZenonRegistryCurrentProgramDir64Prefix + currentVersion);
       }
 
-      if (zenonDir == null) { return null; }
-
-      string k5pPath = Path.Combine(zenonDir, Strings.K5PRPFileName);
-
-      //0x00000008 stands for LOAD_WITH_ALTERED_SEARCH_PATH
-      //https://docs.microsoft.com/de-de/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryexa
-      IntPtr hModule = LoadLibraryEx(k5pPath, IntPtr.Zero, 0x000000008);
-
-      if (hModule == IntPtr.Zero) { return null; }
-
-      IntPtr functionAddress = GetProcAddress(hModule, functionName);
-
-      if (functionAddress == IntPtr.Zero) { return null; }
-
-      return Marshal.GetDelegateForFunctionPointer(functionAddress, typeof(T));
+      return zenonDir;
     }
 
     private string _k5BexeFilePath;
@@ -279,13 +295,51 @@ namespace zenonApi.Zenon.K5Prp
       //  = TryApplySettings(zenonLogicProject.Settings.OnlineChangeSettings.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>())
       //  && allSucceeded;
 
+      var windowHandle = Process.GetCurrentProcess().MainWindowHandle;
+      string clientName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+      K5SrvWrapper srv = K5SrvWrapper.TryConnect(windowHandle, 0x0400, zenonLogicProject.Path, clientName, K5SrvConstants.K5DbSelfNotif);
+
+      allSucceeded &= TryApplySrvSettings(srv,  zenonLogicProject.Settings.OnlineChangeSettings.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>());
+
+      srv.Dispose();
+
       uint cycleTime = zenonLogicProject.Settings.TriggerTime.CycleTime;
       if (cycleTime == 0)
       {
         cycleTime = 10000; // 10 seconds as the default for invalid values
       }
 
-      return SetOption("CycleTime", cycleTime.ToString()) && allSucceeded;
+      return SetSrvOption(srv, K5SrvConstants.K5DbProperty.TargetSizing, cycleTime.ToString()) && allSucceeded;
+    }
+
+    private bool TryApplySrvSettings(K5SrvWrapper srv, IEnumerable<LogicOptionTuple> options)
+    {
+      bool allSucceeded = true;
+      foreach (var optionTuple in options)
+      {
+        if (optionTuple.Name == "comment" || optionTuple.Name == "target")
+        {
+          // Seems to never work
+          continue;
+        }
+
+        if (!string.IsNullOrWhiteSpace(optionTuple.Name) && !string.IsNullOrWhiteSpace(optionTuple.Value))
+        {
+          allSucceeded = TryApplySrvSettings(srv, optionTuple);
+        }
+      }
+
+      return allSucceeded;
+    }
+
+    private bool TryApplySrvSettings(K5SrvWrapper srv, LogicOptionTuple option)
+    {
+      if(option.Name.Equals("enable"))
+      {
+        return SetSrvOption(srv, K5SrvConstants.K5DbProperty.EnableHot, option.Value);
+      }
+
+      return true;
     }
 
     private bool TryApplySettings(IEnumerable<LogicOptionTuple> options)
@@ -306,6 +360,11 @@ namespace zenonApi.Zenon.K5Prp
       }
 
       return allSucceeded;
+    }
+
+    private bool SetSrvOption(K5SrvWrapper srv, K5SrvConstants.K5DbProperty property, string value)
+    {
+      return srv.SetProperty(srv.ProjectHandle, property, value);
     }
 
     /// <summary>
