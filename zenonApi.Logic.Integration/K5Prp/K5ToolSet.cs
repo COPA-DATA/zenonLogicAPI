@@ -274,13 +274,13 @@ namespace zenonApi.Zenon.K5Prp
       return true;
     }
 
-    internal bool TryApplySettings(LogicProject zenonLogicProject)
+    internal bool TryApplySettings(LogicProject zenonLogicProject, ImportOptions options = ImportOptions.Default)
     {
       if (zenonLogicProject?.Settings == null)
       {
         return false;
       }
-
+        
       bool allSucceeded
         = TryApplySettings(zenonLogicProject.Settings.CompilerSettings.CompilerOptions.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>());
 
@@ -295,13 +295,6 @@ namespace zenonApi.Zenon.K5Prp
       //  = TryApplySettings(zenonLogicProject.Settings.OnlineChangeSettings.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>())
       //  && allSucceeded;
 
-      var windowHandle = Process.GetCurrentProcess().MainWindowHandle;
-      string clientName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-      K5SrvWrapper srv = K5SrvWrapper.TryConnect(windowHandle, 0x0400, zenonLogicProject.Path, clientName, K5SrvConstants.K5DbSelfNotif);
-
-      allSucceeded &= TryApplySrvSettings(srv,  zenonLogicProject.Settings.OnlineChangeSettings.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>());
-
-      srv.Dispose();
 
       uint cycleTime = zenonLogicProject.Settings.TriggerTime.CycleTime;
       if (cycleTime == 0)
@@ -309,24 +302,47 @@ namespace zenonApi.Zenon.K5Prp
         cycleTime = 10000; // 10 seconds as the default for invalid values
       }
 
-      return SetSrvOption(srv, K5SrvConstants.K5DbProperty.TargetSizing, cycleTime.ToString()) && allSucceeded;
+      allSucceeded = SetOption("CycleTime", cycleTime.ToString()) && allSucceeded;
+
+      if (!options.Equals(ImportOptions.ApplyOnlineSettings))
+      {
+        return allSucceeded;
+      }
+
+      IntPtr windowHandle = Process.GetCurrentProcess().MainWindowHandle;
+      string clientName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+      K5SrvWrapper srv = K5SrvWrapper.TryConnect(windowHandle, 0x0400, zenonLogicProject.Path, clientName, K5SrvConstants.K5DbSelfNotif);
+
+      allSucceeded &= TryApplyOnlineChangeSettings(srv, zenonLogicProject.Settings.OnlineChangeSettings.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>());
+      srv.Dispose();
+
+      return allSucceeded;
     }
 
-    private bool TryApplySrvSettings(K5SrvWrapper srv, IEnumerable<LogicOptionTuple> options)
+    private bool TryApplyOnlineChangeSettings(K5SrvWrapper srv, IEnumerable<LogicOptionTuple> options)
     {
       bool allSucceeded = true;
+      string hotSizeBuffer = string.Empty;
+
       foreach (var optionTuple in options)
       {
-        if (optionTuple.Name == "comment" || optionTuple.Name == "target")
-        {
-          // Seems to never work
-          continue;
-        }
-
         if (!string.IsNullOrWhiteSpace(optionTuple.Name) && !string.IsNullOrWhiteSpace(optionTuple.Value))
         {
-          allSucceeded = TryApplySrvSettings(srv, optionTuple);
+          if (optionTuple.Name.StartsWith("size"))
+          {
+            hotSizeBuffer = hotSizeBuffer + optionTuple.Name.Replace("size_", "") + "=" + optionTuple.Value + ",";
+          }
+
+          else if (optionTuple.Name.Equals("enable"))
+          {
+            allSucceeded = SetSrvOption(srv, K5SrvConstants.K5DbProperty.EnableHot, optionTuple.Value);
+          }
         }
+      }
+
+      if (hotSizeBuffer.Length > 0)
+      {
+        allSucceeded = SetSrvOption(srv, K5SrvConstants.K5DbProperty.TargetSizing, hotSizeBuffer);
       }
 
       return allSucceeded;
