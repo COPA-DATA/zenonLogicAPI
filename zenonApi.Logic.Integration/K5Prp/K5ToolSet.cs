@@ -348,16 +348,6 @@ namespace zenonApi.Zenon.K5Prp
       return allSucceeded;
     }
 
-    private bool TryApplySrvSettings(K5SrvWrapper srv, LogicOptionTuple option)
-    {
-      if(option.Name.Equals("enable"))
-      {
-        return SetSrvOption(srv, K5SrvConstants.K5DbProperty.EnableHot, option.Value);
-      }
-
-      return true;
-    }
-
     private bool TryApplySettings(IEnumerable<LogicOptionTuple> options)
     {
       bool allSucceeded = true;
