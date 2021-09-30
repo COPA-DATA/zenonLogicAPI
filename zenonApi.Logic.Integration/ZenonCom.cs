@@ -205,7 +205,7 @@ namespace zenonApi.Zenon
         }
 
         // Due to a change in zenon Logic 10, the compiler settings and further other options need to be set explicitly.
-        k5ToolSet.TryApplySettings(logicProject);
+        k5ToolSet.TryApplySettings(logicProject, options);
         k5ToolSet.ImportZenonLogicProject(logicProject, options);
       }
 

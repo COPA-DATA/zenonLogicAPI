@@ -28,6 +28,11 @@ namespace zenonApi.Zenon
     ///   Imports the logic project(s) and recreates variables if needed, but does not merge members.<br />
     ///   This option is equal to calling <c>K5B.exe</c> with argument <c>XMLMERGE-RV-NM</c>.
     /// </summary>
-    ReCreateVariablesDoNotMerge = 3
+    ReCreateVariablesDoNotMerge = 3,
+
+    /// <summary>
+    ///   Applies the online settings to the logic project.<br /> 
+    /// </summary>
+    ApplyOnlineSettings = 4
   }
 }
