@@ -4,7 +4,6 @@ using System.Xml.Linq;
 using zenonApi.Logic.Ini;
 using zenonApi.Zenon.Helper;
 using zenonApi.Zenon.K5Prp;
-using zenonApi.Zenon.StratonUtilities;
 
 // ReSharper disable once CheckNamespace : Intended, to fit into the object hierarchy of the logic API.
 namespace zenonApi.Logic

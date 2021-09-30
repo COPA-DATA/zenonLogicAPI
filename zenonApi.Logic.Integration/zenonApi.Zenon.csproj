@@ -77,6 +77,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper\TemporaryFileCreator.cs" />
+    <Compile Include="ImportOptions.cs" />
+    <Compile Include="K5Srv\DbFile.cs" />
+    <Compile Include="K5Srv\DbGroup.cs" />
+    <Compile Include="K5Srv\DbProp.cs" />
+    <Compile Include="K5Srv\DbSrv.cs" />
+    <Compile Include="K5Srv\DbProgram.cs" />
+    <Compile Include="K5Srv\DbType.cs" />
+    <Compile Include="K5Srv\DbVar.cs" />
+    <Compile Include="K5Srv\K5SrvConstants.cs" />
+    <Compile Include="K5Srv\K5SrvWrapper.cs" />
+    <Compile Include="K5Srv\SelectedVariable.cs" />
     <Compile Include="LazyLogicProject.cs" />
     <Compile Include="StratonUtilities\StratonFolderPath.cs" />
     <Compile Include="K5Prp\K5ToolSet.cs" />
@@ -119,6 +130,7 @@
   <ItemGroup>
     <None Include="zenonApi.Zenon.nuspec" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <ScadaBuildTarget>$(registry:HKEY_LOCAL_MACHINE\SOFTWARE\COPA-DATA\DataDir@ProgramDir32_Common)\AddInFramework\AddInFramework.Build.Common.targets</ScadaBuildTarget>
