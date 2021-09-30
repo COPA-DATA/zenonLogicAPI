@@ -27,6 +27,11 @@ namespace zenonApi.Zenon.K5Prp
     /// </summary>
     private const string ZenonLogicCompileLogFileName = "__build.log";
 
+    /// <summary>
+    /// Windows message to be posted to the callback window when a database event is notified.
+    /// </summary>
+    private const uint messageCallback = 0x400;
+
     static K5ToolSet()
     {
       K5PCall = (K5PRPCall)LoadFunction<K5PRPCall>("K5PRPCall");
@@ -304,14 +309,14 @@ namespace zenonApi.Zenon.K5Prp
 
       allSucceeded = SetOption("CycleTime", cycleTime.ToString()) && allSucceeded;
 
-      if (!options.Equals(ImportOptions.ApplyOnlineSettings))
+      if (!options.HasFlag(ImportOptions.ApplyOnlineSettings))
       {
         return allSucceeded;
       }
 
       IntPtr windowHandle = Process.GetCurrentProcess().MainWindowHandle;
       string clientName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-      K5SrvWrapper srv = K5SrvWrapper.TryConnect(windowHandle, 0x0400, zenonLogicProject.Path, clientName, K5SrvConstants.K5DbSelfNotif);
+      K5SrvWrapper srv = K5SrvWrapper.TryConnect(windowHandle, messageCallback, zenonLogicProject.Path, clientName, K5SrvConstants.K5DbSelfNotif);
 
       allSucceeded &= TryApplyOnlineChangeSettings(srv, zenonLogicProject.Settings.OnlineChangeSettings.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>());
       srv.Dispose();
