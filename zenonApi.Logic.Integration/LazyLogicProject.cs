@@ -184,5 +184,7 @@ namespace zenonApi.Logic
       ProjectName = name;
       Path = logicPath;
     }
+
+    public static implicit operator LazyLogicProject(LogicProject project) => new LazyLogicProject(project);
   }
 }

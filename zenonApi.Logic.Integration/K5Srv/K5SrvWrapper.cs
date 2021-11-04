@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 
 
 namespace zenonApi.Zenon.K5Srv
@@ -11,7 +12,7 @@ namespace zenonApi.Zenon.K5Srv
     private bool isDisposed = false;
     private uint _clientHandle;
     private uint _projectHandle;
-    private K5SrvWrapper() {}
+    private K5SrvWrapper() { }
 
     /// <summary>
     ///   Open a connection to the logic database
@@ -30,7 +31,7 @@ namespace zenonApi.Zenon.K5Srv
       {
         return srv;
       }
-      
+
       return null;
     }
 
@@ -43,7 +44,7 @@ namespace zenonApi.Zenon.K5Srv
     /// <param name="projectPath">Path to the zenon logic project.</param>
     /// <param name="clientName">Name of the accessing application.</param>
     /// <param name="flags">Flags to specify connection.</param>
-    public bool Open(IntPtr handleWindowCallback, uint messageCallback, string projectPath, string clientName, uint flags)
+    private bool Open(IntPtr handleWindowCallback, uint messageCallback, string projectPath, string clientName, uint flags)
     {
       Close();
 
@@ -61,7 +62,7 @@ namespace zenonApi.Zenon.K5Srv
       return IsReady;
     }
 
-    public bool OpenQuiet(string projectPath)
+    private bool OpenQuiet(string projectPath)
     {
       IntPtr ptr = new IntPtr(0);
       return Open(ptr, 0, projectPath, "", 0);
@@ -70,7 +71,7 @@ namespace zenonApi.Zenon.K5Srv
     /// <summary>
     ///   Closes the connection
     /// </summary>
-    public void Close()
+    private void Close()
     {
       if (_projectHandle != 0)
       {
@@ -190,7 +191,7 @@ namespace zenonApi.Zenon.K5Srv
     public bool DispatchEvent(uint eventId, uint arguments)
     {
       CheckIfDisposed();
-      return DbSrv.DispatchEvent(_clientHandle, _projectHandle, eventId, arguments) == (uint) K5SrvConstants.K5DbErr.Ok;
+      return DbSrv.DispatchEvent(_clientHandle, _projectHandle, eventId, arguments) == (uint)K5SrvConstants.K5DbErr.Ok;
     }
 
     /// <summary>
@@ -238,7 +239,7 @@ namespace zenonApi.Zenon.K5Srv
     {
       CheckIfDisposed();
       return DbSrv.SetProjectModified(_clientHandle, _projectHandle) == (uint)K5SrvConstants.K5DbErr.Ok;
-    } 
+    }
 
     /// <summary>
     ///   Requests the program list from the database which are available after this method executed in parameter
@@ -502,7 +503,7 @@ namespace zenonApi.Zenon.K5Srv
       CheckIfDisposed();
       return DbSrv.GetProgramOwner(_clientHandle, _projectHandle, handleProgram);
     }
-     
+
     public bool GetProgramSchedule(uint handleProgram, ref uint period, ref uint offset)
     {
       CheckIfDisposed();
@@ -1031,7 +1032,7 @@ namespace zenonApi.Zenon.K5Srv
       {
         return DbSrv.LockVar(_clientHandle, _projectHandle, groupHandle, variableHandle) == (uint)K5SrvConstants.K5DbErr.Ok;
       }
-      
+
       return DbSrv.UnlockVar(_clientHandle, _projectHandle, groupHandle, variableHandle) == (uint)K5SrvConstants.K5DbErr.Ok;
     }
 
@@ -1307,6 +1308,11 @@ namespace zenonApi.Zenon.K5Srv
     {
       CheckIfDisposed();
 
+      while (!IsReady)
+      {
+        Thread.Sleep(100);
+      }
+
       if (enable)
         DbSrv.EnableHot(_clientHandle, _projectHandle);
       else
@@ -1502,8 +1508,10 @@ namespace zenonApi.Zenon.K5Srv
     /// </summary>
     public void CheckIfDisposed()
     {
-      if(isDisposed)
+      if (isDisposed)
+      {
         throw new ObjectDisposedException("K5Srv", "The instance was already disposed");
+      }
     }
   }
 }
