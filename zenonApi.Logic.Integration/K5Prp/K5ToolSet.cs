@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
 using zenonApi.Logic;
 using zenonApi.Zenon.Helper;
 using zenonApi.Zenon.K5Srv;
@@ -27,16 +28,28 @@ namespace zenonApi.Zenon.K5Prp
     /// </summary>
     private const string ZenonLogicCompileLogFileName = "__build.log";
 
-    /// <summary>
-    /// Windows message to be posted to the callback window when a database event is notified.
-    /// </summary>
-    private const uint messageCallback = 0x400;
-
     static K5ToolSet()
     {
       K5PCall = (K5PRPCall)LoadFunction<K5PRPCall>("K5PRPCall");
       var zenonDirectory = GetActivatedZenonVersionPath();
-      SetDllDirectory(zenonDirectory);
+      if (!string.IsNullOrWhiteSpace(zenonDirectory))
+      {
+        SetDllDirectory(zenonDirectory);
+      }
+    }
+
+    public K5ToolSet(string zenonLogicProjectDirectory)
+    {
+      if (string.IsNullOrWhiteSpace(zenonLogicProjectDirectory))
+      {
+        throw new ArgumentNullException(string.Format(
+          Strings.MethodArgumentNullException,
+          nameof(zenonLogicProjectDirectory),
+          nameof(K5ToolSet)));
+      }
+
+      ZenonLogicProjectDirectory = zenonLogicProjectDirectory;
+      InitializeEnvironmentPathVariable();
     }
 
     /// <summary>
@@ -50,7 +63,7 @@ namespace zenonApi.Zenon.K5Prp
     /// Function to set directory from where the dlls should get loaded
     /// </summary>
     [DllImport("Kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    static extern bool SetDllDirectory(string lpPathName);
+    private static extern bool SetDllDirectory(string lpPathName);
 
 
     /// <summary>
@@ -154,18 +167,6 @@ namespace zenonApi.Zenon.K5Prp
     /// </summary>
     /// <example> C:\ProgramData\COPA-DATA\SQL2012\"zenon project GUID"\FILES\straton\"zenon Logic project name" </example>
     internal string ZenonLogicProjectDirectory { get; private set; }
-
-    internal K5ToolSet(string zenonLogicProjectDirectory)
-    {
-      if (string.IsNullOrWhiteSpace(zenonLogicProjectDirectory))
-      {
-        throw new ArgumentNullException(string.Format(Strings.MethodArgumentNullException,
-          nameof(zenonLogicProjectDirectory), nameof(K5ToolSet)));
-      }
-
-      ZenonLogicProjectDirectory = zenonLogicProjectDirectory;
-      InitializeEnvironmentPathVariable();
-    }
 
     /// <summary>
     /// Gets the x86 components installation directory of zenon
@@ -279,15 +280,15 @@ namespace zenonApi.Zenon.K5Prp
       return true;
     }
 
-    internal bool TryApplySettings(LogicProject zenonLogicProject, ImportOptions options = ImportOptions.Default)
+    internal bool TryApplyCompilerSettings(LogicProject zenonLogicProject, ImportOptions options = ImportOptions.Default)
     {
       if (zenonLogicProject?.Settings == null)
       {
         return false;
       }
-        
-      bool allSucceeded
-        = TryApplySettings(zenonLogicProject.Settings.CompilerSettings.CompilerOptions.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>());
+
+      var settings = zenonLogicProject.Settings.CompilerSettings.CompilerOptions.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>();
+      bool allSucceeded = TryApplyCompilerSettings(settings);
 
       // According to CD-FR the following three setting sections shall never be set manually.
       //allSucceeded
@@ -296,10 +297,6 @@ namespace zenonApi.Zenon.K5Prp
       //allSucceeded
       //  = TryApplySettings(zenonLogicProject.Settings.CompilerSettings.TargetCodeOptions.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>())
       //  && allSucceeded;
-      //allSucceeded
-      //  = TryApplySettings(zenonLogicProject.Settings.OnlineChangeSettings.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>())
-      //  && allSucceeded;
-
 
       uint cycleTime = zenonLogicProject.Settings.TriggerTime.CycleTime;
       if (cycleTime == 0)
@@ -314,46 +311,10 @@ namespace zenonApi.Zenon.K5Prp
         return allSucceeded;
       }
 
-      IntPtr windowHandle = Process.GetCurrentProcess().MainWindowHandle;
-      string clientName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-      K5SrvWrapper srv = K5SrvWrapper.TryConnect(windowHandle, messageCallback, zenonLogicProject.Path, clientName, K5SrvConstants.K5DbSelfNotif);
-
-      allSucceeded &= TryApplyOnlineChangeSettings(srv, zenonLogicProject.Settings.OnlineChangeSettings.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>());
-      srv.Dispose();
-
       return allSucceeded;
     }
 
-    private bool TryApplyOnlineChangeSettings(K5SrvWrapper srv, IEnumerable<LogicOptionTuple> options)
-    {
-      bool allSucceeded = true;
-      string hotSizeBuffer = string.Empty;
-
-      foreach (var optionTuple in options)
-      {
-        if (!string.IsNullOrWhiteSpace(optionTuple.Name) && !string.IsNullOrWhiteSpace(optionTuple.Value))
-        {
-          if (optionTuple.Name.StartsWith("size"))
-          {
-            hotSizeBuffer = hotSizeBuffer + optionTuple.Name.Replace("size_", "") + "=" + optionTuple.Value + ",";
-          }
-
-          else if (optionTuple.Name.Equals("enable"))
-          {
-            allSucceeded = SetSrvOption(srv, K5SrvConstants.K5DbProperty.EnableHot, optionTuple.Value);
-          }
-        }
-      }
-
-      if (hotSizeBuffer.Length > 0)
-      {
-        allSucceeded = SetSrvOption(srv, K5SrvConstants.K5DbProperty.TargetSizing, hotSizeBuffer);
-      }
-
-      return allSucceeded;
-    }
-
-    private bool TryApplySettings(IEnumerable<LogicOptionTuple> options)
+    private bool TryApplyCompilerSettings(IEnumerable<LogicOptionTuple> options)
     {
       bool allSucceeded = true;
       foreach (var optionTuple in options)
@@ -372,6 +333,74 @@ namespace zenonApi.Zenon.K5Prp
 
       return allSucceeded;
     }
+
+    internal void TryApplyOnlineChangeSettings(LogicProject zenonLogicProject, ImportOptions options = ImportOptions.Default)
+    {
+      if (!options.HasFlag(ImportOptions.ApplyOnlineSettings))
+      {
+        return;
+      }
+
+      var optionTuples = zenonLogicProject.Settings.OnlineChangeSettings.OptionTuples ?? Enumerable.Empty<LogicOptionTuple>();
+
+      const uint callback = 0x400;
+      IntPtr hwnd = Process.GetCurrentProcess().MainWindowHandle;
+      string clientName = System.Reflection.Assembly.GetEntryAssembly().GetName().Name;
+      string hotSizeBuffer = string.Empty;
+      bool enableHot = false;
+      bool hasHotOptionDefined = false;
+
+      using (K5SrvWrapper srv = K5SrvWrapper.TryConnect(hwnd, callback, zenonLogicProject.Path, clientName, K5SrvConstants.K5DbSelfNotif))
+      {
+        while (!srv.IsReady)
+        {
+          Thread.Sleep(100);
+        }
+
+        foreach (var optionTuple in optionTuples)
+        {
+          if (!string.IsNullOrWhiteSpace(optionTuple.Name) && !string.IsNullOrWhiteSpace(optionTuple.Value))
+          {
+            if (optionTuple.Name.StartsWith("size_"))
+            {
+              hotSizeBuffer = hotSizeBuffer + optionTuple.Name.Replace("size_", "") + "=" + optionTuple.Value + ",";
+            }
+
+            else if (optionTuple.Name.Equals("enable"))
+            {
+              hasHotOptionDefined = true;
+              if (int.TryParse(optionTuple.Value, out var i))
+              {
+                enableHot = i > 0;
+              }
+              else if (bool.TryParse(optionTuple.Value, out var b))
+              {
+                enableHot = b;
+              }
+              else if (optionTuple.Value.Equals("ON", StringComparison.OrdinalIgnoreCase))
+              {
+                enableHot = true;
+              }
+              else if (optionTuple.Value.Equals("OFF", StringComparison.OrdinalIgnoreCase))
+              {
+                enableHot = false;
+              }
+            }
+          }
+        }
+
+        if (hasHotOptionDefined)
+        {
+          srv.SetHot(enableHot);
+        }
+
+        if (hotSizeBuffer.Length > 0)
+        {
+          srv.SetHotSizing(hotSizeBuffer);
+        }
+      }
+    }
+
 
     private bool SetSrvOption(K5SrvWrapper srv, K5SrvConstants.K5DbProperty property, string value)
     {
@@ -451,14 +480,20 @@ namespace zenonApi.Zenon.K5Prp
     /// Creates a default zenon Logic project
     /// </summary>
     /// <returns></returns>
-    internal bool CreateDefaultZenonLogicProject()
+    internal void CreateDefaultZenonLogicProject()
     {
       bool commandSuccessful = ExecuteK5PrpCommand("CreateProject", out string returnMessage, out _);
       if (!commandSuccessful)
       {
         throw new Exception(returnMessage);
       }
-      return true;
+
+      // It is crucial to call this here, otherwise the logic project gets corrupted if a K5Srv access is attempted
+      commandSuccessful = ExecuteK5PrpCommand("CloseProject", out returnMessage, out _);
+      if (!commandSuccessful)
+      {
+        throw new Exception(returnMessage);
+      }
     }
 
     /// <summary>
@@ -510,6 +545,8 @@ namespace zenonApi.Zenon.K5Prp
     {
       try
       {
+        Debug.Write("DBG: K5PRP Call: " + k5Command + ":");
+
         uint dwOk = 0;
         uint dwDataIn = 0;
         uint dwDataOut = 0;
@@ -521,10 +558,13 @@ namespace zenonApi.Zenon.K5Prp
         bool executedSuccessfully = Convert.ToBoolean(dwOk);
         outHandle = dwDataOut;
 
+        Debug.WriteLine($"DBG: Success: {executedSuccessfully}: Message: {returnMessage}");
         return executedSuccessfully;
       }
       catch (Exception ex)
       {
+        Debug.WriteLine("DBG: Call failed");
+
         returnMessage = string.Format(Strings.ExternalK5PrpCallError, ex.Message);
         outHandle = 0;
         return false;
@@ -541,7 +581,7 @@ namespace zenonApi.Zenon.K5Prp
       }
 
       string currentProcessFilePath;
-      if (fileName.Contains("AddIn")) // Where in the Debugger...
+      if (fileName.Contains("AddIn")) // We are in the Debugger...
       {
         currentProcessFilePath = new FileInfo(fileName).Directory.Parent.FullName;
       }
