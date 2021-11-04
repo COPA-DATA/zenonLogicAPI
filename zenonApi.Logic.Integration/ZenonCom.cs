@@ -13,6 +13,7 @@ using zenonApi.Zenon.Helper;
 using zenonApi.Zenon.K5Prp;
 using zenonApi.Zenon.StratonUtilities;
 
+
 namespace zenonApi.Zenon
 {
   [DebuggerDisplay("{" + nameof(ZenonProjectName) + "}")]
@@ -39,6 +40,7 @@ namespace zenonApi.Zenon
 
     /// <summary>
     ///   Sequence of loaded zenon Logic projects.
+    ///   To add a new project, use <see cref="LazyLogicProjects"/>.
     /// </summary>
     public IReadOnlyList<LogicProject> LogicProjects => LazyLogicProjects.Select(x => x.Value).ToList();
 
@@ -88,7 +90,7 @@ namespace zenonApi.Zenon
           nameof(zenonLogicProjectName), nameof(ImportLogicProjectIntoZenonByName)));
       }
 
-      IEnumerable<LogicProject> logicProjectsWithSearchedNames 
+      IEnumerable<LogicProject> logicProjectsWithSearchedNames
         = LazyLogicProjects
           .Where(lazyLogicProject => lazyLogicProject.ProjectName?.Equals(zenonLogicProjectName) ?? false)
           .Select(project => project.Value);
@@ -167,7 +169,7 @@ namespace zenonApi.Zenon
     /// <param name="reloadZenonProject">Specifies if the current zenon project shall be reloaded after the import.</param>
     /// <param name="options">Specifies options on how to import the <paramref name="zenonLogicProjectsToImport"/> into zenon.</param>
     private void ImportLogicProjectsIntoZenon(
-      IEnumerable<LogicProject> zenonLogicProjectsToImport, 
+      IEnumerable<LogicProject> zenonLogicProjectsToImport,
       bool reloadZenonProject,
       ImportOptions options)
     {
@@ -197,16 +199,17 @@ namespace zenonApi.Zenon
           uint mainPort = logicProject.MainPort;
           K5DbxsIniFile.CreateK5DbxsIniFile
           (
-            this.ZenonProjectGuid, 
-            logicProject.K5DbxsIniFilePath, 
+            this.ZenonProjectGuid,
+            logicProject.K5DbxsIniFilePath,
             mainPort != uint.MinValue ? mainPort.ToString() : nextFreeZenonLogicMainPort,
             newStratonNgDriverId
           );
         }
 
-        // Due to a change in zenon Logic 10, the compiler settings and further other options need to be set explicitly.
-        k5ToolSet.TryApplySettings(logicProject, options);
         k5ToolSet.ImportZenonLogicProject(logicProject, options);
+        // Due to a change in zenon Logic 10, the compiler settings and further other options need to be set explicitly.
+        k5ToolSet.TryApplyCompilerSettings(logicProject, options);
+        k5ToolSet.TryApplyOnlineChangeSettings(logicProject, options);
       }
 
       if (reloadZenonProject)
