@@ -14,6 +14,7 @@ using zenonApi.Zenon.Helper;
 using zenonApi.Zenon.K5Prp;
 using zenonApi.Zenon.StratonUtilities;
 
+
 namespace zenonApi.Zenon
 {
   [DebuggerDisplay("{" + nameof(ZenonProjectName) + "}")]
@@ -35,6 +36,7 @@ namespace zenonApi.Zenon
 
     /// <summary>
     ///   Sequence of lazy loaded zenon Logic projects.
+    ///   To add a new project, use <see cref="LazyLogicProjects"/>.
     /// </summary>
     public ObservableCollection<LazyLogicProject> LazyLogicProjects { get; private set; } = new ObservableCollection<LazyLogicProject>();
 
@@ -77,7 +79,7 @@ namespace zenonApi.Zenon
     /// <param name="reloadZenonProject">Specifies if the current zenon project shall be reloaded after the import.</param>
     /// <param name="options">Specifies options on how to import the projects into zenon.</param>
     public void ImportLogicProjectIntoZenonByName(
-      string zenonLogicProjectName, 
+      string zenonLogicProjectName,
       bool reloadZenonProject = true,
       ImportOptions options = ImportOptions.Default)
     {
@@ -123,7 +125,7 @@ namespace zenonApi.Zenon
           string.Format(Strings.ErrorGettingZenonProjektByNameArgumentNull, nameof(zenonLogicProjectName)));
       }
 
-      IEnumerable<LazyLogicProject> foundLogicProjectsByName 
+      IEnumerable<LazyLogicProject> foundLogicProjectsByName
         = LazyLogicProjects.Where(project => string.Equals(project.ProjectName, zenonLogicProjectName));
 
       if (!foundLogicProjectsByName.Any())
@@ -166,8 +168,8 @@ namespace zenonApi.Zenon
     /// <param name="reloadZenonProject">Specifies if the current zenon project shall be reloaded after the import.</param>
     /// <param name="options">Specifies options on how to import the <paramref name="zenonLogicProjectsToImport"/> into zenon.</param>
     private void ImportLogicProjectsIntoZenon(
-      IEnumerable<LogicProject> zenonLogicProjectsToImport, 
-      bool reloadZenonProject, 
+      IEnumerable<LogicProject> zenonLogicProjectsToImport,
+      bool reloadZenonProject,
       ImportOptions options)
     {
       EnsureSupportedVersion(options);
@@ -201,9 +203,10 @@ namespace zenonApi.Zenon
             newStratonNgDriverId);
         }
 
-        // Due to a change in zenon Logic 10, the compiler settings and further other options need to be set explicitly.
-        k5ToolSet.TryApplySettings(logicProject);
         k5ToolSet.ImportZenonLogicProject(logicProject, options);
+        // Due to a change in zenon Logic 10, the compiler settings and further other options need to be set explicitly.
+        k5ToolSet.TryApplyCompilerSettings(logicProject, options);
+        k5ToolSet.TryApplyOnlineChangeSettings(logicProject, options);
       }
 
       if (reloadZenonProject)

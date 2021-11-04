@@ -5,11 +5,11 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using zenonApi.Logic;
-using zenonApi.Zenon;
+
 
 namespace Sample
 {
-  class Program
+   class Program
   {
     private const string ZenonRuntimeComObjectName = "zenOn.ApplicationED";
 
@@ -168,7 +168,8 @@ namespace Sample
         Declaration = new XDeclaration("1.0", "iso-8859-1", "yes")
       };
       document.Add(modifiedProject);
-      using (XmlTextWriter writer = new XmlTextWriter($@"C:\Users\{Environment.UserName}\Desktop\DemoProjectModified.xml",
+      using (XmlTextWriter writer = new XmlTextWriter(
+        $@"C:\Users\{Environment.UserName}\Desktop\DemoProjectModified.xml",
         Encoding.GetEncoding("iso-8859-1")))
       {
         writer.Indentation = 3;
@@ -180,7 +181,7 @@ namespace Sample
       wrapper.ImportLogicProjectsIntoZenon();
 
       // For zenon version 10 or higher, additional import options are available, e.g.:
-      // wrapper.ImportLogicProjectsIntoZenon(true, ImportOptions.ReCreateVariables);
+      // wrapper.ImportLogicProjectsIntoZenon(true, ImportOptions.ReCreateVariables | ImportOptions.ApplyOnlineSettings);
 
       wrapper.Dispose();
     }

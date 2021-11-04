@@ -81,12 +81,12 @@ namespace zenonApi.Logic
     {
       get
       {
-        var option = this.OptionTuples.Where(x => x.Name == key).FirstOrDefault();
+        var option = this.OptionTuples.FirstOrDefault(x => x.Name == key);
         return option?.Value;
       }
       set
       {
-        var option = this.OptionTuples.Where(x => x.Name == key).FirstOrDefault();
+        var option = this.OptionTuples.FirstOrDefault(x => x.Name == key);
         if (option == null)
         {
           this.OptionTuples.Add(new LogicOptionTuple(key, value));
